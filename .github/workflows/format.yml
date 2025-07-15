@@ -1,0 +1,66 @@
+name: Format
+
+# 실행 조건 = push + pull_reqeust
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+# 기존 실행중인 work_flow 중지
+concurrency:
+  group: format-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  swift_format:
+    name: swift-format
+    runs-on: macos-15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 16.2
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      # cache 확인 후 swift-format 설치
+      - name: Restore swift-format cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.build_swift_format
+          key: swift-format-${{ runner.os }}-${{ hashFiles('**/Package.resolved') }}
+
+      - name: Setup swift-format
+        run: |
+          if [ ! -f ~/.build_swift_format/swift-format ]; then
+            git clone https://github.com/apple/swift-format.git
+            cd swift-format
+            swift build -c release --disable-sandbox
+            mkdir -p ~/.build_swift_format
+            cp .build/release/swift-format ~/.build_swift_format/swift-format
+            cd ..
+          fi
+
+          sudo cp ~/.build_swift_format/swift-format /usr/local/bin/swift-format
+          swift-format --version || echo "swift-format installed"
+
+      # swift-format 실행
+      # .swift 파일에 대해서만 실행
+      - name: Run swift-format
+        run: |
+          find . \
+            -path '*/Documentation.docc' -prune -o \
+            -name '*.swift' \
+            -not -path '*/.*' -print0 \
+            | xargs -0 swift-format --ignore-unparsable-files --in-place
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '[Auto] Run swift-format'
+          branch: 'main'
