@@ -1,0 +1,59 @@
+name: CI - Build & Test (Tuist)
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup mise & install Tuist
+        uses: jdx/mise-action@v2
+
+      - name: Extract Tuist version from mise.toml
+        id: get-tuist-version
+        run: |
+          TUIST_VERSION=$(grep '^tuist' mise.toml | sed 's/.*= "\(.*\)"/\1/')
+          echo "TUIST_VERSION=$TUIST_VERSION" >> $GITHUB_ENV
+
+      - name: Cache Tuist
+        uses: actions/cache@v4
+        id: cache-tuist
+        with:
+          path: ~/.local/share/mise/installs/tuist/${{ env.TUIST_VERSION }}
+          key: tuist-${{ runner.os }}-${{ env.TUIST_VERSION }}
+
+      - name: Install Tuist (if not cached)
+        if: steps.cache-tuist.outputs.cache-hit != 'true'
+        run: mise install tuist@${{ env.TUIST_VERSION }}
+
+      - name: Activate Tuist
+        run: |
+          mise use -g tuist@${{ env.TUIST_VERSION }}
+          tuist --version
+
+      - name: Detect Tuist Project Directory
+        id: detect-tuist-dir
+        run: |
+          echo "Searching for Project.swift..."
+          TUIST_DIR=$(find . -name "Project.swift" -exec dirname {} \; | head -n 1)
+          echo "Found Tuist directory: $TUIST_DIR"
+          echo "tuist_path=$TUIST_DIR" >> $GITHUB_OUTPUT
+
+      - name: Install Dependencies with Tuist
+        working-directory: ${{ steps.detect-tuist-dir.outputs.tuist_path }}
+        run: |
+          tuist install
+
+      - name: Run Tests
+        working-directory: ${{ steps.detect-tuist-dir.outputs.tuist_path }}
+        run: |
+          tuist build
