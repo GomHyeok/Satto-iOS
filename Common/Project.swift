@@ -13,14 +13,13 @@ struct CommonLayer: Layer {
         dependencies: [
           .target(name: "Auth"),
           .target(name: "Constant"),
-          .target(name: "DesignSystem"),
           .target(name: "Lib"),
-          .project(target: "CoreLayer", path: "../Core")
+          .project(target: "CoreLayer", path: "../Core"),
+          .project(target: "DesignSystem", path: "../DesignSystem"),
         ]
       ),
       .createTarget(name: "Auth"),
       .createTarget(name: "Constant"),
-      .createTarget(name: "DesignSystem"),
       .createTarget(
         name: "Lib",
         dependencies: [

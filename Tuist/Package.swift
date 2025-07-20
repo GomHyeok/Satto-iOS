@@ -10,6 +10,7 @@ let packageSettings = PackageSettings(
     "Then": .staticFramework,
     "SnapKit": .staticFramework,
     "Swinject": .staticFramework,
+    "SwiftRichString": .staticFramework,
   ]
 )
 #endif
@@ -21,5 +22,6 @@ let package = Package(
     .package(url: "https://github.com/devxoul/Then.git", from: "3.0.0"),
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
     .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
+    .package(url: "https://github.com/malcommac/SwiftRichString.git", from: "3.7.2"),
   ]
 )

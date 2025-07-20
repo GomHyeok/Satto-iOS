@@ -10,7 +10,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window = UIWindow(windowScene: windowScene)
     window?.windowScene = windowScene
     
-    let viewController = ViewController()
+    let viewController = TypographySampleViewController()
     
     window?.rootViewController = viewController
     window?.makeKeyAndVisible()

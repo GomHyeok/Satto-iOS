@@ -16,6 +16,7 @@ struct AppLayer: Layer {
         infoPlist: .extendingDefault(
           with: [
             "CFBundleDisplayName": "$(APP_NAME)",
+            "UILaunchStoryboardName": "LaunchScreen",
             "UIApplicationSceneManifest": [
               "UIApplicationSupportsMultipleScenes": false,
               "UISceneConfigurations": [

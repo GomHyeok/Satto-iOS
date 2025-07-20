@@ -1,5 +1,5 @@
 {
-  "originHash" : "b1539e33a8c5993d71537eb371846ec17509400343e6762c1808a59df751f48b",
+  "originHash" : "4f6286920efb00d5bf87da8834f7c796966a47e01b2292c701deab7df95be37b",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -44,6 +44,15 @@
       "state" : {
         "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
         "version" : "5.7.1"
+      }
+    },
+    {
+      "identity" : "swiftrichstring",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/malcommac/SwiftRichString.git",
+      "state" : {
+        "revision" : "9bf4b5af6bb4386865636fc504d6c588c2b65040",
+        "version" : "3.7.2"
       }
     },
     {
