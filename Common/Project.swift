@@ -21,7 +21,13 @@ struct CommonLayer: Layer {
       .createTarget(name: "Auth"),
       .createTarget(name: "Constant"),
       .createTarget(name: "DesignSystem"),
-      .createTarget(name: "Lib"),
+      .createTarget(
+        name: "Lib",
+        dependencies: [
+          .external(name: "Then"),
+          .external(name: "SnapKit"),
+        ]
+      ),
     ]
   }
 }

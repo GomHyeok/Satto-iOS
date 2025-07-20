@@ -12,11 +12,21 @@ struct CoreLayer: Layer {
         sources: .empty,
         dependencies: [
           .target(name: "NetworkCore"),
-          .target(name: "DIInjector")
+          .target(name: "DIInjector"),
         ]
       ),
-      .createTarget(name: "NetworkCore"),
-      .createTarget(name: "DIInjector")
+      .createTarget(
+        name: "NetworkCore",
+        dependencies: [
+          .external(name: "Moya")
+        ]
+      ),
+      .createTarget(
+        name: "DIInjector",
+        dependencies: [
+          .external(name: "Swinject")
+        ]
+      )
     ]
   }
 }
