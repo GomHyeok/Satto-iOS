@@ -38,7 +38,7 @@ jobs:
       - name: Activate Tuist
         run: |
           mise use -g tuist@${{ env.TUIST_VERSION }}
-          tuist --version
+          tuist version
 
       - name: Detect Tuist Project Directory
         id: detect-tuist-dir
