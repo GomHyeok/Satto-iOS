@@ -26,6 +26,15 @@ struct CoreLayer: Layer {
         dependencies: [
           .external(name: "Swinject")
         ]
+      ),
+      .createTarget(
+        name: "DITest",
+        product: .unitTests,
+        sources: ["DIInjector/Test/Sources/**"],
+        dependencies: [
+          .target(name: "DIInjector"),
+          
+        ]
       )
     ]
   }
