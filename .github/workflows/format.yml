@@ -36,20 +36,6 @@ jobs:
           path: ~/.build_swift_format
           key: swift-format-${{ runner.os }}-${{ hashFiles('**/Package.resolved') }}
 
-      - name: Setup swift-format
-        run: |
-          if [ ! -f ~/.build_swift_format/swift-format ]; then
-            git clone https://github.com/apple/swift-format.git
-            cd swift-format
-            swift build -c release --disable-sandbox
-            mkdir -p ~/.build_swift_format
-            cp .build/release/swift-format ~/.build_swift_format/swift-format
-            cd ..
-          fi
-
-          sudo cp ~/.build_swift_format/swift-format /usr/local/bin/swift-format
-          swift-format --version || echo "swift-format installed"
-
       # swift-format 실행
       # .swift 파일에 대해서만 실행
       - name: Run swift-format
@@ -63,4 +49,4 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: '[Auto] Run swift-format'
-          branch: 'main'
+          branch: 'develop'
