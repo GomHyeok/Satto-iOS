@@ -73,7 +73,7 @@ final class TypographySampleViewController: UIViewController {
         for (name, style) in allSamples {
             let label = UILabel()
             label.numberOfLines = 0
-            label.attributedText = "(\(name))\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n".set(style: style)
+            label.attributedText = "(\(name))\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n".set(style: style.lineHeightMultiple(1.2))
             contentStack.addArrangedSubview(label)
         }
     }

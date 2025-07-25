@@ -12,7 +12,8 @@ struct DesignSystemLayer: Layer {
         sources: ["DesignSystem/Sources/**"],
         resources: ["DesignSystem/Resources/**"],
         dependencies: [
-          .external(name: "SwiftRichString")
+          .external(name: "SwiftRichString"),
+          .external(name: "Then"),
         ]
       ),
       .createTarget(
