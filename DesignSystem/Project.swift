@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = DesignSystemLayer().project
 
 struct DesignSystemLayer: Layer {
-  
+
   var targets: [Target] {
     [
       .createTarget(
@@ -28,10 +28,10 @@ struct DesignSystemLayer: Layer {
                 "UIWindowSceneSessionRoleApplication": [
                   [
                     "UISceneConfigurationName": "Default Configuration",
-                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
-                  ],
+                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate",
+                  ]
                 ]
-              ]
+              ],
             ],
           ]
         ),
@@ -39,7 +39,7 @@ struct DesignSystemLayer: Layer {
         dependencies: [
           .target(name: "DesignSystem")
         ]
-      )
+      ),
     ]
   }
 }

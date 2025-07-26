@@ -8,16 +8,16 @@
 import Swinject
 
 public class MockClass {
-    func mockFunc() -> Bool {
-        print("MockClass Registered")
-        return true
-    }
+  func mockFunc() -> Bool {
+    print("MockClass Registered")
+    return true
+  }
 }
 
-public struct MockAssembly : Assembly {
-    public func assemble(container: Container) {
-        container.register(MockClass.self) { _ in
-            return MockClass()
-        }
+public struct MockAssembly: Assembly {
+  public func assemble(container: Container) {
+    container.register(MockClass.self) { _ in
+      return MockClass()
     }
+  }
 }

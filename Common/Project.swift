@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = CommonLayer().project
 
 struct CommonLayer: Layer {
-  
+
   var targets: [Target] {
     [
       .createTarget(

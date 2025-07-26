@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = AppLayer().project
 
 struct AppLayer: Layer {
-  
+
   var name: String { "Satto" }
   var options: Project.Options { .options(automaticSchemesOptions: .disabled) }
   var targets: [Target] {
@@ -23,10 +23,10 @@ struct AppLayer: Layer {
                 "UIWindowSceneSessionRoleApplication": [
                   [
                     "UISceneConfigurationName": "Default Configuration",
-                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate"
-                  ],
+                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate",
+                  ]
                 ]
-              ]
+              ],
             ],
           ]
         ),
@@ -43,7 +43,7 @@ struct AppLayer: Layer {
               settings: [
                 "APP_IDENTIFIER": "com.hanbang.satto.debug",
                 "APP_NAME": "Satto Debug",
-                "OTHER_SWIFT_FLAGS": "$(inherited) -DDEBUG"
+                "OTHER_SWIFT_FLAGS": "$(inherited) -DDEBUG",
               ]
             ),
             .release(
@@ -51,7 +51,7 @@ struct AppLayer: Layer {
               settings: [
                 "APP_IDENTIFIER": "com.hanbang.satto",
                 "APP_NAME": "Satto",
-                "OTHER_SWIFT_FLAGS": "$(inherited) -DRELEASE"
+                "OTHER_SWIFT_FLAGS": "$(inherited) -DRELEASE",
               ]
             ),
           ]

@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = FeatureLayer().project
 
 struct FeatureLayer: Layer {
-  
+
   var targets: [Target] {
     [
       .createTarget(
@@ -16,14 +16,14 @@ struct FeatureLayer: Layer {
           .target(name: "Setting"),
           .target(name: "History"),
           .target(name: "Fortune"),
-          .project(target: "CommonLayer", path: "../Common")
+          .project(target: "CommonLayer", path: "../Common"),
         ]
       ),
       .createTarget(name: "Onboarding"),
       .createTarget(name: "Home"),
       .createTarget(name: "Setting"),
       .createTarget(name: "History"),
-      .createTarget(name: "Fortune")
+      .createTarget(name: "Fortune"),
     ]
   }
 }

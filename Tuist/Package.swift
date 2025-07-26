@@ -2,17 +2,17 @@
 import PackageDescription
 
 #if TUIST
-import struct ProjectDescription.PackageSettings
+  import struct ProjectDescription.PackageSettings
 
-let packageSettings = PackageSettings(
-  productTypes: [
-    "Moya": .staticFramework,
-    "Then": .staticFramework,
-    "SnapKit": .staticFramework,
-    "Swinject": .staticFramework,
-    "SwiftRichString": .staticFramework,
-  ]
-)
+  let packageSettings = PackageSettings(
+    productTypes: [
+      "Moya": .staticFramework,
+      "Then": .staticFramework,
+      "SnapKit": .staticFramework,
+      "Swinject": .staticFramework,
+      "SwiftRichString": .staticFramework,
+    ]
+  )
 #endif
 
 let package = Package(

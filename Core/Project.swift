@@ -4,7 +4,7 @@ import ProjectDescriptionHelpers
 let project = CoreLayer().project
 
 struct CoreLayer: Layer {
-  
+
   var targets: [Target] {
     [
       .createTarget(
@@ -32,10 +32,10 @@ struct CoreLayer: Layer {
         product: .unitTests,
         sources: ["DIInjector/Test/Sources/**"],
         dependencies: [
-          .target(name: "DIInjector"),
-          
+          .target(name: "DIInjector")
+
         ]
-      )
+      ),
     ]
   }
 }

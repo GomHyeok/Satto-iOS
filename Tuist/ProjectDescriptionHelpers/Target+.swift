@@ -1,8 +1,8 @@
 import ProjectDescription
 
-public extension Target {
-  
-  static func createTarget(
+extension Target {
+
+  public static func createTarget(
     name: String,
     product: Product = .staticFramework,
     bundleId: String? = nil,
@@ -27,6 +27,6 @@ public extension Target {
   }
 }
 
-public extension SourceFilesList {
-  static var empty: Self { [] }
+extension SourceFilesList {
+  public static var empty: Self { [] }
 }

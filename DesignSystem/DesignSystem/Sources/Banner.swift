@@ -10,13 +10,13 @@ import Then
 import UIKit
 
 public final class Banner: UIView {
-  
+
   public enum Style: CaseIterable {
     case notice
     case error
     case success
     case warning
-    
+
     fileprivate var backgroundColor: UIColor {
       switch self {
       case .notice:
@@ -29,7 +29,7 @@ public final class Banner: UIView {
         return STColors.orange9.color
       }
     }
-    
+
     fileprivate var icon: UIImage? {
       switch self {
       case .notice:
@@ -42,7 +42,7 @@ public final class Banner: UIView {
         return STImages.alertCircle.image
       }
     }
-    
+
     fileprivate var iconTintColor: UIColor {
       switch self {
       case .notice:
@@ -56,7 +56,7 @@ public final class Banner: UIView {
       }
     }
   }
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = 8
     $0.alignment = .top
@@ -80,20 +80,20 @@ public final class Banner: UIView {
     $0.textColor = DesignSystemAsset.Colors.gray4.color
     $0.numberOfLines = .zero
   }
-  
+
   public init(style: Style? = nil) {
     super.init(frame: .zero)
     setupUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private func setupUI() {
     layer.cornerRadius = 8
     layer.masksToBounds = true
-    
+
     addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.verticalEdges.equalToSuperview().inset(12)
@@ -106,7 +106,7 @@ public final class Banner: UIView {
       make.height.equalTo(22)
     }
     contentStackView.addArrangedSubview(textStackView)
-    
+
     textStackView.addArrangedSubview(titleLabel)
     titleLabel.snp.makeConstraints { make in
       make.height.greaterThanOrEqualTo(21)
@@ -116,13 +116,13 @@ public final class Banner: UIView {
       make.height.greaterThanOrEqualTo(18)
     }
   }
-  
+
   public func update(title: String, description: String? = nil) {
     titleLabel.styledText = title
     descriptionLabel.styledText = description
     descriptionLabel.isHidden = description == nil
   }
-  
+
   public func update(style: Style) {
     backgroundColor = style.backgroundColor
     iconImageView.image = style.icon?.withRenderingMode(.alwaysTemplate)
@@ -136,7 +136,7 @@ public final class Banner: UIView {
     $0.axis = .vertical
     $0.spacing = 8
   }
-  
+
   Banner.Style.allCases.forEach {
     let titleOnlyBanner = Banner()
     titleOnlyBanner.update(style: $0)

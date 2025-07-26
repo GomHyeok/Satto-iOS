@@ -9,7 +9,7 @@ import Foundation
 import SwiftRichString
 
 public struct Typography {
-  
+
   // MARK: - Display
   public static let Display_28_B = Style {
     $0.font = DesignSystemFontFamily.Suit.bold.font(size: 28)
@@ -19,7 +19,7 @@ public struct Typography {
     $0.font = DesignSystemFontFamily.Suit.bold.font(size: 26)
     $0.kerning = .point(0.39)
   }
-  
+
   // MARK: - Heading
   public static let Heading_24_B = Style {
     $0.font = DesignSystemFontFamily.Suit.bold.font(size: 24)
@@ -53,7 +53,7 @@ public struct Typography {
     $0.font = DesignSystemFontFamily.Suit.regular.font(size: 20)
     $0.kerning = .point(0.3)
   }
-  
+
   // MARK: - Body
   public static let Body_18_B = Style {
     $0.font = DesignSystemFontFamily.Suit.bold.font(size: 18)
@@ -103,7 +103,7 @@ public struct Typography {
     $0.font = DesignSystemFontFamily.Suit.regular.font(size: 14)
     $0.kerning = .point(0.21)
   }
-  
+
   // MARK: - Caption
   public static let Caption_12_B = Style {
     $0.font = DesignSystemFontFamily.Suit.bold.font(size: 12)
@@ -123,8 +123,8 @@ public struct Typography {
   }
 }
 
-public extension Style {
-  func lineHeightMultiple(_ value: CGFloat) -> Style {
+extension Style {
+  public func lineHeightMultiple(_ value: CGFloat) -> Style {
     paragraph.lineHeightMultiple = value
     return self
   }
