@@ -14,6 +14,6 @@ public protocol BaseTargetType<Response>: TargetType {
 
 extension BaseTargetType {
   public var baseURL: URL {
-    return URL(string: "https://satto.io.kr")! // TODO: 수정 필요
+    return URL(string: "https://satto.io.kr")!  // TODO: 수정 필요
   }
 }

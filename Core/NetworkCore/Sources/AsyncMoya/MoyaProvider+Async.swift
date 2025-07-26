@@ -4,7 +4,7 @@ import Foundation
 import Moya
 
 extension MoyaProvider {
-  
+
   func request(_ target: Target) async throws -> Response {
     let asyncRequestWrapper = AsyncMoyaRequestWrapper { [weak self] continuation in
       guard let self else {
@@ -20,13 +20,15 @@ extension MoyaProvider {
         }
       }
     }
-    
-    return try await withTaskCancellationHandler(operation: {
-      try await withCheckedThrowingContinuation({ continuation in
-        asyncRequestWrapper.perform(continuation: continuation)
+
+    return try await withTaskCancellationHandler(
+      operation: {
+        try await withCheckedThrowingContinuation({ continuation in
+          asyncRequestWrapper.perform(continuation: continuation)
+        })
+      },
+      onCancel: {
+        asyncRequestWrapper.cancel()
       })
-    }, onCancel: {
-      asyncRequestWrapper.cancel()
-    })
   }
 }

@@ -9,14 +9,14 @@ import Foundation
 import Moya
 
 public final class NetworkProvider {
-  
+
   public static let shared: NetworkProvider = .init(internalProvider: MoyaProvider<MultiTarget>())
   private let internalProvider: MoyaProvider<MultiTarget>
-  
+
   public init(internalProvider: MoyaProvider<MultiTarget>) {
     self.internalProvider = internalProvider
   }
-  
+
   public func request<T: BaseTargetType>(target: T) async throws -> T.Response {
     // TODO: Reachability 확인 필요할지
     do {
@@ -27,7 +27,7 @@ public final class NetworkProvider {
       throw mapToNetworkError(error)
     }
   }
-  
+
   private func mapToNetworkError(_ error: Error) -> NetworkError {
     if let moyaError = error as? MoyaError {
       switch moyaError {
