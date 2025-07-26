@@ -9,12 +9,15 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Select Xcode 16.4
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+        
       - name: Setup mise & install Tuist
         uses: jdx/mise-action@v2
 
@@ -24,15 +27,7 @@ jobs:
           TUIST_VERSION=$(grep '^tuist' mise.toml | sed 's/.*= "\(.*\)"/\1/')
           echo "TUIST_VERSION=$TUIST_VERSION" >> $GITHUB_ENV
 
-      - name: Cache Tuist
-        uses: actions/cache@v4
-        id: cache-tuist
-        with:
-          path: ~/.local/share/mise/installs/tuist/${{ env.TUIST_VERSION }}
-          key: tuist-${{ runner.os }}-${{ env.TUIST_VERSION }}
-
-      - name: Install Tuist (if not cached)
-        if: steps.cache-tuist.outputs.cache-hit != 'true'
+      - name: Install Tuist
         run: mise install tuist@${{ env.TUIST_VERSION }}
 
       - name: Activate Tuist
@@ -40,20 +35,11 @@ jobs:
           mise use -g tuist@${{ env.TUIST_VERSION }}
           tuist version
 
-      - name: Detect Tuist Project Directory
-        id: detect-tuist-dir
-        run: |
-          echo "Searching for Project.swift..."
-          TUIST_DIR=$(find . -name "Project.swift" -exec dirname {} \; | head -n 1)
-          echo "Found Tuist directory: $TUIST_DIR"
-          echo "tuist_path=$TUIST_DIR" >> $GITHUB_OUTPUT
-
       - name: Install Dependencies with Tuist
-        working-directory: ${{ steps.detect-tuist-dir.outputs.tuist_path }}
         run: |
           tuist install
 
-      - name: Run Tests
-        working-directory: ${{ steps.detect-tuist-dir.outputs.tuist_path }}
+      - name: Build
         run: |
+          tuist generate
           tuist build
