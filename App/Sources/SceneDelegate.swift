@@ -1,4 +1,5 @@
 import UIKit
+import Onboarding
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -12,7 +13,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window = UIWindow(windowScene: windowScene)
     window?.windowScene = windowScene
 
-    let viewController = ViewController()
+    // TODO: Splash로 이동 or Home으로 이동 선택 로직 필요
+    let viewController = LaunchScreenViewController()
 
     window?.rootViewController = viewController
     window?.makeKeyAndVisible()
