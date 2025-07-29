@@ -18,7 +18,13 @@ struct FeatureLayer: Layer {
           .target(name: "Fortune"),
           .project(target: "CommonLayer", path: "../Common"),
           .project(target : "DesignSystem", path : "../DesignSystem")
-        ]
+        ],
+        settings: .settings(
+          base: [
+            "DEFINES_MODULE": "NO",
+            "SWIFT_INSTALL_OBJC_HEADER": "NO",
+          ]
+        )
       ),
       .createTarget(
         name: "Onboarding",
@@ -27,7 +33,12 @@ struct FeatureLayer: Layer {
         ]
       ),
       .createTarget(name: "Home"),
-      .createTarget(name: "Setting"),
+      .createTarget(
+        name: "Setting",
+        dependencies: [
+          .project(target: "CommonLayer", path: "../Common"),
+        ]
+      ),
       .createTarget(name: "History"),
       .createTarget(name: "Fortune"),
     ]

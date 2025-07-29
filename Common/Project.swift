@@ -16,7 +16,13 @@ struct CommonLayer: Layer {
           .target(name: "Lib"),
           .project(target: "CoreLayer", path: "../Core"),
           .project(target: "DesignSystem", path: "../DesignSystem"),
-        ]
+        ],
+        settings: .settings(
+          base: [
+            "DEFINES_MODULE": "NO",
+            "SWIFT_INSTALL_OBJC_HEADER": "NO",
+          ]
+        )
       ),
       .createTarget(name: "Auth"),
       .createTarget(name: "Constant"),

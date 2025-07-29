@@ -14,7 +14,13 @@ struct CoreLayer: Layer {
           .target(name: "NetworkCore"),
           .target(name: "DIInjector"),
           .target(name: "Extension")
-        ]
+        ],
+        settings: .settings(
+          base: [
+            "DEFINES_MODULE": "NO",
+            "SWIFT_INSTALL_OBJC_HEADER": "NO",
+          ]
+        )
       ),
       .createTarget(
         name: "NetworkCore",

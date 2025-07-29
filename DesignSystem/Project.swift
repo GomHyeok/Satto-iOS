@@ -14,7 +14,13 @@ struct DesignSystemLayer: Layer {
         dependencies: [
           .external(name: "SwiftRichString"),
           .external(name: "Then"),
-        ]
+        ],
+        settings: .settings(
+          base: [
+            "DEFINES_MODULE": "NO",
+            "SWIFT_INSTALL_OBJC_HEADER": "NO",
+          ]
+        )
       ),
       .createTarget(
         name: "DesignSystemSample",
