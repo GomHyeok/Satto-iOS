@@ -197,7 +197,7 @@ extension OnboardingViewController {
         genderSelectionView.delegate = self
         dateTypeChipsView.delegate = self
         birthTextField.delegate  = self
-        bornTimeSetButton.delegate = self
+//        bornTimeSetButton.delegate = self
     }
     
     private func setupBind() {
