@@ -14,20 +14,29 @@ import SnapKit
 import Then
 
 public final class OnboardingViewController: UIViewController {
-    private var store: [AnyCancellable] = []
+    private var store: Set<AnyCancellable> = []
+    
+    private let viewModel : OnboardingViewModelProtocol
+    
+    private lazy var scrollView : UIScrollView = UIScrollView().then {
+        $0.showsVerticalScrollIndicator = false
+        $0.keyboardDismissMode = .interactive
+    }
+    
+    private lazy var contentView : UIView = UIView()
     
     private lazy var headingLabel : UILabel = UILabel().then {
-        var stlye = Typography.Heading_22_B
-        stlye.color = DesignSystemAsset.Colors.gray1.color
-        $0.attributedText = "정보를 입력해주세요".set(
-            style: stlye)
+        var style = Typography.Heading_22_B
+        style.color = DesignSystemAsset.Colors.gray1.color
+        $0.style = style
+        $0.styledText = "정보를 입력해주세요"
     }
     
     private lazy var subLabel : UILabel = UILabel().then {
-        var stlye = Typography.Body_14_M
-        stlye.color = DesignSystemAsset.Colors.gray3.color
-        $0.attributedText = "회원님의 사주를 기반으로 로또 번호를 추천해 드릴게요".set(
-            style: Typography.Body_14_M)
+        var style = Typography.Body_14_M
+        style.color = DesignSystemAsset.Colors.gray3.color
+        $0.style = style
+        $0.styledText = "회원님의 사주를 기반으로 로또 번호를 추천해 드릴게요"
     }
     
     private lazy var onBoardingStack : UIStackView = UIStackView().then {
@@ -39,10 +48,9 @@ public final class OnboardingViewController: UIViewController {
     private lazy var nextButton : UIButton = UIButton().then {
         var style = Typography.Body_18_B
         style.color = DesignSystemAsset.Colors.white.color
-        var styled = "다음".set(style: style)
-        
+        let styled = "다음".set(style: style)
         $0.setAttributedTitle(styled, for: .normal)
-        $0.backgroundColor = DesignSystemAsset.Colors.primary7.color
+        $0.backgroundColor = STColors.primary7.color
         $0.layer.cornerRadius = 8
         $0.isEnabled = false
     }
@@ -55,39 +63,42 @@ public final class OnboardingViewController: UIViewController {
     private lazy var nameLabel : UILabel = UILabel().then {
         var style = Typography.Body_16_B
         style.color = DesignSystemAsset.Colors.gray1.color
-        $0.attributedText = "이름".set(style: style)
+        $0.style = style
+        $0.styledText = "이름"
     }
     
     private lazy var nameTextField : UITextField = UITextField().then {
         var style = Typography.Body_14_M
-        style.color = DesignSystemAsset.Colors.gray5.color
+        style.color = STColors.gray5.color
         $0.attributedPlaceholder = "김사또".set(style: style)
         $0.font = style.font?.font(size: 14)
-        $0.textColor = DesignSystemAsset.Colors.black.color
+        $0.textColor = STColors.black.color
         $0.layer.borderWidth = 1
-        $0.layer.borderColor = DesignSystemAsset.Colors.primary2.color.cgColor
+        $0.layer.borderColor = STColors.primary2.color.cgColor
         $0.layer.cornerRadius = 6
         $0.layer.masksToBounds = true
         $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 14, height: 0))
         $0.leftViewMode = .always
-        $0.tag = 101
     }
     
     private lazy var nameErrorLabel : UILabel = UILabel().then {
         var style = Typography.Caption_12_M
         style.color = DesignSystemAsset.Colors.red3.color
-        $0.attributedText = "이름은 최대 6글자까지 입력 가능해요".set(style: style)
+        $0.style = style
+        $0.styledText = "이름은 최대 6글짜까지 입력 가능해요"
     }
     
     private lazy var genderStack : UIStackView = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = 8
+        $0.alpha = 0.0
     }
     
     private lazy var genderLabel : UILabel = UILabel().then {
         var style = Typography.Body_16_B
         style.color = DesignSystemAsset.Colors.gray1.color
-        $0.attributedText = "성별".set(style: style)
+        $0.style = style
+        $0.styledText = "성별"
     }
     
     private lazy var genderSelectionView : GenderSelectionView = GenderSelectionView()
@@ -95,12 +106,14 @@ public final class OnboardingViewController: UIViewController {
     private lazy var birthStack : UIStackView = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = 8
+        $0.alpha = 0.0
     }
     
     private lazy var birthLabel : UILabel = UILabel().then {
         var style = Typography.Body_16_B
         style.color = DesignSystemAsset.Colors.gray1.color
-        $0.attributedText = "생년월일".set(style: style)
+        $0.style = style
+        $0.styledText = "생년월일"
     }
     
     private lazy var birthTextField : UITextField = UITextField().then {
@@ -116,34 +129,42 @@ public final class OnboardingViewController: UIViewController {
         $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 14, height: 0))
         $0.leftViewMode = .always
         $0.keyboardType = .numberPad
-        $0.tag = 102
     }
     
-    private lazy var dateTypeChipsView : DateTypeChipGroupView = DateTypeChipGroupView()
+//    private lazy var dateTypeChipsView : DateTypeChipGroupView = DateTypeChipGroupView()
 
     private lazy var birthdayErrorLabel : UILabel = UILabel().then {
         var style = Typography.Caption_12_M
         style.color = STColors.red3.color
-        $0.attributedText = "올바른 형식으로 입력해 주세요.".set(style: style)
+        $0.style = style
+        $0.styledText = "올바른 형식으로 입력해 주세요."
     }
     
     private lazy var bornTimeStack : UIStackView = UIStackView().then {
         $0.axis = .vertical
         $0.spacing = 8
+        $0.alpha = 0.0
     }
     
     private lazy var bornTimeLabel : UILabel = UILabel().then {
         var style = Typography.Body_16_B
         style.color = STColors.gray1.color
-        $0.attributedText = "태어난 시".set(style: style)
+        $0.style = style
+        $0.styledText = "태어난 시"
     }
     
     private lazy var bornTimeSetButton : PickerButton = PickerButton().then {
         $0.placeholder = "10:00~11:00"
         $0.addTarget(self, action: #selector(bornTimeInputButtonTapped), for: .touchUpInside)
     }
+    private lazy var dontKnowButton : CheckBox = CheckBox().then {
+        $0.title = "모르겠어요"
+        $0.isSelected = false
+        $0.addTarget(self, action: #selector(dontKonwButtonTapped), for: .touchUpInside)
+    }
     
-    public init() {
+    public init(viewModel : OnboardingViewModelProtocol) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -165,6 +186,12 @@ public final class OnboardingViewController: UIViewController {
         setupHierarchy()
         setupLayout()
         setupDelegate()
+        setupKeyboardObservers()
+    }
+    
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardObservers()
     }
 }
 
@@ -173,7 +200,11 @@ extension OnboardingViewController {
     private func setupHierarchy() {
         self.view.addSubview(headingLabel)
         self.view.addSubview(subLabel)
-        self.view.addSubview(onBoardingStack)
+
+        self.view.addSubview(scrollView)
+        self.scrollView.addSubview(contentView)
+        self.contentView.addSubview(onBoardingStack)
+        //self.view.addSubview(onBoardingStack)
         self.view.addSubview(nextButton)
         
         self.onBoardingStack.addArrangedSubview(nameStack)
@@ -186,22 +217,106 @@ extension OnboardingViewController {
         
         self.birthStack.addArrangedSubview(birthLabel)
         self.birthStack.addArrangedSubview(birthTextField)
-        self.birthStack.addArrangedSubview(dateTypeChipsView)
+        //self.birthStack.addArrangedSubview(dateTypeChipsView)
         
         self.bornTimeStack.addArrangedSubview(bornTimeLabel)
         self.bornTimeStack.addArrangedSubview(bornTimeSetButton)
+        self.bornTimeStack.addArrangedSubview(dontKnowButton)
     }
     
     private func setupDelegate() {
         nameTextField.delegate = self
         genderSelectionView.delegate = self
-        dateTypeChipsView.delegate = self
+        //dateTypeChipsView.delegate = self
         birthTextField.delegate  = self
-//        bornTimeSetButton.delegate = self
     }
     
     private func setupBind() {
+        viewModel.isNextButtonEnabled
+            .receive(on: RunLoop.main)
+            .sink{[weak self] enable in
+                guard let self = self else { return }
+                self.nextButton.isEnabled = enable
+                
+                if enable { self.nextButton.backgroundColor = STColors.primary2.color }
+                else { self.nextButton.backgroundColor = STColors.primary7.color }
+            }
+            .store(in: &store)
         
+        viewModel.showNameError
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink{[weak self] isValid in
+                guard let self = self else { return }
+                
+                if !isValid {
+                    if !nameStack.arrangedSubviews.contains(nameErrorLabel) {
+                        nameStack.addArrangedSubview(nameErrorLabel)
+                        nameStack.setCustomSpacing(6, after: nameTextField)
+                        nameTextField.layer.borderColor = STColors.red3.color.cgColor
+                        nextButton.isEnabled = false
+                    }
+                } else {
+                    if nameStack.arrangedSubviews.contains(nameErrorLabel) {
+                        nameStack.removeArrangedSubview(nameErrorLabel)
+                        nameTextField.layer.borderColor = STColors.primary2.color.cgColor
+                        nameErrorLabel.removeFromSuperview()
+                    }
+                }
+                
+                self.nameStack.layoutIfNeeded()
+            }
+            .store(in: &store)
+        
+        viewModel.showBirthError
+            .dropFirst()
+            .receive(on: RunLoop.main)
+            .sink{ [weak self] isValid in
+                guard let self = self else { return }
+                if !isValid {
+                    birthTextField.layer.borderColor = STColors.red3.color.cgColor
+                    if !birthStack.arrangedSubviews.contains(birthdayErrorLabel) {
+                        birthStack.addArrangedSubview(birthdayErrorLabel)
+                        birthStack.setCustomSpacing(6, after: birthTextField)
+                    }
+                } else {
+                    birthTextField.resignFirstResponder()
+                    if !onBoardingStack.contains(bornTimeStack) {
+                        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+                            self.onBoardingStack.insertArrangedSubview(self.bornTimeStack, at: 0)
+                            
+                            self.bornTimeStack.snp.makeConstraints {
+                                $0.leading.trailing.equalToSuperview()
+                            }
+                            
+                            self.bornTimeStack.alpha = 1.0
+                            self.onBoardingStack.layoutIfNeeded()
+                        }
+                    }
+                    if birthStack.arrangedSubviews.contains(birthdayErrorLabel) {
+                        birthStack.removeArrangedSubview(birthdayErrorLabel)
+                        birthdayErrorLabel.removeFromSuperview()
+                    }
+                }
+                
+                self.birthStack.layoutIfNeeded()
+            }
+            .store(in: &store)
+        
+        nextButton.tapPublisher
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                
+                let agreementVC = AgreementViewController()
+                agreementVC.delegate = self
+                agreementVC.modalPresentationStyle = .overFullScreen
+                agreementVC.modalTransitionStyle = .crossDissolve
+                self.present(agreementVC, animated: true, completion: nil)
+                
+                // TODO: Router 구현 후 로직 이동 필요
+                
+            }
+            .store(in: &store)
     }
     
     private func setupLayout() {
@@ -224,8 +339,20 @@ extension OnboardingViewController {
             $0.trailing.equalToSuperview().offset(-24)
         }
         
-        onBoardingStack.snp.makeConstraints {
+        scrollView.snp.makeConstraints {
             $0.top.equalTo(self.subLabel.snp.bottom).offset(28)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(self.nextButton.snp.top).offset(-28)
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
+        }
+        
+        onBoardingStack.snp.makeConstraints {
+            //$0.top.bottom.equalTo(self.subLabel.snp.bottom).offset(28)
+            $0.top.bottom.equalToSuperview()
             $0.leading.equalToSuperview().offset(24)
             $0.trailing.equalToSuperview().offset(-24)
         }
@@ -251,81 +378,72 @@ extension OnboardingViewController {
             $0.leading.trailing.equalToSuperview()
         }
         
-        dateTypeChipsView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
-        }
+//        dateTypeChipsView.snp.makeConstraints {
+//            $0.leading.trailing.equalToSuperview()
+//        }
         
         bornTimeSetButton.snp.makeConstraints {
             $0.height.equalTo(43)
             $0.leading.trailing.equalToSuperview()
         }
+        
+        bornTimeStack.setCustomSpacing(12, after: bornTimeSetButton)
+    }
+    
+    private func setupKeyboardObservers() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
+    }
+    
+    private func removeKeyboardObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        
+        let contentInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: keyboardFrame.height, right: 0.0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+        
+        if let activeTextField = UIResponder.currentFirstResponder as? UITextField {
+            let textFieldRect = activeTextField.convert(activeTextField.bounds, to: scrollView)
+            scrollView.scrollRectToVisible(textFieldRect, animated: true)
+        }
+    }
+    
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
     }
 }
 
 // MARK: functions
 extension OnboardingViewController {
-    func checkFormat(text : String) -> Bool {
-        let components = text.split(separator: "-").compactMap{ Int($0) }
-        let calendar = Calendar.current
-        
-        if components.count == 3 {
-            let year = components[0]
-            let month = components[1]
-            let day = components[2]
-            
-            // 1. 최소 연도는 1900년
-            if year < 1900 { return false }
-            
-            // 2. 존재하지 않는 날짜 불가 (윤년 고려)
-            var dateComponents = DateComponents()
-            dateComponents.year = year
-            dateComponents.month = month
-            dateComponents.day = day
-            
-            if let date = calendar.date(from: dateComponents) {
-                if date > Date() { return false }
-                
-                let acturalComponents = calendar.dateComponents([.year, .month, .day], from: date)
-                
-                if acturalComponents.year != year || acturalComponents.month != month || acturalComponents.day != day { return false }
-            } else {
-                return false
-            }
-        }
-        return true
-    }
-    
-    private func updateBirthdayErrorLabel(isValid: Bool) {
-        if isValid {
-            birthTextField.resignFirstResponder()
-            if !onBoardingStack.contains(bornTimeStack) {
-                onBoardingStack.insertArrangedSubview(bornTimeStack, at: 0)
-                bornTimeStack.snp.makeConstraints {
-                    $0.leading.trailing.equalToSuperview()
-                }
-            }
-            if birthStack.arrangedSubviews.contains(birthdayErrorLabel) {
-                birthStack.removeArrangedSubview(birthdayErrorLabel)
-                birthdayErrorLabel.removeFromSuperview()
-            }
-        } else {
-            birthTextField.layer.borderColor = STColors.red3.color.cgColor
-            if !birthStack.arrangedSubviews.contains(birthdayErrorLabel) {
-                birthStack.addArrangedSubview(birthdayErrorLabel)
-                birthStack.setCustomSpacing(6, after: birthTextField)
-            }
-        }
-    }
-    
     @objc private func bornTimeInputButtonTapped() {
         // 버튼이 탭되었을 때 활성 상태로 변경
-        if let pickerButton = bornTimeSetButton as? PickerButton {
-            pickerButton.isActive = true
-        }
+        bornTimeSetButton.isActive = true
         
         let bottomSheetVC = TimePickerBottomSheetViewController()
+        bottomSheetVC.delegate = self
         bottomSheetVC.modalPresentationStyle = .overFullScreen
         present(bottomSheetVC, animated: true, completion: nil)
+    }
+    
+    @objc private func dontKonwButtonTapped() {
+        viewModel.inputStream.send(.bornTimeSelected(bornTime: .dontKnow(isSelected: self.dontKnowButton.isSelected)))
+        bornTimeSetButton.isEnabled.toggle()
     }
 }
 
@@ -349,19 +467,9 @@ extension OnboardingViewController : UITextFieldDelegate {
         let nsCurrentText = currentText as NSString
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         
-        if textField == self.nameTextField {
-            
-            if updatedText.count > 6 {
-                nameStack.addArrangedSubview(nameErrorLabel)
-                nameStack.setCustomSpacing(6, after: nameTextField)
-                nameTextField.layer.borderColor = STColors.red3.color.cgColor
-                nextButton.isEnabled = false
-            } else {
-                nameStack.removeArrangedSubview(nameErrorLabel)
-                nameTextField.layer.borderColor = STColors.primary2.color.cgColor
-                nameErrorLabel.removeFromSuperview()
-            }
-        } else if textField == self.birthTextField {
+        if textField === self.nameTextField {
+            viewModel.inputStream.send(.checkNameFormat(name: updatedText))
+        } else if textField === self.birthTextField {
             if updatedText.count > 10 {
                 return false
             }
@@ -387,7 +495,7 @@ extension OnboardingViewController : UITextFieldDelegate {
                 return false
             } else if updatedText.count == 10 {
                 textField.text = updatedText
-                updateBirthdayErrorLabel(isValid: checkFormat(text: updatedText))
+                viewModel.inputStream.send(.checkBirthFormat(birth: updatedText))
                 return false
             }
         }
@@ -396,7 +504,7 @@ extension OnboardingViewController : UITextFieldDelegate {
     }
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == nameTextField {
+        if textField === nameTextField {
             guard let name = textField.text, !name.isEmpty else {
                 return false
             }
@@ -404,20 +512,14 @@ extension OnboardingViewController : UITextFieldDelegate {
             textField.resignFirstResponder()
             
             if !onBoardingStack.arrangedSubviews.contains(genderStack) {
-                onBoardingStack.insertArrangedSubview(genderStack, at: 0)
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+                    self.onBoardingStack.insertArrangedSubview(self.genderStack, at: 0)
+                    self.genderStack.alpha = 1.0
+                    self.onBoardingStack.layoutIfNeeded()
+                }
             }
         }
         
-        return true
-    }
-    
-    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-//        if textField == bornTimeTextField {
-//            let bottomSheetVC = TimePickerBottomSheetViewController()
-//            bottomSheetVC.modalPresentationStyle = .overFullScreen
-//            present(bottomSheetVC, animated: true, completion: nil)
-//            return false
-//        }
         return true
     }
 }
@@ -426,9 +528,22 @@ extension OnboardingViewController : UITextFieldDelegate {
 extension OnboardingViewController : GenderSelectionViewDelegate {
     func genderSelectionView(_ view: GenderSelectionView, didSelectGender gender: String?) {
         guard let gender = gender else { return }
+        
+        var genderType : GenderType
+        
+        if gender == "남성" { genderType = .male }
+        else {genderType = .female}
+        
+        viewModel.inputStream.send(.genderSelected(isSelected: genderType))
+        
         if !onBoardingStack.arrangedSubviews.contains(birthStack) {
-            onBoardingStack.insertArrangedSubview(birthStack, at: 0)
-            birthTextField.becomeFirstResponder()
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+                self.onBoardingStack.insertArrangedSubview(self.birthStack, at: 0)
+                self.birthStack.alpha = 1.0
+                self.onBoardingStack.layoutIfNeeded()
+            } completion: { _ in
+                self.birthTextField.becomeFirstResponder() // 애니메이션 완료 후 포커스
+            }
         }
         
         self.birthStack.snp.makeConstraints {
@@ -438,18 +553,42 @@ extension OnboardingViewController : GenderSelectionViewDelegate {
 }
 
 // MARK: DateTypeChipGroupDelegate
-extension OnboardingViewController : DateTypeChipGroupViewDelegate {
-    func dateTypeChipGroupView(_ view: DateTypeChipGroupView, didSelectDateType dateType: String?) {
-        guard let dateType = dateType else { return }
-    }
-}
+//extension OnboardingViewController : DateTypeChipGroupViewDelegate {
+//    func dateTypeChipGroupView(_ view: DateTypeChipGroupView, didSelectDateType dateType: String?) {
+//        guard let dateType = dateType else { return }
+//    }
+//}
 
 extension OnboardingViewController : TimePickerBottomSheetDelegate {
     func timePickerBottomSheet(_ controller: TimePickerBottomSheetViewController, didSelectTimeRange timeRange: String?) {
         bornTimeSetButton.selectedItem = timeRange
+        bornTimeSetButton.isActive = false
+        
+        guard let timeRange = timeRange else { return }
+        viewModel.inputStream.send(.bornTimeSelected(bornTime: .time(time: timeRange)))
     }
     
     func timePickerBottomSheetDidCancel(_ controller: TimePickerBottomSheetViewController) {
-        bornTimeSetButton.layer.borderColor = STColors.gray7.color.cgColor
+        bornTimeSetButton.isActive = false
+    }
+}
+
+extension OnboardingViewController : AgreementViewDelegate {
+    func agreementViewDidComplete() {
+        viewModel.inputStream.send(.completeButtonTap)
+    }
+}
+
+extension UIResponder {
+    private static weak var _currentFirstResponder: UIResponder? = nil
+    
+    static var currentFirstResponder: UIResponder? {
+        _currentFirstResponder = nil
+        UIApplication.shared.sendAction(#selector(findFirstResponder(sender:)), to: nil, from: nil, for: nil)
+        return _currentFirstResponder
+    }
+    
+    @objc private func findFirstResponder(sender: Any) {
+        UIResponder._currentFirstResponder = self
     }
 }

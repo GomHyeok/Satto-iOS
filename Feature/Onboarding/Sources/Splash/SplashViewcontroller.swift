@@ -64,7 +64,8 @@ extension SplashViewcontroller {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.viewModel.inputStream.send(.navigateToOnboarding)
-                let viewController = OnboardingViewController()
+                let viewModel = OnboardingViewModel()
+                let viewController = OnboardingViewController(viewModel: viewModel)
                 self.navigationController?.pushViewController(viewController, animated: true)
             }
             .store(in: &store)

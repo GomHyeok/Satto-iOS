@@ -17,6 +17,7 @@ class TimeRangeCell: UICollectionViewCell {
     private let timeLabel = UILabel().then {
         var style = Typography.Body_16_B
         style.color = STColors.gray5.color
+        $0.style = style
         $0.textAlignment = .center
     }
 

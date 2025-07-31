@@ -15,7 +15,8 @@ class PickerButton : UIButton {
     private let placeholderLabel = UILabel().then {
         var style = Typography.Body_14_M
         style.color = STColors.gray5.color
-        $0.attributedText = "Placeholder".set(style: style)
+        $0.style = style
+        $0.styledText = "PlaceHolder"
         $0.isUserInteractionEnabled = false
     }
 
@@ -46,8 +47,7 @@ class PickerButton : UIButton {
 
     override var isEnabled: Bool {
         didSet {
-            alpha = isEnabled ? 1.0 : 0.5
-            layer.borderColor = isEnabled ? STColors.primary2.color.cgColor : STColors.gray7.color.cgColor
+            updateBorderColor()
         }
     }
 
@@ -63,7 +63,7 @@ class PickerButton : UIButton {
 
     // MARK: - Setup
     private func setupView() {
-        self.backgroundColor = .clear // 배경 투명
+        self.backgroundColor = STColors.white.color // 배경 투명
         self.layer.borderWidth = 1
         self.layer.borderColor = STColors.gray5.color.cgColor
         self.layer.cornerRadius = 6
@@ -109,26 +109,24 @@ class PickerButton : UIButton {
     }
     
     private func updateBorderColor() {
-        if isActive {
-            self.layer.borderColor = STColors.primary2.color.cgColor
-            self.dropdownImageView.transform = CGAffineTransform(rotationAngle: .pi)
-            self.backgroundColor = .clear
+        if isEnabled {
+            self.backgroundColor = STColors.white.color
+            updateText()
+            if isActive {
+                self.layer.borderColor = STColors.primary2.color.cgColor
+                self.dropdownImageView.transform = CGAffineTransform(rotationAngle: .pi)
+                self.backgroundColor = .clear
+            } else {
+                self.layer.borderColor = STColors.gray7.color.cgColor
+                self.dropdownImageView.transform = .identity
+                self.backgroundColor = .clear
+            }
         } else {
-            self.layer.borderColor = STColors.gray7.color.cgColor
-            self.dropdownImageView.transform = CGAffineTransform(rotationAngle: .pi)
-            self.backgroundColor = .clear
-        }
-        
-        if !isEnabled {
-            self.layer.borderColor = STColors.gray8.color.cgColor
             self.backgroundColor = STColors.gray8.color
             
             let style = Typography.Body_14_M
             style.color = STColors.gray5.color
             placeholderLabel.attributedText = "입력하지 않아도 괜찮아요".set(style: style)
-        } else {
-            self.backgroundColor = STColors.gray7.color
-            updateText()
         }
     }
 }

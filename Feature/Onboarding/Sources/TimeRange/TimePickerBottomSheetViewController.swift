@@ -38,7 +38,8 @@ class TimePickerBottomSheetViewController: UIViewController {
     private let titleLabel = UILabel().then {
         var style = Typography.Body_18_B
         style.color = STColors.gray1.color
-        $0.attributedText = "태어난 시".set(style: style)
+        $0.style = style
+        $0.styledText = "태어난 시"
         $0.textAlignment = .center
     }
     

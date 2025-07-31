@@ -36,7 +36,11 @@ class RadioButtonView: UIView {
     }
 
     // 라디오 버튼 옆의 텍스트 레이블
-    private let titleLabel = UILabel()
+    private let titleLabel = UILabel().then {
+        let style = Typography.Body_14_M
+        style.color = DesignSystemAsset.Colors.black.color
+        $0.style = style
+    }
 
     // 라디오 버튼의 선택 상태 (true: 선택됨, false: 선택 안 됨)
     var isSelected: Bool = false {
@@ -54,10 +58,9 @@ class RadioButtonView: UIView {
 
     // 라디오 버튼에 표시될 텍스트
     var title: String? {
-        didSet {
-            let style = Typography.Body_14_M
-            style.color = DesignSystemAsset.Colors.black.color
-            titleLabel.attributedText = title?.set(style: style)
+        get { titleLabel.text }
+        set {
+            titleLabel.styledText = newValue
         }
     }
 
@@ -104,7 +107,6 @@ class RadioButtonView: UIView {
 
     // 탭 제스처 처리
     @objc private func handleTap() {
-        // 델리게이트에게 자신이 선택되었음을 알림
         delegate?.radioButtonView(self, didSelect: true)
     }
 }

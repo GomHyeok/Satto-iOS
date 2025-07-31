@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "checkGray.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -6,78 +6,127 @@
 //
 
 import UIKit
+import DesignSystem
+
 import SnapKit
 import Then
-import DesignSystem // DesignSystem 모듈에 접근할 수 있다고 가정
 
-
-class CheckBoxView : UIView {
+class CheckBox: UIControl {
 
     private let checkboxImageView = UIImageView().then {
-        // 이미지 에셋 이름을 여기에 사용합니다.
-        // 예를 들어, 프로젝트의 Assets.xcassets에 'checkbox_normal'과 'checkbox_selected' 이미지가 있다고 가정합니다.
-        $0.image = UIImage(named: "checkbox_normal") // 기본 이미지
-        $0.contentMode = .scaleAspectFit
-        $0.tintColor = DesignSystemAsset.Colors.gray3.color // 체크박스 색상 (시스템 이미지 사용 시)
+        $0.contentMode = .center
+        $0.backgroundColor = STColors.white.color
+        
+        $0.layer.borderColor = STColors.gray7.color.cgColor
+        $0.layer.borderWidth = 1.5
+        $0.layer.cornerRadius = 6
+        
+        $0.image = STImages.check.image
+        $0.isUserInteractionEnabled = false
     }
 
     private let titleLabel = UILabel().then {
-        $0.text = "몰랐어요"
-        $0.font = Typography.Body_14_M.font?.font(size: 14) // 폰트 스타일 조정
-        $0.textColor = DesignSystemAsset.Colors.gray3.color
+        var style = Typography.Body_16_M
+        style.color = STColors.gray1.color
+        $0.style = style
+        $0.styledText = "check box"
+        $0.isUserInteractionEnabled = false
     }
 
-    var isSelected: Bool = false {
+    // MARK: - 공개 속성
+    public var title: String? {
+        get { titleLabel.text }
+        set {
+            titleLabel.styledText = newValue
+            
+            updateTitle()
+        }
+    }
+
+    override var isSelected: Bool {
         didSet {
             updateAppearance()
         }
     }
 
+    override var isEnabled: Bool {
+        didSet {
+            updateAppearance()
+        }
+    }
+
+    // MARK: - 초기화
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
-        setupGesture()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+      
+    // MARK: - 설정
     private func setupView() {
+        self.backgroundColor = .clear
+
         addSubview(checkboxImageView)
         addSubview(titleLabel)
 
-        checkboxImageView.snp.makeConstraints { make in
-            make.leading.centerY.equalToSuperview()
-            make.width.height.equalTo(20) // 체크박스 이미지 크기 (조정 가능)
+        checkboxImageView.snp.makeConstraints {
+            $0.leading.centerY.equalToSuperview()
+            $0.width.height.equalTo(20)
         }
 
-        titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(checkboxImageView.snp.trailing).offset(4) // 이미지와 텍스트 간격
-            make.centerY.equalToSuperview()
-            make.trailing.lessThanOrEqualToSuperview() // 오토레이아웃 경고 방지
+        titleLabel.snp.makeConstraints {
+            $0.leading.equalTo(checkboxImageView.snp.trailing).offset(6)
+            $0.centerY.equalToSuperview()
+            $0.trailing.lessThanOrEqualToSuperview()
         }
+        
+        // 콘텐츠에 따라 최소 높이 설정
+        self.snp.makeConstraints {
+            $0.height.greaterThanOrEqualTo(24)
+        }
+
+        updateTitle()
     }
 
-    private func setupGesture() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        addGestureRecognizer(tapGesture)
-    }
-
+    // MARK: - UI 업데이트
     private func updateAppearance() {
-        if isSelected {
-            // 선택된 이미지: 예시로 `checkbox_selected` 에셋 이름 사용
-            checkboxImageView.image = UIImage(named: "checkbox_selected") ?? UIImage(systemName: "checkmark.square.fill")
-            // System Image를 사용한다면 틴트 컬러 변경도 가능합니다.
-            checkboxImageView.tintColor = DesignSystemAsset.Colors.primary7.color // 선택 시 색상
+        if isEnabled {
+            checkboxImageView.image = STImages.check.image
+            if isSelected {
+                checkboxImageView.backgroundColor = STColors.primary2.color
+                checkboxImageView.layer.borderColor = STColors.primary2.color.cgColor
+            } else {
+                checkboxImageView.backgroundColor = STColors.white.color
+                checkboxImageView.layer.borderColor = STColors.gray7.color.cgColor
+            }
         } else {
-            // 기본 이미지: 예시로 `checkbox_normal` 에셋 이름 사용
-            checkboxImageView.image = UIImage(named: "checkbox_normal") ?? UIImage(systemName: "square")
-            checkboxImageView.tintColor = DesignSystemAsset.Colors.gray3.color // 기본 색상
+            checkboxImageView.backgroundColor = STColors.gray9.color
+            if isSelected {
+                checkboxImageView.layer.borderColor = STColors.gray9.color.cgColor
+                checkboxImageView.image = STImages.checkGray.image
+            } else {
+                checkboxImageView.layer.borderColor = STColors.gray7.color.cgColor
+                checkboxImageView.image = nil
+            }
         }
     }
 
-    @objc private func handleTap() {
-        isSelected.toggle() // 상태 토글
+    private func updateTitle() {
+        if isEnabled { titleLabel.textColor = STColors.gray1.color }
+        else { titleLabel.textColor = STColors.gray6.color }
+
+        updateAppearance()
+    }
+
+    // MARK: - 터치 처리
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        if isEnabled {
+            isSelected.toggle()
+            sendActions(for: .valueChanged) // 상태 변경 시 .valueChanged 이벤트를 보냅니다.
+        }
     }
 }
