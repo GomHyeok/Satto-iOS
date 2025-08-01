@@ -13,7 +13,7 @@ struct CoreLayer: Layer {
         dependencies: [
           .target(name: "NetworkCore"),
           .target(name: "DIInjector"),
-          .target(name: "Extension")
+          .target(name: "Extension"),
         ],
         settings: .settings(
           base: [
@@ -45,7 +45,7 @@ struct CoreLayer: Layer {
       ),
       .createTarget(
         name: "Extension"
-      )
+      ),
     ]
   }
 }

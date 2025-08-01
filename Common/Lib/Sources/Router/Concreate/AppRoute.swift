@@ -6,10 +6,10 @@
 //
 
 public enum AppRoute {
-    case fortune
-    case history
-    case home
-    case onboarding
-    case setting
-    case splash
+  case fortune
+  case history
+  case home
+  case onboarding
+  case setting
+  case splash
 }

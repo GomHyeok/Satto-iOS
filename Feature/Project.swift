@@ -17,7 +17,7 @@ struct FeatureLayer: Layer {
           .target(name: "History"),
           .target(name: "Fortune"),
           .project(target: "CommonLayer", path: "../Common"),
-          .project(target : "DesignSystem", path : "../DesignSystem")
+          .project(target: "DesignSystem", path: "../DesignSystem"),
         ],
         settings: .settings(
           base: [
@@ -29,14 +29,14 @@ struct FeatureLayer: Layer {
       .createTarget(
         name: "Onboarding",
         dependencies: [
-            .external(name: "SnapKit"),
+          .external(name: "SnapKit")
         ]
       ),
       .createTarget(name: "Home"),
       .createTarget(
         name: "Setting",
         dependencies: [
-          .project(target: "CommonLayer", path: "../Common"),
+          .project(target: "CommonLayer", path: "../Common")
         ]
       ),
       .createTarget(name: "History"),

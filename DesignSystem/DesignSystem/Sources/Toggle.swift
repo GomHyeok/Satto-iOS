@@ -8,29 +8,29 @@
 import UIKit
 
 public final class Toggle: UISwitch {
-  
+
   override public var isEnabled: Bool {
     didSet {
       updateUI(isEnabled)
     }
   }
-  
+
   public override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError()
   }
-  
+
   private func setupUI() {
     onTintColor = STColors.primary1.color
     snp.makeConstraints { make in
       make.width.equalTo(51)
     }
   }
-  
+
   private func updateUI(_ isEnabled: Bool) {
     if isEnabled {
       onTintColor = STColors.primary1.color
@@ -72,7 +72,7 @@ public final class Toggle: UISwitch {
   activeStackView.addArrangedSubview(activeDefaultToggle)
   activeStackView.addArrangedSubview(activeDisabledLabel)
   activeStackView.addArrangedSubview(activeDisabledToggle)
-  
+
   let inactiveStackView = UIStackView().then {
     $0.axis = .horizontal
     $0.spacing = 20
@@ -94,12 +94,12 @@ public final class Toggle: UISwitch {
     $0.isOn = false
     $0.isEnabled = false
   }
-  
+
   inactiveStackView.addArrangedSubview(inactiveDefaultLabel)
   inactiveStackView.addArrangedSubview(inactiveDefaultToggle)
   inactiveStackView.addArrangedSubview(inactiveDisabledLabel)
   inactiveStackView.addArrangedSubview(inactiveDisabledToggle)
-  
+
   let activeTitleLabel = UILabel().then {
     $0.text = "Control/Toggle/Active"
     $0.style = Typography.Heading_20_B
@@ -112,6 +112,6 @@ public final class Toggle: UISwitch {
   stackView.addArrangedSubview(activeStackView)
   stackView.addArrangedSubview(inactiveTitleLabel)
   stackView.addArrangedSubview(inactiveStackView)
-  
+
   return stackView
 }

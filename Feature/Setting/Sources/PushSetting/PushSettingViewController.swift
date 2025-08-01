@@ -5,49 +5,55 @@
 //  Created by ttozzi on 7/31/25.
 //
 
+import Combine
 import DesignSystem
 import SnapKit
 import Then
 import UIKit
-import Combine
 
 final class PushSettingViewController: UIViewController {
-  
-  private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout()).then {
+
+  private lazy var collectionView = UICollectionView(
+    frame: .zero, collectionViewLayout: createLayout()
+  ).then {
     $0.backgroundColor = .clear
     $0.dataSource = self
-    $0.register(PushSettingImageCollectionViewCell.self, forCellWithReuseIdentifier: PushSettingImageCollectionViewCell.typeName)
-    $0.register(PushSettingToggleCollectionViewCell.self, forCellWithReuseIdentifier: PushSettingToggleCollectionViewCell.typeName)
+    $0.register(
+      PushSettingImageCollectionViewCell.self,
+      forCellWithReuseIdentifier: PushSettingImageCollectionViewCell.typeName)
+    $0.register(
+      PushSettingToggleCollectionViewCell.self,
+      forCellWithReuseIdentifier: PushSettingToggleCollectionViewCell.typeName)
   }
   private let viewModel: PushSettingViewModel
   private var cancellables = Set<AnyCancellable>()
-  
+
   init(viewModel: PushSettingViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-  
+
   private func setupUI() {
     view.backgroundColor = STColors.white.color
-    
+
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints { make in
       make.verticalEdges.equalToSuperview()
       make.horizontalEdges.equalToSuperview().inset(24)
     }
   }
-  
+
   private func setupBinding() {
     viewModel.output.sections
       .receive(on: DispatchQueue.main)
@@ -56,7 +62,7 @@ final class PushSettingViewController: UIViewController {
       }
       .store(in: &cancellables)
   }
-  
+
   private func createLayout() -> UICollectionViewCompositionalLayout {
     let layout = UICollectionViewCompositionalLayout { section, env in
       let item = NSCollectionLayoutItem(
@@ -65,7 +71,7 @@ final class PushSettingViewController: UIViewController {
           heightDimension: .estimated(56)
         )
       )
-      
+
       let group = NSCollectionLayoutGroup.vertical(
         layoutSize: NSCollectionLayoutSize(
           widthDimension: .fractionalWidth(1.0),
@@ -73,7 +79,7 @@ final class PushSettingViewController: UIViewController {
         ),
         subitems: [item]
       )
-      
+
       let sectionLayout = NSCollectionLayoutSection(group: group)
       sectionLayout.interGroupSpacing = 12
       return sectionLayout
@@ -83,24 +89,30 @@ final class PushSettingViewController: UIViewController {
 }
 
 extension PushSettingViewController: UICollectionViewDataSource {
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+    -> Int
+  {
     return viewModel.output.sections.value.count
   }
-  
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+    -> UICollectionViewCell
+  {
     guard let item = viewModel.output.sections.value[safe: indexPath.item] else {
       return UICollectionViewCell()
     }
     switch item {
     case let item as PushSettingImageCollectionViewCellModel:
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PushSettingImageCollectionViewCell.typeName, for: indexPath)
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: PushSettingImageCollectionViewCell.typeName, for: indexPath)
       if let cell = cell as? PushSettingImageCollectionViewCell {
         cell.update(with: item)
       }
       return cell
-      
+
     case let item as PushSettingToggleCollectionViewCellModel:
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PushSettingToggleCollectionViewCell.typeName, for: indexPath)
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: PushSettingToggleCollectionViewCell.typeName, for: indexPath)
       if let cell = cell as? PushSettingToggleCollectionViewCell {
         cell.update(with: item)
         cell.toggleChangedPublisher
@@ -110,7 +122,7 @@ extension PushSettingViewController: UICollectionViewDataSource {
           .store(in: &cell.cancellables)
       }
       return cell
-      
+
     default:
       return UICollectionViewCell()
     }

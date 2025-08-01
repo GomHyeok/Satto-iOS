@@ -1,5 +1,5 @@
-import UIKit
 import Onboarding
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

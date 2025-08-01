@@ -6,6 +6,6 @@
 //
 
 public enum BornType {
-    case dontKnow(isSelected : Bool)
-    case time(time : String)
+  case dontKnow(isSelected: Bool)
+  case time(time: String)
 }

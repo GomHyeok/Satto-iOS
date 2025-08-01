@@ -5,18 +5,18 @@
 //  Created by ttozzi on 7/29/25.
 //
 
+import DesignSystem
 import Foundation
 import NetworkCore
-import DesignSystem
 
 struct MyPageService {
-  
+
   private let networkProvider: NetworkProvider
-  
+
   init(networkProvider: NetworkProvider = .shared) {
     self.networkProvider = networkProvider
   }
-  
+
   func fetch() async throws -> [MyPageSection] {
     // TODO: 서버 통신
     try await Task.sleep(for: .seconds(2))
@@ -36,11 +36,14 @@ struct MyPageService {
         )
       ),
       .menu([
-        MyPageMenuCollectionViewCellModel(style: .icon(STImages.chevronRightS.image), title: "푸시알림"),
-        MyPageMenuCollectionViewCellModel(style: .icon(STImages.chevronRightS.image), title: "이용약관"),
-        MyPageMenuCollectionViewCellModel(style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침"),
+        MyPageMenuCollectionViewCellModel(
+          style: .icon(STImages.chevronRightS.image), title: "푸시알림"),
+        MyPageMenuCollectionViewCellModel(
+          style: .icon(STImages.chevronRightS.image), title: "이용약관"),
+        MyPageMenuCollectionViewCellModel(
+          style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침"),
         MyPageMenuCollectionViewCellModel(style: .text("1.0.0"), title: "앱 버전"),
-      ])
+      ]),
     ]
   }
 }

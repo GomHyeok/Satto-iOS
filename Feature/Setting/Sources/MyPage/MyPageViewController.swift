@@ -7,10 +7,10 @@
 
 import Combine
 import DesignSystem
+import Extension
 import SnapKit
 import Then
 import UIKit
-import Extension
 
 enum MyPageSection {
   case profile(MyProfileInfoCollectionViewCellModel)
@@ -19,48 +19,56 @@ enum MyPageSection {
 }
 
 final class MyPageViewController: UIViewController {
-  
+
   private enum Constant {
     static let menuItemHeight: CGFloat = 48
     static let sectionSpacing: CGFloat = 12
   }
 
-  private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: createLayout()).then {
+  private lazy var collectionView = UICollectionView(
+    frame: .zero, collectionViewLayout: createLayout()
+  ).then {
     $0.backgroundColor = .clear
     $0.dataSource = self
     $0.delegate = self
-    $0.register(MyProfileInfoCollectionViewCell.self, forCellWithReuseIdentifier: MyProfileInfoCollectionViewCell.typeName)
-    $0.register(SendFeedbackCollectionViewCell.self, forCellWithReuseIdentifier: SendFeedbackCollectionViewCell.typeName)
-    $0.register(MyPageMenuCollectionViewCell.self, forCellWithReuseIdentifier: MyPageMenuCollectionViewCell.typeName)
+    $0.register(
+      MyProfileInfoCollectionViewCell.self,
+      forCellWithReuseIdentifier: MyProfileInfoCollectionViewCell.typeName)
+    $0.register(
+      SendFeedbackCollectionViewCell.self,
+      forCellWithReuseIdentifier: SendFeedbackCollectionViewCell.typeName)
+    $0.register(
+      MyPageMenuCollectionViewCell.self,
+      forCellWithReuseIdentifier: MyPageMenuCollectionViewCell.typeName)
   }
   private let viewModel: MyPageViewModel
   private var cancellables = Set<AnyCancellable>()
-  
+
   init(viewModel: MyPageViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-  
+
   private func setupUI() {
     view.backgroundColor = STColors.primary9.color
-    
+
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
       $0.edges.equalToSuperview().inset(24)
     }
   }
-  
+
   private func setupBinding() {
     viewModel.output.sections
       .receive(on: DispatchQueue.main)
@@ -69,17 +77,18 @@ final class MyPageViewController: UIViewController {
       }
       .store(in: &cancellables)
   }
-  
+
   private func createLayout() -> UICollectionViewCompositionalLayout {
     let layout = UICollectionViewCompositionalLayout { [weak self] section, env in
       guard let self,
-            let section = self.viewModel.output.sections.value[safe: section] else {
+        let section = self.viewModel.output.sections.value[safe: section]
+      else {
         return nil
       }
       let itemHeight: NSCollectionLayoutDimension
       let groupHeight: NSCollectionLayoutDimension
       let itemCount: Int
-      
+
       switch section {
       case .profile:
         itemHeight = .fractionalHeight(1.0)
@@ -95,14 +104,14 @@ final class MyPageViewController: UIViewController {
         groupHeight = .estimated(Constant.menuItemHeight * CGFloat(max(count, 1)))
         itemCount = count
       }
-      
+
       let item = NSCollectionLayoutItem(
         layoutSize: NSCollectionLayoutSize(
           widthDimension: .fractionalWidth(1.0),
           heightDimension: itemHeight
         )
       )
-      
+
       let group = NSCollectionLayoutGroup.vertical(
         layoutSize: NSCollectionLayoutSize(
           widthDimension: .fractionalWidth(1.0),
@@ -111,19 +120,24 @@ final class MyPageViewController: UIViewController {
         repeatingSubitem: item,
         count: max(itemCount, 1)
       )
-      
+
       let sectionLayout = NSCollectionLayoutSection(group: group)
-      sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: Constant.sectionSpacing, trailing: 0)
+      sectionLayout.contentInsets = NSDirectionalEdgeInsets(
+        top: 0, leading: 0, bottom: Constant.sectionSpacing, trailing: 0)
       sectionLayout.interGroupSpacing = Constant.sectionSpacing
-      
-      let background = NSCollectionLayoutDecorationItem.background(elementKind: MyPageSectionBackgroundView.typeName)
-      background.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: Constant.sectionSpacing, trailing: 0)
+
+      let background = NSCollectionLayoutDecorationItem.background(
+        elementKind: MyPageSectionBackgroundView.typeName)
+      background.contentInsets = NSDirectionalEdgeInsets(
+        top: 0, leading: 0, bottom: Constant.sectionSpacing, trailing: 0)
       sectionLayout.decorationItems = [background]
-      
+
       return sectionLayout
     }
-    
-    layout.register(MyPageSectionBackgroundView.self, forDecorationViewOfKind: MyPageSectionBackgroundView.typeName)
+
+    layout.register(
+      MyPageSectionBackgroundView.self,
+      forDecorationViewOfKind: MyPageSectionBackgroundView.typeName)
     return layout
   }
 }
@@ -132,8 +146,10 @@ extension MyPageViewController: UICollectionViewDataSource {
   func numberOfSections(in collectionView: UICollectionView) -> Int {
     return viewModel.output.sections.value.count
   }
-  
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+    -> Int
+  {
     guard let selectedSection = viewModel.output.sections.value[safe: section] else {
       return .zero
     }
@@ -144,14 +160,17 @@ extension MyPageViewController: UICollectionViewDataSource {
       return items.count
     }
   }
-  
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+    -> UICollectionViewCell
+  {
     guard let section = viewModel.output.sections.value[safe: indexPath.section] else {
       return UICollectionViewCell()
     }
     switch section {
     case .profile(let model):
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyProfileInfoCollectionViewCell.typeName, for: indexPath)
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: MyProfileInfoCollectionViewCell.typeName, for: indexPath)
       if let cell = cell as? MyProfileInfoCollectionViewCell {
         cell.update(with: model)
         cell.editButton.tapPublisher
@@ -161,16 +180,18 @@ extension MyPageViewController: UICollectionViewDataSource {
           .store(in: &cell.cancellables)
       }
       return cell
-      
+
     case .feedback(let model):
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SendFeedbackCollectionViewCell.typeName, for: indexPath)
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: SendFeedbackCollectionViewCell.typeName, for: indexPath)
       if let cell = cell as? SendFeedbackCollectionViewCell {
         cell.update(with: model)
       }
       return cell
-      
+
     case .menu(let models):
-      let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MyPageMenuCollectionViewCell.typeName, for: indexPath)
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: MyPageMenuCollectionViewCell.typeName, for: indexPath)
       if let cell = cell as? MyPageMenuCollectionViewCell {
         let model = models[indexPath.item]
         cell.update(with: model)
@@ -186,10 +207,10 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
     switch section {
     case .profile:
       break
-      
+
     case .feedback:
       viewModel.send(input: .feedBackButtonTapped)
-      
+
     case .menu(let items):
       let item = items[indexPath.item]
       viewModel.send(input: .menuTapped(item: item))
@@ -198,13 +219,13 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
 }
 
 #if targetEnvironment(simulator)
-import DIInjector
+  import DIInjector
 
-@available(iOS 17.0, *)
-#Preview {
-  DependencyInjector.shared.assemble([
+  @available(iOS 17.0, *)
+  #Preview {
+    DependencyInjector.shared.assemble([
       SettingAssembly()
-  ])
-  return MyPageViewController(viewModel: MyPageViewModel())
-}
+    ])
+    return MyPageViewController(viewModel: MyPageViewModel())
+  }
 #endif

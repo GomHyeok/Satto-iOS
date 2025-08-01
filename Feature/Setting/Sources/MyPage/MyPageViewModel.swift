@@ -10,21 +10,21 @@ import DIInjector
 import Foundation
 
 final class MyPageViewModel {
-  
+
   enum Input {
     case viewDidLoad
     case editButtonTapped
     case feedBackButtonTapped
     case menuTapped(item: MyPageMenuCollectionViewCellModel)
   }
-  
+
   struct Output {
     let sections = CurrentValueSubject<[MyPageSection], Never>([])
   }
-  
+
   @Injected private var myPageService: MyPageService
   let output: Output = Output()
-  
+
   func send(input: Input) {
     switch input {
     case .viewDidLoad:
@@ -38,15 +38,15 @@ final class MyPageViewModel {
           // TODO: 에러 처리
         }
       }
-      
+
     case .editButtonTapped:
       // TODO: 프로필 수정 화면 이동
       break
-      
+
     case .feedBackButtonTapped:
       // TODO: 피드백 전송 링크
       break
-      
+
     case .menuTapped(let item):
       // TODO: menu 핸들링
       break

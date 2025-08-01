@@ -16,7 +16,7 @@ struct SendFeedbackCollectionViewCellModel {
 }
 
 final class SendFeedbackCollectionViewCell: UICollectionViewCell {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .horizontal
     $0.spacing = 14
@@ -31,38 +31,38 @@ final class SendFeedbackCollectionViewCell: UICollectionViewCell {
     $0.numberOfLines = 2
   }
   private lazy var sendFeedbackButton = UIButton().then {
-    $0.backgroundColor = STColors.primary8.color // TODO: 버튼 컴포넌트
+    $0.backgroundColor = STColors.primary8.color  // TODO: 버튼 컴포넌트
     $0.isUserInteractionEnabled = false
   }
   private lazy var imageView = UIImageView().then {
-    $0.backgroundColor = .gray // TODO: 이미지 리소스 확인 필요
+    $0.backgroundColor = .gray  // TODO: 이미지 리소스 확인 필요
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private func setupUI() {
     backgroundColor = .clear
     contentStackView.backgroundColor = .clear
-    
+
     contentView.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.edges.equalToSuperview().inset(20)
     }
-    
+
     contentStackView.addArrangedSubview(feedbackAreaStackView)
     feedbackAreaStackView.addArrangedSubview(descriptionLabel)
     feedbackAreaStackView.addArrangedSubview(sendFeedbackButton)
-    
+
     contentStackView.addArrangedSubview(imageView)
   }
-  
+
   func update(with cellModel: SendFeedbackCollectionViewCellModel) {
     descriptionLabel.styledText = cellModel.description
     sendFeedbackButton.setTitle(cellModel.feedbackButtonTitle, for: .normal)

@@ -6,6 +6,6 @@
 //
 
 public enum GenderType {
-    case male
-    case female
+  case male
+  case female
 }

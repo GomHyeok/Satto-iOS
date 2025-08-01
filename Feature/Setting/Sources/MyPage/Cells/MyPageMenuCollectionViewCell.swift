@@ -11,19 +11,19 @@ import Then
 import UIKit
 
 struct MyPageMenuCollectionViewCellModel {
-  
+
   enum Style {
     case none
     case icon(UIImage)
     case text(String)
   }
-  
+
   let style: Style
   let title: String
 }
 
 final class MyPageMenuCollectionViewCell: UICollectionViewCell {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .horizontal
     $0.spacing = .zero
@@ -37,30 +37,30 @@ final class MyPageMenuCollectionViewCell: UICollectionViewCell {
     $0.axis = .horizontal
     $0.spacing = .zero
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private func setupUI() {
     backgroundColor = .clear
     contentStackView.backgroundColor = .clear
-    
+
     contentView.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.horizontalEdges.equalToSuperview().inset(20)
       make.centerY.equalToSuperview()
     }
-    
+
     contentStackView.addArrangedSubview(titleLabel)
     contentStackView.addArrangedSubview(accessoryStackView)
   }
-  
+
   func update(with cellModel: MyPageMenuCollectionViewCellModel) {
     resetAccessoryStackView()
     switch cellModel.style {
@@ -84,7 +84,7 @@ final class MyPageMenuCollectionViewCell: UICollectionViewCell {
     }
     titleLabel.styledText = cellModel.title
   }
-  
+
   private func resetAccessoryStackView() {
     accessoryStackView.arrangedSubviews.forEach {
       accessoryStackView.removeArrangedSubview($0)
@@ -110,7 +110,7 @@ final class MyPageMenuCollectionViewCell: UICollectionViewCell {
     MyPageMenuCollectionViewCellModel(
       style: .text("1.0.0"),
       title: "text"
-    )
+    ),
   ]
   cellModels.forEach {
     let cell = MyPageMenuCollectionViewCell()

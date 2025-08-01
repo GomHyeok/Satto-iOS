@@ -14,13 +14,13 @@ import UIKit
 struct MyProfileInfoCollectionViewCellModel {
   let nickname: String
   // let profileImageURL: URL?
-  let gender: String // TODO: 데이터 타입 확인 필요
-  let birthDate: String // TODO: 데이터 타입 확인 필요
+  let gender: String  // TODO: 데이터 타입 확인 필요
+  let birthDate: String  // TODO: 데이터 타입 확인 필요
   let birthTime: String
 }
 
 final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = .zero
     $0.axis = .vertical
@@ -57,42 +57,42 @@ final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
     $0.style = Typography.Caption_12_B
   }
   var cancellables = Set<AnyCancellable>()
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
-    profileImageView.backgroundColor = .gray // TODO: 임시
+    profileImageView.backgroundColor = .gray  // TODO: 임시
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func prepareForReuse() {
     super.prepareForReuse()
     cancellables.removeAll()
   }
-  
+
   private func setupUI() {
     backgroundColor = .clear
     contentStackView.backgroundColor = .clear
-    
+
     contentView.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.edges.equalToSuperview().inset(20)
     }
-    
+
     contentStackView.addArrangedSubview(profileImageView)
     contentStackView.setCustomSpacing(16, after: profileImageView)
     profileImageView.snp.makeConstraints { make in
       make.size.equalTo(88)
     }
-    
+
     contentStackView.addArrangedSubview(nicknameStackView)
     contentStackView.setCustomSpacing(8, after: nicknameStackView)
     nicknameStackView.addArrangedSubview(nicknameLabel)
     nicknameStackView.addArrangedSubview(editButton)
-    
+
     contentStackView.addArrangedSubview(descriptionStackView)
     let descriptionLabels = [genderLabel, birthDateLabel, birthTimeLabel]
     descriptionLabels.enumerated().forEach { index, label in
@@ -104,7 +104,7 @@ final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
       }
     }
   }
-  
+
   func update(with cellModel: MyProfileInfoCollectionViewCellModel) {
     nicknameLabel.styledText = "\(cellModel.nickname) 님"
     genderLabel.styledText = cellModel.gender
