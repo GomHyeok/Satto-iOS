@@ -32,6 +32,7 @@ final class SendFeedbackCollectionViewCell: UICollectionViewCell {
   }
   private lazy var sendFeedbackButton = UIButton().then {
     $0.backgroundColor = STColors.primary8.color // TODO: 버튼 컴포넌트
+    $0.isUserInteractionEnabled = false
   }
   private lazy var imageView = UIImageView().then {
     $0.backgroundColor = .gray // TODO: 이미지 리소스 확인 필요

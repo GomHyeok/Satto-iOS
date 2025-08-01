@@ -6,7 +6,6 @@
 //
 
 import DIInjector
-import Swinject
 import Testing
 
 struct DependencyInjectorTest {

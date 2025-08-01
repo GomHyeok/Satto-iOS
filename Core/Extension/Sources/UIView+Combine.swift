@@ -68,3 +68,11 @@ extension UIButton {
             .eraseToAnyPublisher()
     }
 }
+
+extension UISwitch {
+  public var isOnPublisher: AnyPublisher<Bool, Never> {
+    controlPublisher(for: .valueChanged)
+      .map { [weak self] _ in self?.isOn ?? false }
+      .eraseToAnyPublisher()
+  }
+}

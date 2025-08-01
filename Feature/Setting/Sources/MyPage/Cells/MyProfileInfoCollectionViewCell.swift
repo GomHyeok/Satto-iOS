@@ -5,6 +5,7 @@
 //  Created by ttozzi on 7/26/25.
 //
 
+import Combine
 import DesignSystem
 import SnapKit
 import Then
@@ -36,7 +37,7 @@ final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
   private lazy var nicknameLabel = UILabel().then {
     $0.style = Typography.Heading_20_B
   }
-  private lazy var editButton = UIButton().then {
+  private(set) lazy var editButton = UIButton().then {
     let image = STImages.edit2.image.withRenderingMode(.alwaysTemplate)
     $0.setImage(image, for: .normal)
     $0.tintColor = STColors.gray5.color
@@ -55,6 +56,7 @@ final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
   private lazy var birthTimeLabel = UILabel().then {
     $0.style = Typography.Caption_12_B
   }
+  var cancellables = Set<AnyCancellable>()
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -64,6 +66,11 @@ final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    cancellables.removeAll()
   }
   
   private func setupUI() {

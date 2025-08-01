@@ -10,8 +10,6 @@ import Foundation
 import DIInjector
 import Lib
 
-import Swinject
-
 public class CoreLayerAssembly : Assembly {
     public func assemble(container: Container) {
         container.register(AppRouter.self) { _ in

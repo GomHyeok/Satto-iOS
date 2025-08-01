@@ -1,6 +1,7 @@
 import UIKit
 import Onboarding
 import Lib
+import Setting
 
 import DIInjector
 
@@ -27,7 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     private func dependencyInjection() {
         DependencyInjector.shared.assemble([
-            CoreLayerAssembly()
+            CoreLayerAssembly(),
+            SettingAssembly()
         ])
     }
     
