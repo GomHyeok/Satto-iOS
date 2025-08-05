@@ -56,7 +56,7 @@ public class OnboardingViewModel: OnboardingViewModelProtocol {
 
   private var state: State = .init()
 
-  init() {
+  public init() {
     inputStream
       .sink { [weak self] action in
         guard let self = self else { return }

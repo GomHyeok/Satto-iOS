@@ -162,10 +162,10 @@ public final class OnboardingViewController: UIViewController {
     $0.addTarget(self, action: #selector(dontKonwButtonTapped), for: .touchUpInside)
   }
 
-  public init(viewModel: OnboardingViewModelProtocol) {
-    self.viewModel = viewModel
-    super.init(nibName: nil, bundle: nil)
-  }
+    init(viewModel: OnboardingViewModelProtocol = OnboardingViewModel()){
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

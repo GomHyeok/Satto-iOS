@@ -13,7 +13,6 @@ import UIKit
 protocol AgreementViewDelegate: AnyObject {
   func agreementViewDidComplete()
 }
-
 final class AgreementViewController: UIViewController {
 
   weak var delegate: AgreementViewDelegate?

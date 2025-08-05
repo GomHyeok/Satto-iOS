@@ -8,56 +8,124 @@
 import Foundation
 import UIKit
 
-public protocol Routable {
-  func navigate(to route: AppRoute, from: Routable?, with data: [String: Any])
+public enum AppRoute : Hashable {
+  case fortune
+  case history
+  case home
+    case onboarding(onboardingRoute : OnboardingRoute?)
+  case setting
+    
+    public func hash(into hasher: inout Hasher) {
+        switch self {
+        case .fortune:
+            hasher.combine(0)
+        case .history:
+            hasher.combine(1)
+        case .home:
+            hasher.combine(2)
+        case .onboarding(onboardingRoute: let onboardingRoute):
+            hasher.combine(3)
+        case .setting:
+            hasher.combine(4)
+        }
+    }
+    
+    public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
+        switch (lhs, rhs) {
+        case (.fortune, .fortune), (.history, .history), (.home, .home), (.setting, .setting):
+            return true
+        case (.onboarding, .onboarding):
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+@MainActor
+public protocol Routable : AnyObject {
+    func navigate(to route: Any, how : NavigateType, with data: [String: Any])
 }
 
 public final class AppRouter: Routable {
-  public static let shared = AppRouter()
+    public static let shared = AppRouter()
 
-  private var factories: [AppRoute: () -> Routable] = [:]
+    private var factories: [AppRoute: () -> Routable] = [:]
 
-  private init() {}
+    private init() {}
 
-  public func register(route: AppRoute, factory: @escaping () -> Routable) {
-    factories[route] = factory
-  }
+    public func register(route: AppRoute, factory: @escaping () -> Routable) {
+        factories[route] = factory
+    }
 
-  public func navigate(to route: AppRoute, from: Routable?, with data: [String: Any]) {
-    guard let router = factories[route]?() else { return }
-    guard let navigateType = data["navigateType"] as? NavigateType else { return }
+    public func navigate(to route: Any, how : NavigateType, with data: [String: Any]) {
+        guard let appRoute = route as? AppRoute else { return }
+        guard let factory = factories[appRoute] else { return }
+        let subRouter = factory()
+        
+        switch appRoute {
+        case .fortune:
+            break
+        case .history:
+            break
+        case .home:
+            break
+        case .onboarding(let onboardingRoute):
+            guard let onboardingRoute = onboardingRoute else { return }
+            subRouter.navigate(to: onboardingRoute, how: how, with: data)
+        case .setting:
+            break
+        }
+    }
+}
 
-    // TODO: topview 찾고 -> UIWindow의 rootviewcon을 찾아서 -> Navigation이 될꺼고 -> 띄우는걸로
-    // TODO: 모듈마다 모듈 내부 view 이동 router -> 해당 router는 approtuer 에서 관리
-    // 여기서는 그냥 각 모듈을 present, push 하는 정도 역할만
-    // 만약 스택을 비워야 한다면 해당 모듈에서 스택을 비우고 가는 걸로
-
-    //        switch navigateType {
-    //        case .push:
-    //            if let navigationController = from?.navigationController {
-    //                navigationController.pushViewController(viewController, animated: true)
-    //            }
-    //        case .present:
-    //            from?.present(viewController, animated: true)
-    //        case .fullscreen:
-    //            viewController.modalPresentationStyle = .fullScreen
-    //            from?.present(viewController, animated: true)
-    //        case .currentContext:
-    //            viewController.modalPresentationStyle = .currentContext
-    //            from?.present(viewController, animated: true)
-    //        case .overFullScreen:
-    //            viewController.modalPresentationStyle = .overFullScreen
-    //            from?.present(viewController, animated: true)
-    //        case .overCurrentContext:
-    //            viewController.modalPresentationStyle = .overCurrentContext
-    //            from?.present(viewController, animated: true)
-    //        case .custom:
-    //            if let transitioningDelegate = data["transitioningDelegate"] as? UIViewControllerTransitioningDelegate {
-    //                    viewController.modalPresentationStyle = .custom
-    //                    viewController.transitioningDelegate = transitioningDelegate
-    //                }
-    //                from?.present(viewController, animated: true)
-    //        }
-
-  }
+extension Routable {
+    public func topViewController( from base: UIViewController? = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?.rootViewController
+    ) -> UIViewController? {
+        if let nav = base as? UINavigationController {
+            return topViewController(from: nav.visibleViewController)
+        }
+        if let tab = base as? UITabBarController {
+            return topViewController(from: tab.selectedViewController)
+        }
+        if let presented = base?.presentedViewController {
+            return topViewController(from: presented)
+        }
+        return base
+    }
+    
+    public func manageViewController(_ viewController: UIViewController, how: NavigateType) {
+        switch how {
+        case .push:
+            if let navigationController = topViewController()?.navigationController {
+                navigationController.pushViewController(viewController, animated: true)
+            }
+        case .present:
+            topViewController()?.present(viewController, animated: true, completion: nil)
+        case .fullscreen:
+            viewController.modalPresentationStyle = .fullScreen
+            topViewController()?.present(viewController, animated: true, completion: nil)
+        case .currentContext:
+            viewController.modalPresentationStyle = .currentContext
+            topViewController()?.present(viewController, animated: true, completion: nil)
+        case .overFullScreen:
+            viewController.modalPresentationStyle = .overFullScreen
+            topViewController()?.present(viewController, animated: true, completion: nil)
+        case .overCurrentContext:
+            viewController.modalPresentationStyle = .overCurrentContext
+            topViewController()?.present(viewController, animated: true, completion: nil)
+        case .custom:
+            viewController.modalPresentationStyle = .custom
+            topViewController()?.present(viewController, animated: true, completion: nil)
+        case .clear:
+            if let navigationController = topViewController()?.navigationController {
+                navigationController.viewControllers.removeAll()
+                navigationController.pushViewController(viewController, animated: true)
+            } else {
+                topViewController()?.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
 }

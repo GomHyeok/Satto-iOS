@@ -33,6 +33,30 @@ struct CommonLayer: Layer {
           .external(name: "SnapKit"),
         ]
       ),
+      .createTarget(
+        name: "LibTest",
+        product: .app,
+        infoPlist: .extendingDefault(
+          with: [
+            "UILaunchStoryboardName": "LaunchScreen",
+            "UIApplicationSceneManifest": [
+              "UIApplicationSupportsMultipleScenes": false,
+              "UISceneConfigurations": [
+                "UIWindowSceneSessionRoleApplication": [
+                  [
+                    "UISceneConfigurationName": "Default Configuration",
+                    "UISceneDelegateClassName": "$(PRODUCT_MODULE_NAME).SceneDelegate",
+                  ]
+                ]
+              ],
+            ],
+          ]
+        ),
+        sources: ["LibTest/Sources/**"],
+        dependencies: [
+          .target(name: "Lib")
+        ]
+      ),
     ]
   }
 }

@@ -1,8 +1,10 @@
-import DIInjector
-import UIKit
-import Lib
-import Onboarding
-import Setting
+//
+//  AppDelegate.swift
+//  CommonLayer
+//
+//  Created by 최재혁 on 8/3/25.
+//
+
 import UIKit
 
 @main
@@ -12,9 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-      
+    // Override point for customization after application launch.
       registRouter()
-
     return true
   }
 
@@ -24,7 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession,
     options: UIScene.ConnectionOptions
   ) -> UISceneConfiguration {
-
+    // Called when a new scene session is being created.
+    // Use this method to select a configuration to create the new scene with.
     return UISceneConfiguration(
       name: "Default Configuration", sessionRole: connectingSceneSession.role)
   }
@@ -37,16 +39,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
   }
 
-  private func dependencyInjection() {
-    DependencyInjector.shared.assemble([
-      CoreLayerAssembly(),
-      SettingAssembly(),
-    ])
-  }
-
-  private func registRouter() {
-      let appRouter = AppRouter.shared
-      
-      appRouter.register(route: .onboarding(onboardingRoute: nil), factory: { OnboardingRouter() })
-  }
+    private func registRouter() {
+        let appRouter = TestAppRouter.shared
+        
+        var libFactories: [LibRoute: () -> UIViewController] = [:]
+        libFactories[.lib] = { LibViewController() }
+        let libRouteFactory = { LibRouter(factories: libFactories) }
+        
+        var subFactories: [SubRoute: () -> UIViewController] = [:]
+        subFactories[.sub] = { SubViewController() }
+        let subRouteFactory = { SubRouter(factories: subFactories)}
+        
+        appRouter.register(route: .lib, factory: libRouteFactory)
+        appRouter.register(route: .subRoute, factory: subRouteFactory)
+    }
 }

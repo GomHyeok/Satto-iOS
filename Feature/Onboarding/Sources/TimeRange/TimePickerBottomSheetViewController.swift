@@ -17,7 +17,7 @@ protocol TimePickerBottomSheetDelegate: AnyObject {
   func timePickerBottomSheetDidCancel(_ controller: TimePickerBottomSheetViewController)
 }
 
-class TimePickerBottomSheetViewController: UIViewController {
+final class TimePickerBottomSheetViewController: UIViewController {
 
   weak var delegate: TimePickerBottomSheetDelegate?
 
