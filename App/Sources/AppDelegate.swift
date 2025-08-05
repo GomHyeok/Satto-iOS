@@ -1,5 +1,4 @@
 import DIInjector
-import UIKit
 import Lib
 import Onboarding
 import Setting
@@ -12,8 +11,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-      
-      registRouter()
+
+    registRouter()
 
     return true
   }
@@ -45,8 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   private func registRouter() {
-      let appRouter = AppRouter.shared
-      
-      appRouter.register(route: .onboarding(onboardingRoute: nil), factory: { OnboardingRouter() })
+    let appRouter = AppRouter.shared
+
+    appRouter.register(route: .onboarding(onboardingRoute: nil), factory: { OnboardingRouter() })
   }
 }

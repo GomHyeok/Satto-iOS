@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     // Override point for customization after application launch.
-      registRouter()
+    registRouter()
     return true
   }
 
@@ -39,18 +39,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
   }
 
-    private func registRouter() {
-        let appRouter = TestAppRouter.shared
-        
-        var libFactories: [LibRoute: () -> UIViewController] = [:]
-        libFactories[.lib] = { LibViewController() }
-        let libRouteFactory = { LibRouter(factories: libFactories) }
-        
-        var subFactories: [SubRoute: () -> UIViewController] = [:]
-        subFactories[.sub] = { SubViewController() }
-        let subRouteFactory = { SubRouter(factories: subFactories)}
-        
-        appRouter.register(route: .lib, factory: libRouteFactory)
-        appRouter.register(route: .subRoute, factory: subRouteFactory)
-    }
+  private func registRouter() {
+    let appRouter = TestAppRouter.shared
+
+    var libFactories: [LibRoute: () -> UIViewController] = [:]
+    libFactories[.lib] = { LibViewController() }
+    let libRouteFactory = { LibRouter(factories: libFactories) }
+
+    var subFactories: [SubRoute: () -> UIViewController] = [:]
+    subFactories[.sub] = { SubViewController() }
+    let subRouteFactory = { SubRouter(factories: subFactories) }
+
+    appRouter.register(route: .lib, factory: libRouteFactory)
+    appRouter.register(route: .subRoute, factory: subRouteFactory)
+  }
 }
