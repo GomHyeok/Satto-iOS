@@ -5,9 +5,9 @@
 //  Created by ttozzi on 8/3/25.
 //
 
-import UIKit
 import DesignSystem
 import Extension
+import UIKit
 
 struct FortuneItemCollectionViewCellModel {
   let title: String
@@ -16,13 +16,13 @@ struct FortuneItemCollectionViewCellModel {
 }
 
 final class FortuneItemCollectionViewCell: UICollectionViewCell {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = 12
     $0.axis = .vertical
     $0.alignment = .center
   }
-  private lazy var titleLabel = PaddingLabel().then { // TODO: Chip
+  private lazy var titleLabel = PaddingLabel().then {  // TODO: Chip
     $0.style = Typography.Body_14_SB
     $0.textColor = STColors.primary2.color
     $0.contentInsets = UIEdgeInsets(top: 3.5, left: 10, bottom: 3.5, right: 10)
@@ -31,7 +31,7 @@ final class FortuneItemCollectionViewCell: UICollectionViewCell {
     $0.layer.borderColor = STColors.primary7.color.cgColor
   }
   private lazy var imageView = UIImageView().then {
-    $0.backgroundColor = .gray // TODO: 확인 필요
+    $0.backgroundColor = .gray  // TODO: 확인 필요
     $0.layer.cornerRadius = 8
     $0.clipsToBounds = true
   }
@@ -40,7 +40,7 @@ final class FortuneItemCollectionViewCell: UICollectionViewCell {
     $0.textColor = STColors.gray1.color
     $0.numberOfLines = .zero
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -52,7 +52,7 @@ final class FortuneItemCollectionViewCell: UICollectionViewCell {
 
   private func setupUI() {
     contentView.backgroundColor = .clear
-    
+
     contentView.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
@@ -71,7 +71,7 @@ final class FortuneItemCollectionViewCell: UICollectionViewCell {
       make.height.greaterThanOrEqualTo(21)
     }
   }
-  
+
   func update(with model: FortuneItemCollectionViewCellModel) {
     titleLabel.styledText = model.title
     messageLabel.styledText = model.message

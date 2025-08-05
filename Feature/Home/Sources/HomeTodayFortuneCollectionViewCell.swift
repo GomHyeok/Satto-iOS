@@ -13,7 +13,7 @@ struct HomeTodayFortuneCollectionViewCellModel: HomeCellModel {
 }
 
 final class HomeTodayFortuneCollectionViewCell: UICollectionViewCell {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .vertical
     $0.spacing = 20
@@ -46,45 +46,45 @@ final class HomeTodayFortuneCollectionViewCell: UICollectionViewCell {
     )
   }
   private var cellModel: HomeTodayFortuneCollectionViewCellModel?
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private func setupUI() {
     contentView.backgroundColor = STColors.white.color
     contentView.layer.cornerRadius = 12
     contentView.clipsToBounds = true
-    
+
     contentView.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.top.equalToSuperview().inset(24)
       make.horizontalEdges.equalToSuperview().inset(20)
       make.bottom.equalToSuperview().inset(20)
     }
-    
+
     contentStackView.addArrangedSubview(titleLabel)
-    
+
     contentStackView.addArrangedSubview(collectionView)
     collectionView.snp.makeConstraints { make in
       make.horizontalEdges.equalToSuperview()
     }
   }
-  
+
   private func createLayout() -> UICollectionViewLayout {
     let spacing: CGFloat = 20
-    
+
     let itemSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(0.5),
       heightDimension: .estimated(179)
     )
     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-    
+
     let groupSize = NSCollectionLayoutSize(
       widthDimension: .fractionalWidth(1.0),
       heightDimension: .estimated(179)
@@ -94,13 +94,13 @@ final class HomeTodayFortuneCollectionViewCell: UICollectionViewCell {
       subitems: [item]
     )
     group.interItemSpacing = .fixed(spacing)
-    
+
     let section = NSCollectionLayoutSection(group: group)
     section.interGroupSpacing = 40
-    
+
     return UICollectionViewCompositionalLayout(section: section)
   }
-  
+
   func update(with model: HomeTodayFortuneCollectionViewCellModel) {
     self.cellModel = model
     collectionView.reloadData()
@@ -108,15 +108,20 @@ final class HomeTodayFortuneCollectionViewCell: UICollectionViewCell {
 }
 
 extension HomeTodayFortuneCollectionViewCell: UICollectionViewDataSource {
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+    -> Int
+  {
     return cellModel?.items.count ?? .zero
   }
-  
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+    -> UICollectionViewCell
+  {
     let cell = collectionView.dequeueReusableCell(
       withReuseIdentifier: FortuneItemCollectionViewCell.typeName, for: indexPath)
     if let cell = cell as? FortuneItemCollectionViewCell,
-       let item = cellModel?.items[safe: indexPath.item] {
+      let item = cellModel?.items[safe: indexPath.item]
+    {
       cell.update(with: item)
     }
     return cell
@@ -146,7 +151,7 @@ extension HomeTodayFortuneCollectionViewCell: UICollectionViewDataSource {
         title: "오늘의 금기",
         imageURL: "",
         message: "카페인 과다 섭취 금지"
-      )
+      ),
     ]
   )
   let cell = HomeTodayFortuneCollectionViewCell()

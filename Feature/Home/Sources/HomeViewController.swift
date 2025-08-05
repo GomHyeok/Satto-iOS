@@ -10,15 +10,15 @@ import DesignSystem
 import UIKit
 
 final class HomeViewController: UIViewController {
-  
+
   private enum Constant {
     static let horizontalMargin: CGFloat = 20
   }
-  
+
   private lazy var collectionView = UICollectionView(
     frame: .zero, collectionViewLayout: createLayout()
   ).then {
-    $0.backgroundColor = STColors.primary8.color // TODO: 확인 필요
+    $0.backgroundColor = STColors.primary8.color  // TODO: 확인 필요
     $0.dataSource = self
     $0.register(
       HomeHeaderCollectionViewCell.self,
@@ -33,33 +33,33 @@ final class HomeViewController: UIViewController {
       forCellWithReuseIdentifier: HomeTodayFortuneCollectionViewCell.typeName
     )
   }
-  
+
   private let viewModel: HomeViewModel
   private var cancellables = Set<AnyCancellable>()
-  
+
   init(viewModel: HomeViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-  
+
   private func setupUI() {
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
       $0.edges.equalToSuperview()
     }
   }
-  
+
   private func setupBinding() {
     viewModel.output.sections
       .receive(on: DispatchQueue.main)
@@ -68,7 +68,7 @@ final class HomeViewController: UIViewController {
       }
       .store(in: &cancellables)
   }
-  
+
   private func createLayout() -> UICollectionViewCompositionalLayout {
     let layout = UICollectionViewCompositionalLayout { section, env in
       let item = NSCollectionLayoutItem(
@@ -77,7 +77,7 @@ final class HomeViewController: UIViewController {
           heightDimension: .estimated(510)
         )
       )
-      
+
       let group = NSCollectionLayoutGroup.vertical(
         layoutSize: NSCollectionLayoutSize(
           widthDimension: .fractionalWidth(1.0),
@@ -85,7 +85,7 @@ final class HomeViewController: UIViewController {
         ),
         subitems: [item]
       )
-      
+
       let sectionLayout = NSCollectionLayoutSection(group: group)
       sectionLayout.interGroupSpacing = 12
       sectionLayout.contentInsets = NSDirectionalEdgeInsets(
@@ -101,12 +101,16 @@ final class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: UICollectionViewDataSource {
-  
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+    -> Int
+  {
     return viewModel.output.sections.value.count
   }
-  
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
+  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+    -> UICollectionViewCell
+  {
     guard let item = viewModel.output.sections.value[safe: indexPath.item] else {
       return UICollectionViewCell()
     }
@@ -120,7 +124,7 @@ extension HomeViewController: UICollectionViewDataSource {
         cell.update(with: item)
       }
       return cell
-      
+
     case let item as HomeRecommendationCollectionViewCellModel:
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: HomeRecommendationCollectionViewCell.typeName,
@@ -130,7 +134,7 @@ extension HomeViewController: UICollectionViewDataSource {
         cell.update(with: item)
       }
       return cell
-      
+
     case let item as HomeTodayFortuneCollectionViewCellModel:
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: HomeTodayFortuneCollectionViewCell.typeName,
@@ -140,7 +144,7 @@ extension HomeViewController: UICollectionViewDataSource {
         cell.update(with: item)
       }
       return cell
-      
+
     default:
       return UICollectionViewCell()
     }

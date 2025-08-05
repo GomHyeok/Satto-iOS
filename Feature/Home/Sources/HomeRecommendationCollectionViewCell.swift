@@ -10,24 +10,24 @@ import SnapKit
 import UIKit
 
 struct HomeRecommendationCollectionViewCellModel: HomeCellModel {
-  
+
   enum State {
     case needsRecommendation
     case recommended(numbers: [Int])
     case needsResultCheck(numbers: [Int])
   }
-  
+
   let dateText: String
   let title: String
   let state: State
 }
 
 final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
-  
+
   private enum Constant {
     static let seeMoreAreaHeight: CGFloat = 43
   }
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = .zero
     $0.axis = .vertical
@@ -77,36 +77,36 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
     contentView.backgroundColor = STColors.white.color
     contentView.layer.cornerRadius = 12
     contentView.clipsToBounds = true
-    
+
     contentView.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.top.equalToSuperview().inset(24)
       make.horizontalEdges.equalToSuperview().inset(20)
     }
-    
+
     contentStackView.addArrangedSubview(dateLabel)
     dateLabel.snp.makeConstraints { make in
       make.height.equalTo(18)
     }
     contentStackView.setCustomSpacing(4, after: dateLabel)
-    
+
     contentStackView.addArrangedSubview(titleLabel)
     titleLabel.snp.makeConstraints { make in
       make.height.equalTo(27)
     }
     contentStackView.setCustomSpacing(20, after: titleLabel)
-    
+
     contentStackView.addArrangedSubview(numberBallContainerStackView)
     numberBallContainerStackView.addArrangedSubview(numberBallStackView)
     numberBallContainerStackView.addArrangedSubview(emptyMessageLabel)
     contentStackView.setCustomSpacing(20, after: numberBallContainerStackView)
-    
+
     contentStackView.addArrangedSubview(recommendButton)
     recommendButton.snp.makeConstraints { make in
       make.height.equalTo(48)
       make.horizontalEdges.equalToSuperview()
     }
-    
+
     contentView.addSubview(seeMoreAreaView)
     seeMoreAreaView.snp.makeConstraints { make in
       make.top.equalTo(contentStackView.snp.bottom).offset(24)
@@ -114,7 +114,7 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
       seeMoreAreaViewHeight = make.height.equalTo(Constant.seeMoreAreaHeight).constraint
       make.width.equalToSuperview()
     }
-    
+
     let divider = UIView().then {
       $0.backgroundColor = STColors.gray8.color
     }
@@ -138,7 +138,7 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
   func update(with model: HomeRecommendationCollectionViewCellModel) {
     dateLabel.styledText = model.dateText
     titleLabel.styledText = model.title
-    
+
     switch model.state {
     case .needsRecommendation:
       makeEmptyNumberBallStack()
@@ -166,7 +166,7 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
       seeMoreAreaViewHeight?.update(offset: 0)
     }
   }
-  
+
   private func makeEmptyNumberBallStack() {
     numberBallStackView.arrangedSubviews.forEach {
       $0.removeFromSuperview()
@@ -178,7 +178,7 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
       numberBallStackView.addArrangedSubview(numberImageView)
     }
   }
-  
+
   private func makeNumberBallStack(for numbers: [Int]) {
     numberBallStackView.arrangedSubviews.forEach {
       $0.removeFromSuperview()

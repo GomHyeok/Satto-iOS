@@ -5,8 +5,8 @@
 //  Created by ttozzi on 7/19/25.
 //
 
-import UIKit
 import SwiftRichString
+import UIKit
 
 public struct Typography {
 
@@ -128,7 +128,7 @@ extension Style {
     paragraph.lineHeightMultiple = value
     return self
   }
-  
+
   public func color(_ value: UIColor) -> Style {
     color = value
     return self

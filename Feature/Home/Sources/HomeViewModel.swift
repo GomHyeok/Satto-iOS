@@ -11,22 +11,22 @@ import Foundation
 protocol HomeCellModel {}
 
 final class HomeViewModel {
-  
+
   enum Input {
     case viewDidLoad
   }
-  
+
   struct Output {
     let sections = CurrentValueSubject<[any HomeCellModel], Never>([])
   }
-  
+
   let output: Output = Output()
-  
+
   func send(input: Input) {
     switch input {
     case .viewDidLoad:
       // TODO: 분리 필요
-      
+
       output.sections.send([
         HomeHeaderCollectionViewCellModel(
           roundText: "1181회",
@@ -59,9 +59,9 @@ final class HomeViewModel {
               title: "오늘의 금기",
               imageURL: "",
               message: "카페인 과다 섭취 금지"
-            )
+            ),
           ]
-        )
+        ),
       ])
     }
   }
