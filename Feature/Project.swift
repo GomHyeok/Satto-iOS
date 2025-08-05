@@ -32,7 +32,12 @@ struct FeatureLayer: Layer {
           .external(name: "SnapKit")
         ]
       ),
-      .createTarget(name: "Home"),
+      .createTarget(
+        name: "Home",
+        dependencies: [
+          .project(target: "CommonLayer", path: "../Common")
+        ]
+      ),
       .createTarget(
         name: "Setting",
         dependencies: [
