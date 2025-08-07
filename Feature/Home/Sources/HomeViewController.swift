@@ -132,6 +132,11 @@ extension HomeViewController: UICollectionViewDataSource {
       )
       if let cell = cell as? HomeRecommendationCollectionViewCell {
         cell.update(with: item)
+        cell.butonTapPublisher
+          .sink { [weak self] _ in
+            self?.viewModel.send(input: .recommendationButtonTapped(item.state))
+          }
+          .store(in: &cell.cancellables)
       }
       return cell
 

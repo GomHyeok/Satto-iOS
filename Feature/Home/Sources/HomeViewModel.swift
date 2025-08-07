@@ -14,6 +14,7 @@ final class HomeViewModel {
 
   enum Input {
     case viewDidLoad
+    case recommendationButtonTapped(HomeRecommendationCollectionViewCellModel.State)
   }
 
   struct Output {
@@ -63,6 +64,19 @@ final class HomeViewModel {
           ]
         ),
       ])
+      
+    case .recommendationButtonTapped(let state):
+      switch state {
+      case .needsRecommendation:
+        // TODO: 번호 추천
+        break
+      case .recommended:
+        // TODO: 번호 상세
+        break
+      case .needsResultCheck:
+        // TODO: 결과
+        break
+      }
     }
   }
 }

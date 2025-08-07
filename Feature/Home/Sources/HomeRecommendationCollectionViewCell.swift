@@ -5,6 +5,7 @@
 //  Created by ttozzi on 7/31/25.
 //
 
+import Combine
 import DesignSystem
 import SnapKit
 import UIKit
@@ -63,14 +64,24 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
     $0.backgroundColor = .clear
   }
   private var seeMoreAreaViewHeight: Constraint?
+  private var internalCancellables = Set<AnyCancellable>()
+  private let buttonTapSubject = PassthroughSubject<Void, Never>()
+  var butonTapPublisher: AnyPublisher<Void, Never> { buttonTapSubject.eraseToAnyPublisher() }
+  var cancellables = Set<AnyCancellable>()
 
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
+    setupBinding()
   }
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    cancellables.removeAll()
   }
 
   private func setupUI() {
@@ -134,6 +145,19 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
       make.center.equalToSuperview()
     }
   }
+  
+  private func setupBinding() {
+    recommendButton.tapPublisher
+      .sink { [weak self] in
+        self?.buttonTapSubject.send(())
+      }
+      .store(in: &internalCancellables)
+    seeMoreAreaView.gesturePublisher(gestureRecognizer: UITapGestureRecognizer())
+      .sink { [weak self] _ in
+        self?.buttonTapSubject.send(())
+      }
+      .store(in: &internalCancellables)
+  }
 
   func update(with model: HomeRecommendationCollectionViewCellModel) {
     dateLabel.styledText = model.dateText
@@ -184,10 +208,9 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
       $0.removeFromSuperview()
     }
     numbers.forEach { number in
-      // TODO: 확인 필요
-      let numberImageView = UIImageView(image: STImages.numberBall.image)
-      numberImageView.contentMode = .scaleAspectFit
-      numberBallStackView.addArrangedSubview(numberImageView)
+      let ball = Ball()
+      ball.number = String(number)
+      numberBallStackView.addArrangedSubview(ball)
     }
   }
 }
