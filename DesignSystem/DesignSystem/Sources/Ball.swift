@@ -5,12 +5,12 @@
 //  Created by ttozzi on 8/6/25.
 //
 
-import UIKit
-import Then
 import SwiftRichString
+import Then
+import UIKit
 
 public final class Ball: UIView {
- 
+
   private lazy var numberLabel = UILabel().then {
     $0.style = Style {
       $0.font = DesignSystemFontFamily.Suit.extraBold.font(size: 14)
@@ -19,7 +19,7 @@ public final class Ball: UIView {
     }
   }
   private lazy var backgroundImageView = UIImageView()
-  public var number: String? { // TODO: 타입 확인
+  public var number: String? {  // TODO: 타입 확인
     get { numberLabel.text }
     set {
       let backgroundImage = BallBackgroundImageFactory.makeImage(of: newValue)
@@ -27,22 +27,22 @@ public final class Ball: UIView {
       numberLabel.styledText = newValue
     }
   }
-  
+
   public override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private func setupUI() {
     addSubview(backgroundImageView)
     backgroundImageView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
     }
-    
+
     backgroundImageView.addSubview(numberLabel)
     numberLabel.snp.makeConstraints { make in
       make.center.equalToSuperview()
@@ -51,7 +51,7 @@ public final class Ball: UIView {
 }
 
 private enum BallBackgroundImageFactory {
-    
+
   static func makeImage(of number: String?) -> UIImage? {
     guard let number, let n = Int(number) else {
       // TODO: ?

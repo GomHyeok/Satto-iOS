@@ -78,7 +78,7 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func prepareForReuse() {
     super.prepareForReuse()
     cancellables.removeAll()
@@ -145,7 +145,7 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
       make.center.equalToSuperview()
     }
   }
-  
+
   private func setupBinding() {
     recommendButton.tapPublisher
       .sink { [weak self] in

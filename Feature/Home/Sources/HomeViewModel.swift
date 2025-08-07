@@ -64,7 +64,7 @@ final class HomeViewModel {
           ]
         ),
       ])
-      
+
     case .recommendationButtonTapped(let state):
       switch state {
       case .needsRecommendation:
