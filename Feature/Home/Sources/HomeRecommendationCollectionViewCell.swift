@@ -5,6 +5,7 @@
 //  Created by ttozzi on 7/31/25.
 //
 
+import Base
 import Combine
 import DesignSystem
 import SnapKit
@@ -23,7 +24,7 @@ struct HomeRecommendationCollectionViewCellModel: HomeCellModel {
   let state: State
 }
 
-final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
+final class HomeRecommendationCollectionViewCell: BaseCollectionViewCell {
 
   private enum Constant {
     static let seeMoreAreaHeight: CGFloat = 43
@@ -67,7 +68,6 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
   private var internalCancellables = Set<AnyCancellable>()
   private let buttonTapSubject = PassthroughSubject<Void, Never>()
   var butonTapPublisher: AnyPublisher<Void, Never> { buttonTapSubject.eraseToAnyPublisher() }
-  var cancellables = Set<AnyCancellable>()
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -77,11 +77,6 @@ final class HomeRecommendationCollectionViewCell: UICollectionViewCell {
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-
-  override func prepareForReuse() {
-    super.prepareForReuse()
-    cancellables.removeAll()
   }
 
   private func setupUI() {

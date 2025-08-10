@@ -5,6 +5,7 @@
 //  Created by ttozzi on 7/26/25.
 //
 
+import Base
 import Combine
 import DesignSystem
 import SnapKit
@@ -19,7 +20,7 @@ struct MyProfileInfoCollectionViewCellModel {
   let birthTime: String
 }
 
-final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
+final class MyProfileInfoCollectionViewCell: BaseCollectionViewCell {
 
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = .zero
@@ -56,7 +57,6 @@ final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
   private lazy var birthTimeLabel = UILabel().then {
     $0.style = Typography.Caption_12_B
   }
-  var cancellables = Set<AnyCancellable>()
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -67,12 +67,7 @@ final class MyProfileInfoCollectionViewCell: UICollectionViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
-  override func prepareForReuse() {
-    super.prepareForReuse()
-    cancellables.removeAll()
-  }
-
+  
   private func setupUI() {
     backgroundColor = .clear
     contentStackView.backgroundColor = .clear
