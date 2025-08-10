@@ -10,33 +10,26 @@ import DIInjector
 import Foundation
 import Lib
 
-public enum SplashInputType {
-  case navigateToOnboarding
-}
 
-public protocol SplashViewModelOutput {
-
-}
-
-public protocol SplashViewModelProtocol: SplashViewModelOutput {
-  var inputStream: PassthroughSubject<SplashInputType, Never> { get }
-}
-
-public final class SplashViewModel: SplashViewModelProtocol {
+public final class SplashViewModel {
+    enum Input {
+        case startButtonTap
+    }
+    
+    struct Output {
+        let navigate = PassthroughSubject<OnboardingRoute, Never>()
+    }
+    
   private var store: [AnyCancellable] = []
 
-  public init() {
-    inputStream
-      .sink { [weak self] type in
-        guard let self = self else { return }
-        // TODO: router 통해서 view 이동 (lottie를 overlay할지?)
-        switch type {
-        case .navigateToOnboarding: break
-
+    let output : Output = .init()
+    
+    public init() { }
+    
+    func send(input : Input) {
+        switch input {
+        case .startButtonTap:
+            self.output.navigate.send(.onboarding)
         }
-      }
-      .store(in: &store)
-  }
-
-  public var inputStream: PassthroughSubject<SplashInputType, Never> = .init()
+    }
 }

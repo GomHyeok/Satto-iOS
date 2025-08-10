@@ -15,22 +15,8 @@ import UIKit
 
 public final class SplashViewcontroller: UIViewController {
   private var store: [AnyCancellable] = []
-  private var viewModel: SplashViewModelProtocol!
-
-  public init() {
-    super.init(nibName: nil, bundle: nil)
-  }
-
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  public override func viewDidLoad() {
-    super.viewDidLoad()
-    self.view.backgroundColor = .white
-    setupHierarchy()
-    setupLayout()
-  }
+    private let viewModel: SplashViewModel!
+    private var router : OnboardingRouter!
 
   private lazy var splashImageView: UIImageView = UIImageView().then {
     $0.image = DesignSystemAsset.Images.sattoLogo.image
@@ -46,6 +32,24 @@ public final class SplashViewcontroller: UIViewController {
     $0.backgroundColor = DesignSystemAsset.Colors.primary2.color
     $0.layer.cornerRadius = 8
   }
+    
+    public init(viewModel : SplashViewModel, router: OnboardingRouter) {
+        self.router = router
+        self.viewModel = viewModel
+      super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
+
+    public override func viewDidLoad() {
+      super.viewDidLoad()
+      self.view.backgroundColor = .white
+        setupBind()
+      setupHierarchy()
+      setupLayout()
+    }
 }
 
 // MARK: Setup View
@@ -55,20 +59,21 @@ extension SplashViewcontroller {
     self.view.addSubview(startButton)
   }
 
-  public func setupBind(viewModel: SplashViewModelProtocol) {
-    self.viewModel = viewModel
+    private func setupBind() {
+        self.startButton.tapPublisher
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.viewModel.send(input: .startButtonTap)
+            }
+            .store(in: &store)
 
-    self.startButton.tapPublisher
-      .sink { [weak self] _ in
-        guard let self = self else { return }
-        self.viewModel.inputStream.send(.navigateToOnboarding)
-        let viewModel = OnboardingViewModel()
-        let viewController = OnboardingViewController(viewModel: viewModel)
-        self.navigationController?.pushViewController(viewController, animated: true)
-      }
-      .store(in: &store)
-
-  }
+        self.viewModel.output.navigate
+            .sink { [weak self] route in
+                guard let self = self else { return }
+                self.router.navigate(to: route, how: .push, with: [:])
+            }
+            .store(in: &store)
+    }
 
   private func setupLayout() {
     splashImageView.snp.makeConstraints {

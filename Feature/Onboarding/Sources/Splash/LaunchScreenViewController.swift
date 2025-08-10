@@ -50,9 +50,8 @@ extension LaunchScreenViewController {
 
   private func moveToSplashView() {
     DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-      let splashViewController = SplashViewcontroller()
-      let viewModel = SplashViewModel()
-      splashViewController.setupBind(viewModel: viewModel)
+        let router = OnboardingRouter()
+        let splashViewController = SplashViewcontroller(viewModel: SplashViewModel(), router: router)
 
       let navigationController = UINavigationController(rootViewController: splashViewController)
 

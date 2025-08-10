@@ -7,86 +7,68 @@
 
 import Combine
 import Foundation
+import Lib
 
-public enum OnboardingAction {
-  case checkNameFormat(name: String)
-  case genderSelected(isSelected: GenderType)
-  case checkBirthFormat(birth: String)
-  case bornTimeSelected(bornTime: BornType)
-  case nextButtonTap
-  case completeButtonTap
-}
-
-public protocol OnboardingOutputProtocol {
-  var showNameError: AnyPublisher<Bool, Never> { get }
-  var showBirthError: AnyPublisher<Bool, Never> { get }
-  var isNextButtonEnabled: AnyPublisher<Bool, Never> { get }
-}
-
-public protocol OnboardingViewModelProtocol: OnboardingOutputProtocol {
-  var inputStream: PassthroughSubject<OnboardingAction, Never> { get }
-}
-
-public class OnboardingViewModel: OnboardingViewModelProtocol {
-  var stor: Set<AnyCancellable> = []
-
-  @Published private var _isNameValid: Bool = false
-  @Published private var _isBirthDateValid: Bool = false
-  @Published private var _isBornTimeValied: Bool = false
-
-  public var inputStream: PassthroughSubject<OnboardingAction, Never> = .init()
-
-  public var isNextButtonEnabled: AnyPublisher<Bool, Never> {
-    Publishers.CombineLatest3($_isNameValid, $_isBirthDateValid, $_isBornTimeValied).map {
-      (nameValid, birthBalid, bornTimeValid) in
-      return nameValid && birthBalid && bornTimeValid
+public class OnboardingViewModel {
+    
+    enum Input {
+        case checkNameFormat(name: String)
+        case genderSelected(isSelected: GenderType)
+        case checkBirthFormat(birth: String)
+        case bornTimeSelected(bornTime: BornType)
+        case nextButtonTap
+        case completeButtonTap
+        case timePickerTap
     }
-    .eraseToAnyPublisher()
-  }
-
-  public var showNameError: AnyPublisher<Bool, Never> {
-    $_isNameValid
-      .eraseToAnyPublisher()
-  }
-
-  public var showBirthError: AnyPublisher<Bool, Never> {
-    $_isBirthDateValid
-      .eraseToAnyPublisher()
-  }
-
-  private var state: State = .init()
-
-  public init() {
-    inputStream
-      .sink { [weak self] action in
-        guard let self = self else { return }
-        switch action {
-        case .checkNameFormat(let name):
-          self._isNameValid = checkNameFormat(name: name)
-          if self._isNameValid { self.state.name = name }
-        case .genderSelected(let isSelected):
-          self.state.gender = isSelected
-        case .checkBirthFormat(let birth):
-          self._isBirthDateValid = checkBirthFormat(birth: birth)
-          if self._isBirthDateValid { self.state.birthDate = birth }
-        case .bornTimeSelected(let bornTime):
-          switch bornTime {
-          case .dontKnow(let isSelected):
-            self._isBornTimeValied = (self.state.bornTime != nil || !isSelected)
-          case .time(let time):
-            self._isBornTimeValied = true
-            self.state.bornTime = bornTime
-          }
+    
+    struct Output {
+        let showNameError : PassthroughSubject<Bool, Never> = .init()
+        let showBirthError : PassthroughSubject<Bool, Never> = .init()
+        let isNextButtonEnabled: PassthroughSubject<Bool, Never> = .init()
+        let navigate : PassthroughSubject<OnboardingRoute, Never> = .init()
+    }
+    
+    let output : Output = Output()
+    
+    private var _isNameValid: Bool = false
+    private var _isBirthDateValid: Bool = false
+    private var _isBornTimeValied: Bool = false
+    
+    private var state: State = .init()
+    
+    func send(input : Input) {
+        switch input {
+        case .checkNameFormat(name: let name):
+            self._isNameValid = checkNameFormat(name: name)
+            if self._isNameValid { self.state.name = name }
+            self.output.showNameError.send(self._isNameValid)
+            self.output.isNextButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
+        case .genderSelected(isSelected: let isSelected):
+            self.state.gender = isSelected
+        case .checkBirthFormat(birth: let birth):
+            self._isBirthDateValid = checkBirthFormat(birth: birth)
+            if self._isBirthDateValid { self.state.birthDate = birth }
+            self.output.showBirthError.send(self._isBirthDateValid)
+            self.output.isNextButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
+        case .bornTimeSelected(bornTime: let bornTime):
+            switch bornTime {
+            case .dontKnow(let isSelected):
+                self._isBornTimeValied = (self.state.bornTime != nil || !isSelected)
+            case .time(let time):
+                self._isBornTimeValied = true
+                self.state.bornTime = time
+            }
+            self.output.isNextButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
         case .nextButtonTap:
-          // TODO: Modal present
-          break
+            self.output.navigate.send(.agreement)
         case .completeButtonTap:
-          // TODO: API 연결 부분
-          break
+            break
+        case .timePickerTap :
+            self.output.navigate.send(.timePicker)
         }
-      }
-      .store(in: &stor)
-  }
+    }
+    
+    public init() { }
 }
 
 extension OnboardingViewModel {
@@ -94,7 +76,7 @@ extension OnboardingViewModel {
     var name: String?
     var gender: GenderType?
     var birthDate: String?
-    var bornTime: BornType?
+      var bornTime: String?
   }
 }
 

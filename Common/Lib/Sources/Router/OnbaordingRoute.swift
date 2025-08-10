@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import UIKit
 
 public enum OnboardingRoute {
   case splash
   case onboarding
-  case agreement
-  case timePicker
+    case agreement
+    case timePicker
 }
