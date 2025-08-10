@@ -5,20 +5,20 @@
 //  Created by ttozzi on 8/7/25.
 //
 
-import UIKit
-import Extension
 import DesignSystem
+import Extension
+import UIKit
 
 struct NumberRecommendationCollectionViewCellModel: RecommendationDetailCellModel {
   let roundText: String
   let title: String
   let numbers: [Int]
   let expectedPrize: String
-  let timeUntilDraw: String // TODO: 확인 필요
+  let timeUntilDraw: String  // TODO: 확인 필요
 }
 
 final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = 16
     $0.axis = .vertical
@@ -53,7 +53,7 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
     $0.textColor = STColors.gray1.color
     $0.textAlignment = .right
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -67,48 +67,50 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
     contentView.backgroundColor = STColors.white.color
     contentView.layer.cornerRadius = 12
     contentView.clipsToBounds = true
-    
+
     contentView.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.top.equalToSuperview().inset(24)
       make.leading.trailing.bottom.equalToSuperview().inset(20)
     }
-    
+
     contentStackView.addArrangedSubview(roundTextChip)
     roundTextChip.snp.makeConstraints { make in
       make.height.equalTo(28)
     }
-    
+
     contentStackView.addArrangedSubview(titleLabel)
     titleLabel.snp.makeConstraints { make in
       make.height.equalTo(27)
     }
-    
+
     contentStackView.addArrangedSubview(numberBallStackView)
     numberBallStackView.snp.makeConstraints { make in
       make.height.equalTo(40)
     }
-    
+
     let line = DashedLineView(color: STColors.gray6.color)
     contentStackView.addArrangedSubview(line)
     line.snp.makeConstraints { make in
       make.height.equalTo(1)
       make.width.equalToSuperview()
     }
-    
-    let expectedPrizeStackView = makeTextStackView(title: "이번 주 예상 당첨금", descriptionLabel: expectedPrizeLabel)
+
+    let expectedPrizeStackView = makeTextStackView(
+      title: "이번 주 예상 당첨금", descriptionLabel: expectedPrizeLabel)
     contentStackView.addArrangedSubview(expectedPrizeStackView)
     expectedPrizeStackView.snp.makeConstraints { make in
       make.width.equalToSuperview()
     }
     contentStackView.setCustomSpacing(6, after: expectedPrizeStackView)
-    let timeUntilDrawStackView = makeTextStackView(title: "추첨까지 남은 시간", descriptionLabel: timeUntilDrawLabel)
+    let timeUntilDrawStackView = makeTextStackView(
+      title: "추첨까지 남은 시간", descriptionLabel: timeUntilDrawLabel)
     contentStackView.addArrangedSubview(timeUntilDrawStackView)
     timeUntilDrawStackView.snp.makeConstraints { make in
       make.width.equalToSuperview()
     }
   }
-  
+
   func update(with model: NumberRecommendationCollectionViewCellModel) {
     roundTextChip.styledText = model.roundText
     titleLabel.styledText = model.title
@@ -123,7 +125,7 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
     expectedPrizeLabel.styledText = model.expectedPrize
     timeUntilDrawLabel.styledText = model.timeUntilDraw
   }
-  
+
   private func makeTextStackView(title: String, descriptionLabel: UILabel) -> UIStackView {
     let textStackView = UIStackView().then {
       $0.axis = .horizontal

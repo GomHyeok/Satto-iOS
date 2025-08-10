@@ -5,8 +5,8 @@
 //  Created by ttozzi on 8/9/25.
 //
 
-import UIKit
 import DesignSystem
+import UIKit
 
 struct NumberRecommendationItem {
   let title: String
@@ -14,7 +14,7 @@ struct NumberRecommendationItem {
 }
 
 final class NumberRecommendationItemView: UIView {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = 20
     $0.axis = .horizontal
@@ -28,32 +28,32 @@ final class NumberRecommendationItemView: UIView {
     $0.spacing = 8
     $0.axis = .horizontal
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private func setupUI() {
     clipsToBounds = true
     layer.borderColor = STColors.gray7.color.cgColor
     layer.borderWidth = 1
     layer.cornerRadius = 8
-    
+
     addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.edges.equalToSuperview().inset(16)
     }
-    
+
     contentStackView.addArrangedSubview(titleLabel)
-    
+
     contentStackView.addArrangedSubview(numberBallStackView)
   }
-  
+
   func update(with item: NumberRecommendationItem) {
     titleLabel.styledText = item.title
     numberBallStackView.arrangedSubviews.forEach {

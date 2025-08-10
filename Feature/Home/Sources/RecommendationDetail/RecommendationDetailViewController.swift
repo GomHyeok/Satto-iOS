@@ -10,11 +10,11 @@ import DesignSystem
 import UIKit
 
 final class RecommendationDetailViewController: UIViewController {
-  
+
   private enum Constant {
     static let horizontalMargin: CGFloat = 20
   }
-  
+
   private lazy var collectionView = UICollectionView(
     frame: .zero, collectionViewLayout: createLayout()
   ).then {
@@ -37,7 +37,7 @@ final class RecommendationDetailViewController: UIViewController {
       forCellWithReuseIdentifier: AvoidNumberCollectionViewCell.typeName
     )
   }
-  
+
   private let viewModel: RecommendationDetailViewModel
   private var cancellables = Set<AnyCancellable>()
 
@@ -49,21 +49,21 @@ final class RecommendationDetailViewController: UIViewController {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-  
+
   private func setupUI() {
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
       $0.edges.equalToSuperview()
     }
   }
-  
+
   private func setupBinding() {
     viewModel.output.sections
       .receive(on: DispatchQueue.main)
@@ -148,7 +148,7 @@ extension RecommendationDetailViewController: UICollectionViewDataSource {
         cell.update(with: item)
       }
       return cell
-      
+
     case let item as AvoidNumberCollectionViewCellModel:
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: AvoidNumberCollectionViewCell.typeName,
