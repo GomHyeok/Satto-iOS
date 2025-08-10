@@ -12,10 +12,10 @@ struct CommonLayer: Layer {
         sources: .empty,
         dependencies: [
           .target(name: "Auth"),
+          .target(name: "Base"),
           .target(name: "Constant"),
           .target(name: "Lib"),
           .project(target: "CoreLayer", path: "../Core"),
-          .project(target: "DesignSystem", path: "../DesignSystem"),
         ],
         settings: .settings(
           base: [
@@ -25,6 +25,14 @@ struct CommonLayer: Layer {
         )
       ),
       .createTarget(name: "Auth"),
+      .createTarget(
+        name: "Base",
+        dependencies: [
+          .project(target: "DesignSystem", path: "../DesignSystem"),
+          .external(name: "Then"),
+          .external(name: "SnapKit"),
+        ]
+      ),
       .createTarget(name: "Constant"),
       .createTarget(
         name: "Lib",

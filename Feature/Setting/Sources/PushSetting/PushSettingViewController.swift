@@ -5,13 +5,14 @@
 //  Created by ttozzi on 7/31/25.
 //
 
+import Base
 import Combine
 import DesignSystem
 import SnapKit
 import Then
 import UIKit
 
-final class PushSettingViewController: UIViewController {
+final class PushSettingViewController: BaseViewController {
 
   private lazy var collectionView = UICollectionView(
     frame: .zero, collectionViewLayout: createLayout()
@@ -39,9 +40,21 @@ final class PushSettingViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupNavigationBar()
     setupUI()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
+    title = "푸시알림"
+  }
+  
+  private func setupNavigationBar() {
+    let backButtonItem = NaivgationBarButtonItem.back
+    backButtonItem.tapPublisher
+      .sink { [weak self] in
+        self?.viewModel.send(input: .backButtonTapped)
+      }
+      .store(in: &cancellables)
+    setNavigationBarLeftButtonItems(items: [backButtonItem])
   }
 
   private func setupUI() {
@@ -49,7 +62,8 @@ final class PushSettingViewController: UIViewController {
 
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints { make in
-      make.verticalEdges.equalToSuperview()
+      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      make.bottom.equalToSuperview()
       make.horizontalEdges.equalToSuperview().inset(24)
     }
   }
