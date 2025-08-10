@@ -46,7 +46,7 @@ final class PushSettingViewController: BaseViewController {
     viewModel.send(input: .viewDidLoad)
     title = "푸시알림"
   }
-  
+
   private func setupNavigationBar() {
     let backButtonItem = NaivgationBarButtonItem.back
     backButtonItem.tapPublisher

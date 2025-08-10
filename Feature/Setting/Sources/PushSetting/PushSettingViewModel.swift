@@ -40,7 +40,7 @@ final class PushSettingViewModel {
     case .toggleChanged(let isEnabled):
       // TODO: 푸시 알림 설정 변경 or 기기 설정 이동
       break
-      
+
     case .backButtonTapped:
       break
     }
