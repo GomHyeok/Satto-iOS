@@ -18,7 +18,9 @@ public final class Ball: UIView {
       $0.color = STColors.white.color
     }
   }
-  private lazy var backgroundImageView = UIImageView()
+  private lazy var backgroundImageView = UIImageView().then {
+    $0.contentMode = .scaleAspectFit
+  }
   public var number: String? {  // TODO: 타입 확인
     get { numberLabel.text }
     set {
