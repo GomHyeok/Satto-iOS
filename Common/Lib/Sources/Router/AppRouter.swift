@@ -45,7 +45,7 @@ public enum AppRoute: Hashable {
 @MainActor
 public protocol Routable: AnyObject {
   func navigate(to route: Any, how: NavigateType, with data: [String: Any])
-    func setFactories()
+  func setFactories()
 }
 
 public final class AppRouter: Routable {
@@ -63,7 +63,7 @@ public final class AppRouter: Routable {
     guard let appRoute = route as? AppRoute else { return }
     guard let factory = factories[appRoute] else { return }
     let subRouter = factory()
-      
+
     switch appRoute {
     case .fortune:
       break
@@ -73,14 +73,14 @@ public final class AppRouter: Routable {
       break
     case .onboarding(let onboardingRoute):
       guard let onboardingRoute = onboardingRoute else { return }
-        
+
       subRouter.navigate(to: onboardingRoute, how: how, with: data)
     case .setting:
       break
     }
   }
-    
-    public func setFactories() { }
+
+  public func setFactories() {}
 }
 
 extension Routable {
