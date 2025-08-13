@@ -14,7 +14,6 @@ import UIKit
 
 public final class OnboardingViewController: UIViewController {
   private var store: Set<AnyCancellable> = []
-
   private let viewModel: OnboardingViewModel
 
   private let router: OnboardingRouter
@@ -158,7 +157,7 @@ public final class OnboardingViewController: UIViewController {
     $0.placeholder = "23:00~00:59"
     //$0.addTarget(self, action: #selector(bornTimeInputButtonTapped), for: .touchUpInside)
   }
-
+    
   private lazy var dontKnowButton: CheckBox = CheckBox().then {
     $0.title = "모르겠어요"
     $0.isSelected = false
@@ -235,46 +234,45 @@ extension OnboardingViewController {
   }
 
   private func setupBind() {
+      
+      viewModel.output.isNextButtonEnabled
+          .receive(on: RunLoop.main)
+          .sink { [weak self] enable in
+              guard let self = self else { return }
+              self.nextButton.isEnabled = enable
 
-    viewModel.output.isNextButtonEnabled
-      .receive(on: RunLoop.main)
-      .sink { [weak self] enable in
-        guard let self = self else { return }
-        self.nextButton.isEnabled = enable
-
-        if enable {
-          self.nextButton.backgroundColor = STColors.primary2.color
-        } else {
-          self.nextButton.backgroundColor = STColors.primary7.color
-        }
-      }
-      .store(in: &store)
-
-    viewModel.output.showNameError
-      .receive(on: RunLoop.main)
-      .sink { [weak self] isValid in
-        guard let self = self else { return }
-
-        if !isValid {
-          if !nameStack.arrangedSubviews.contains(nameErrorLabel) {
-            nameStack.addArrangedSubview(nameErrorLabel)
-            nameStack.setCustomSpacing(6, after: nameTextField)
-            nameTextField.layer.borderColor = STColors.red3.color.cgColor
-            nextButton.isEnabled = false
+              if enable {
+                self.nextButton.backgroundColor = STColors.primary2.color
+              } else {
+                self.nextButton.backgroundColor = STColors.primary7.color
+              }
           }
-        } else {
-          if nameStack.arrangedSubviews.contains(nameErrorLabel) {
-            nameStack.removeArrangedSubview(nameErrorLabel)
-            nameTextField.layer.borderColor = STColors.primary2.color.cgColor
-            nameErrorLabel.removeFromSuperview()
+          .store(in: &store)
+      
+      viewModel.output.showNameError
+          .receive(on: RunLoop.main)
+          .sink { [weak self] isValid in
+              guard let self = self else { return }
+
+              if !isValid {
+                if !nameStack.arrangedSubviews.contains(nameErrorLabel) {
+                  nameStack.addArrangedSubview(nameErrorLabel)
+                  nameStack.setCustomSpacing(6, after: nameTextField)
+                  nameTextField.layer.borderColor = STColors.red3.color.cgColor
+                }
+              } else {
+                if nameStack.arrangedSubviews.contains(nameErrorLabel) {
+                  nameStack.removeArrangedSubview(nameErrorLabel)
+                  nameTextField.layer.borderColor = STColors.primary2.color.cgColor
+                  nameErrorLabel.removeFromSuperview()
+                }
+              }
+
+              self.nameStack.layoutIfNeeded()
           }
-        }
+          .store(in: &store)
 
-        self.nameStack.layoutIfNeeded()
-      }
-      .store(in: &store)
-
-    viewModel.output.showBirthError
+      viewModel.output.showBirthError
       .receive(on: RunLoop.main)
       .sink { [weak self] isValid in
         guard let self = self else { return }
@@ -308,36 +306,35 @@ extension OnboardingViewController {
       }
       .store(in: &store)
 
-    viewModel.output.navigate
-      .receive(on: RunLoop.main)
-      .sink { [weak self] route in
-        guard let self = self else { return }
-        switch route {
-        case .splash:
-          router.navigate(to: route, how: .clear, with: [:])
-        case .onboarding:
-          router.navigate(to: route, how: .push, with: [:])
-        case .agreement:
-          router.navigate(to: route, how: .overFullScreen, with: ["delegate": self])
-        case .timePicker:
-          router.navigate(to: route, how: .overFullScreen, with: ["delegate": self])
-        }
-      }
-      .store(in: &store)
-
+      viewModel.output.navigate
+          .receive(on: RunLoop.main)
+          .sink { [weak self] route in
+              guard let self = self else { return }
+              switch route {
+              case .splash:
+                  router.navigate(to: route, how: .clear, with: [:])
+              case .onboarding:
+                  router.navigate(to: route, how: .push, with: [:])
+              case .agreement:
+                  router.navigate(to: route, how: .overFullScreen, with: ["delegate" : self])
+              case .timePicker:
+                  router.navigate(to: route, how: .overFullScreen, with: ["delegate" : self])
+              }
+          }
+          .store(in: &store)
+      
     nextButton.tapPublisher
       .sink { [weak self] _ in
         guard let self = self else { return }
-        self.viewModel.send(input: .nextButtonTap)
+          self.viewModel.send(input: .nextButtonTap)
       }
       .store(in: &store)
-
-    bornTimeSetButton.tapPublisher
-      .sink { [weak self] _ in
-        self?.viewModel.send(input: .timePickerTap)
-      }
-      .store(in: &store)
-
+      
+      bornTimeSetButton.tapPublisher
+          .sink{[weak self] _ in
+              self?.viewModel.send(input: .timePickerTap)
+          }
+          .store(in: &store)
   }
 
   private func setupLayout() {
@@ -466,12 +463,11 @@ extension OnboardingViewController {
     bottomSheetVC.delegate = self
     bottomSheetVC.modalPresentationStyle = .overFullScreen
     present(bottomSheetVC, animated: true, completion: nil)
-
+      
   }
 
   @objc private func dontKonwButtonTapped() {
-    viewModel.send(
-      input: .bornTimeSelected(bornTime: .dontKnow(isSelected: self.dontKnowButton.isSelected)))
+      viewModel.send(input: .bornTimeSelected(bornTime: .dontKnow(isSelected: self.dontKnowButton.isSelected)))
     bornTimeSetButton.isEnabled.toggle()
   }
 }
@@ -565,7 +561,6 @@ extension OnboardingViewController: GenderSelectionViewDelegate {
     var genderType: GenderType
 
     if gender == "남성" { genderType = .male } else { genderType = .female }
-
     viewModel.send(input: .genderSelected(isSelected: genderType))
 
     if !onBoardingStack.arrangedSubviews.contains(birthStack) {
