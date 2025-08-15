@@ -17,7 +17,7 @@ final class TabBarView: UIView {
   enum Constant {
     static let tabBarHeight: CGFloat = 72
   }
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .horizontal
     $0.distribution = .fillEqually
@@ -45,7 +45,7 @@ final class TabBarView: UIView {
       make.horizontalEdges.equalToSuperview().inset(4)
       make.height.equalTo(Constant.tabBarHeight)
     }
-    
+
     Tab.allCases.enumerated().forEach { index, tab in
       let item = TabBarItem()
       item.image = tab.icon
@@ -55,7 +55,7 @@ final class TabBarView: UIView {
       tabBarItems.append(item)
     }
   }
-  
+
   private func setupBinding() {
     tabBarItems.enumerated().forEach { index, item in
       item.gesturePublisher(gestureRecognizer: UITapGestureRecognizer())
@@ -63,7 +63,7 @@ final class TabBarView: UIView {
           self?.selectedIndexSubject.send(index)
         }
         .store(in: &cancellables)
-      
+
       selectedIndexSubject
         .map { $0 == index }
         .sink { isSelected in

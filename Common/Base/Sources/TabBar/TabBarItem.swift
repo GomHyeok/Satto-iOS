@@ -11,7 +11,7 @@ import Then
 import UIKit
 
 final class TabBarItem: UIView {
-  
+
   private enum Constant {
     static let selectedColor = STColors.primary2.color
     static let unselectedColor = STColors.gray5.color
@@ -63,7 +63,7 @@ final class TabBarItem: UIView {
     }
     contentStackView.addArrangedSubview(titleLabel)
   }
-  
+
   private func update(selected: Bool) {
     if selected {
       imageView.tintColor = Constant.selectedColor
@@ -91,7 +91,7 @@ final class TabBarItem: UIView {
   selectedItem.title = "홈"
   selectedItem.isSelected = true
   content.addArrangedSubview(selectedItem)
-  
+
   let unselectedItem = TabBarItem()
   unselectedItem.snp.makeConstraints { make in
     make.width.equalTo(88)
@@ -103,4 +103,3 @@ final class TabBarItem: UIView {
   content.addArrangedSubview(unselectedItem)
   return content
 }
-
