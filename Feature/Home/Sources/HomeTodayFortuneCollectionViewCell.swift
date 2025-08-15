@@ -23,7 +23,7 @@ final class HomeTodayFortuneCollectionViewCell: UICollectionViewCell {
     $0.style = Typography.Body_18_B
     $0.textColor = STColors.black.color
     let attachment = NSTextAttachment()
-    attachment.image = STImages.clover.image
+    attachment.image = STImages.coloredClover.image
     attachment.bounds = CGRect(x: 0, y: -6, width: 24, height: 24)
     let space = NSMutableAttributedString(string: " ")
     space.addAttribute(.kern, value: 1, range: NSRange(location: 0, length: 1))
