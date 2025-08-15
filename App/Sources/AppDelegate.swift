@@ -1,3 +1,4 @@
+import Auth
 import DIInjector
 import Lib
 import Onboarding
@@ -11,7 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-
+    DeviceUUIDManager.setup()
     registRouter()
 
     return true
