@@ -27,7 +27,7 @@ struct CommonLayer: Layer {
       .createTarget(
         name: "Auth",
         dependencies: [
-          .target(name: "Lib"),
+          .target(name: "Lib")
         ]
       ),
       .createTarget(

@@ -9,11 +9,11 @@ import Foundation
 import Lib
 
 public final class DeviceUUIDManager {
-  
+
   private enum Constant {
     static let uuidKey = "device-uuid"
   }
-  
+
   public static let shared = DeviceUUIDManager()
   public var deviceUUID: String {
     do {
@@ -24,22 +24,22 @@ public final class DeviceUUIDManager {
       return newUUID
     }
   }
-  
+
   private init() {}
-  
+
   func regenerateUUID() -> String {
     let newUUID = UUID().uuidString
     try? KeyChainService.set(newUUID, forKey: Constant.uuidKey)
     return newUUID
   }
-  
+
   func deleteUUID() {
     try? KeyChainService.remove(forKey: Constant.uuidKey)
   }
 }
 
-public extension DeviceUUIDManager {
-  static func setup() {
+extension DeviceUUIDManager {
+  public static func setup() {
     _ = shared.deviceUUID
   }
 }
