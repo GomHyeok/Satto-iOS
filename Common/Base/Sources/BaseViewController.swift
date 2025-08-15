@@ -43,6 +43,7 @@ open class BaseViewController: UIViewController {
   }
 
   private func setupNavigationBar() {
+    navigationController?.setNavigationBarHidden(true, animated: false)
     view.addSubview(navigationBar)
     navigationBar.snp.makeConstraints { make in
       make.top.equalTo(view.snp.top)

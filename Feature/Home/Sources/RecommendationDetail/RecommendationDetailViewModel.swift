@@ -43,7 +43,6 @@ final class RecommendationDetailViewModel {
           roundText: "1181회",
           title: "콩떡님을 위한 로또 번호 추천",
           numbers: [9, 11, 18, 24, 33, 42],
-          expectedPrize: "402,396,191원",
           timeUntilDraw: "6일 2시간 59분 32초"
         ),
         AIAnalysisResultCollectionViewCellModel(

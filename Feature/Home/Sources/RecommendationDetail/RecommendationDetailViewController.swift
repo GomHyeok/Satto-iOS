@@ -5,14 +5,16 @@
 //  Created by ttozzi on 8/7/25.
 //
 
+import Base
 import Combine
 import DesignSystem
 import UIKit
 
-final class RecommendationDetailViewController: UIViewController {
+final class RecommendationDetailViewController: BaseViewController {
 
   private enum Constant {
     static let horizontalMargin: CGFloat = 20
+    static let footerHeight: CGFloat = 104
   }
 
   private lazy var collectionView = UICollectionView(
@@ -36,8 +38,12 @@ final class RecommendationDetailViewController: UIViewController {
       AvoidNumberCollectionViewCell.self,
       forCellWithReuseIdentifier: AvoidNumberCollectionViewCell.typeName
     )
+    $0.contentInset.bottom = Constant.footerHeight
   }
-
+  private lazy var footerView = RecommendationDetailFooterContainerView()
+  private lazy var tooltipView = TooltipView().then { // TODO: 노출 조건 확인
+    $0.text = "결과가 나왔소! 번호 보러 오시오."
+  }
   private let viewModel: RecommendationDetailViewModel
   private var cancellables = Set<AnyCancellable>()
 
@@ -52,15 +58,51 @@ final class RecommendationDetailViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupNavigationBar()
     setupUI()
     setupBinding()
+    updateFooterView() // TODO: 임시
     viewModel.send(input: .viewDidLoad)
+  }
+  
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+
+    if let window = view.window {
+      footerView.snp.updateConstraints { make in
+        make.height.equalTo(Constant.footerHeight + window.safeAreaInsets.bottom)
+      }
+    }
+  }
+  
+  private func setupNavigationBar() {
+    title = "콩떡님의 로또 번호" // TODO: username 확인 필요
+    navigationBar.backgroundColor = STColors.primary9.color
+    let backButtonItem = NaivgationBarButtonItem.back
+    setNavigationBarLeftButtonItems(items: [
+      backButtonItem
+    ])
   }
 
   private func setupUI() {
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
-      $0.edges.equalToSuperview()
+      $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      $0.leading.trailing.bottom.equalToSuperview()
+    }
+    
+    view.addSubview(footerView)
+    footerView.snp.makeConstraints { make in
+      make.horizontalEdges.equalToSuperview()
+      make.bottom.equalToSuperview()
+      make.height.equalTo(Constant.footerHeight)
+    }
+    
+    view.addSubview(tooltipView)
+    tooltipView.snp.makeConstraints { make in
+      make.bottom.equalTo(footerView.snp.top).inset(16)
+      make.width.equalToSuperview().inset(24)
+      make.centerX.equalToSuperview()
     }
   }
 
@@ -101,6 +143,20 @@ final class RecommendationDetailViewController: UIViewController {
       return sectionLayout
     }
     return layout
+  }
+  
+  private func updateFooterView() { // TODO: 상태에 따른 업데이트
+    let showResultsButton = UIButton().then {
+      $0.backgroundColor = STColors.primary2.color
+      $0.layer.cornerRadius = 8
+      let style = Typography.Body_16_B.color(STColors.white.color)
+      let styledText = "결과 확인하기".set(style: style)
+      $0.setAttributedTitle(styledText, for: .normal)
+    }
+    showResultsButton.snp.makeConstraints { make in
+      make.height.equalTo(48)
+    }
+    footerView.update(buttons: [showResultsButton])
   }
 }
 
@@ -167,5 +223,6 @@ extension RecommendationDetailViewController: UICollectionViewDataSource {
 
 @available(iOS 17.0, *)
 #Preview {
-  RecommendationDetailViewController(viewModel: RecommendationDetailViewModel())
+  let vc = RecommendationDetailViewController(viewModel: RecommendationDetailViewModel())
+  return UINavigationController(rootViewController: vc)
 }

@@ -13,7 +13,6 @@ struct NumberRecommendationCollectionViewCellModel: RecommendationDetailCellMode
   let roundText: String
   let title: String
   let numbers: [Int]
-  let expectedPrize: String
   let timeUntilDraw: String  // TODO: 확인 필요
 }
 
@@ -42,11 +41,6 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
     $0.spacing = 12
     $0.axis = .horizontal
     $0.alignment = .center
-  }
-  private lazy var expectedPrizeLabel = UILabel().then {
-    $0.style = Typography.Body_14_SB
-    $0.textColor = STColors.gray1.color
-    $0.textAlignment = .right
   }
   private lazy var timeUntilDrawLabel = UILabel().then {
     $0.style = Typography.Body_14_SB
@@ -95,14 +89,7 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
       make.height.equalTo(1)
       make.width.equalToSuperview()
     }
-
-    let expectedPrizeStackView = makeTextStackView(
-      title: "이번 주 예상 당첨금", descriptionLabel: expectedPrizeLabel)
-    contentStackView.addArrangedSubview(expectedPrizeStackView)
-    expectedPrizeStackView.snp.makeConstraints { make in
-      make.width.equalToSuperview()
-    }
-    contentStackView.setCustomSpacing(6, after: expectedPrizeStackView)
+    
     let timeUntilDrawStackView = makeTextStackView(
       title: "추첨까지 남은 시간", descriptionLabel: timeUntilDrawLabel)
     contentStackView.addArrangedSubview(timeUntilDrawStackView)
@@ -122,7 +109,6 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
       ball.number = String(number)
       numberBallStackView.addArrangedSubview(ball)
     }
-    expectedPrizeLabel.styledText = model.expectedPrize
     timeUntilDrawLabel.styledText = model.timeUntilDraw
   }
 
@@ -153,7 +139,6 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
     roundText: "1181회",
     title: "콩떡님을 위한 로또 번호 추천",
     numbers: [9, 11, 18, 24, 33, 42],
-    expectedPrize: "402,396,191원",
     timeUntilDraw: "6일 2시간 59분 32초"
   )
   let cell = NumberRecommendationCollectionViewCell()
