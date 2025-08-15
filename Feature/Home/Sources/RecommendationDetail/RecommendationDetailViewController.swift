@@ -41,7 +41,7 @@ final class RecommendationDetailViewController: BaseViewController {
     $0.contentInset.bottom = Constant.footerHeight
   }
   private lazy var footerView = RecommendationDetailFooterContainerView()
-  private lazy var tooltipView = TooltipView().then { // TODO: 노출 조건 확인
+  private lazy var tooltipView = TooltipView().then {  // TODO: 노출 조건 확인
     $0.text = "결과가 나왔소! 번호 보러 오시오."
   }
   private let viewModel: RecommendationDetailViewModel
@@ -61,10 +61,10 @@ final class RecommendationDetailViewController: BaseViewController {
     setupNavigationBar()
     setupUI()
     setupBinding()
-    updateFooterView() // TODO: 임시
+    updateFooterView()  // TODO: 임시
     viewModel.send(input: .viewDidLoad)
   }
-  
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
@@ -74,9 +74,9 @@ final class RecommendationDetailViewController: BaseViewController {
       }
     }
   }
-  
+
   private func setupNavigationBar() {
-    title = "콩떡님의 로또 번호" // TODO: username 확인 필요
+    title = "콩떡님의 로또 번호"  // TODO: username 확인 필요
     navigationBar.backgroundColor = STColors.primary9.color
     let backButtonItem = NaivgationBarButtonItem.back
     setNavigationBarLeftButtonItems(items: [
@@ -90,14 +90,14 @@ final class RecommendationDetailViewController: BaseViewController {
       $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)
       $0.leading.trailing.bottom.equalToSuperview()
     }
-    
+
     view.addSubview(footerView)
     footerView.snp.makeConstraints { make in
       make.horizontalEdges.equalToSuperview()
       make.bottom.equalToSuperview()
       make.height.equalTo(Constant.footerHeight)
     }
-    
+
     view.addSubview(tooltipView)
     tooltipView.snp.makeConstraints { make in
       make.bottom.equalTo(footerView.snp.top).inset(16)
@@ -144,8 +144,8 @@ final class RecommendationDetailViewController: BaseViewController {
     }
     return layout
   }
-  
-  private func updateFooterView() { // TODO: 상태에 따른 업데이트
+
+  private func updateFooterView() {  // TODO: 상태에 따른 업데이트
     let showResultsButton = UIButton().then {
       $0.backgroundColor = STColors.primary2.color
       $0.layer.cornerRadius = 8

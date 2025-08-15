@@ -15,7 +15,7 @@ struct NumberCardItem {
 }
 
 final class NumberCardItemCollectionViewCell: BaseCollectionViewCell {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = 20
     $0.axis = .vertical
@@ -31,34 +31,34 @@ final class NumberCardItemCollectionViewCell: BaseCollectionViewCell {
     $0.axis = .horizontal
     $0.alignment = .bottom
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private func setupUI() {
     contentView.backgroundColor = STColors.gray9.color
     contentView.clipsToBounds = true
     contentView.layer.cornerRadius = 10
-    
+
     contentView.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.edges.equalToSuperview().inset(16)
     }
-    
+
     contentStackView.addArrangedSubview(titleLabel)
-    
+
     contentStackView.addArrangedSubview(numberBallStackView)
     numberBallStackView.snp.makeConstraints { make in
       make.height.greaterThanOrEqualTo(28)
     }
   }
-  
+
   func update(with item: NumberCardItem) {
     titleLabel.styledText = item.title
     numberBallStackView.arrangedSubviews.forEach {

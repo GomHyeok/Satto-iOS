@@ -9,12 +9,12 @@ import DesignSystem
 import UIKit
 
 final class TooltipView: UIView {
-  
+
   private enum Constant {
     static let verticalPadding: CGFloat = 12
     static let horizontalPadding: CGFloat = 16
   }
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .vertical
     $0.alignment = .center
@@ -43,7 +43,7 @@ final class TooltipView: UIView {
     get { textLabel.text }
     set { textLabel.styledText = newValue }
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -52,7 +52,7 @@ final class TooltipView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   private func setupUI() {
     addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
@@ -60,7 +60,7 @@ final class TooltipView: UIView {
       make.horizontalEdges.equalToSuperview()
       make.bottom.equalToSuperview().inset(6)
     }
-    
+
     addSubview(arrowImageView)
     arrowImageView.snp.makeConstraints { make in
       make.top.equalTo(contentStackView.snp.bottom)
@@ -68,7 +68,7 @@ final class TooltipView: UIView {
       make.height.equalTo(6)
       make.width.equalTo(13)
     }
-    
+
     contentStackView.addArrangedSubview(textLabel)
   }
 }

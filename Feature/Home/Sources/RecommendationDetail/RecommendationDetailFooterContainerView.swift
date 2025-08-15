@@ -6,22 +6,22 @@
 //
 
 import DesignSystem
+import SnapKit
 import Then
 import UIKit
-import SnapKit
 
 final class RecommendationDetailFooterContainerView: UIView {
-  
+
   private let gradientLayer = CAGradientLayer()
   private lazy var gradientView = UIView().then {
     let gradient = CAGradientLayer()
     gradientLayer.colors = [
       STColors.primary9.color.withAlphaComponent(0).cgColor,
-      STColors.primary9.color.cgColor
+      STColors.primary9.color.cgColor,
     ]
     gradientLayer.locations = [0, 1]
     gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.25)
-    gradientLayer.endPoint   = CGPoint(x: 0.5, y: 0.75)
+    gradientLayer.endPoint = CGPoint(x: 0.5, y: 0.75)
     $0.layer.addSublayer(gradientLayer)
   }
   private lazy var contentStackView = UIStackView().then {
@@ -33,7 +33,7 @@ final class RecommendationDetailFooterContainerView: UIView {
     $0.isLayoutMarginsRelativeArrangement = true
     $0.layoutMargins = UIEdgeInsets(top: .zero, left: 24, bottom: .zero, right: 24)
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -42,11 +42,11 @@ final class RecommendationDetailFooterContainerView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func layoutSubviews() {
-     super.layoutSubviews()
-     gradientLayer.frame = gradientView.bounds
-   }
+    super.layoutSubviews()
+    gradientLayer.frame = gradientView.bounds
+  }
 
   private func setupUI() {
     addSubview(gradientView)
@@ -62,7 +62,7 @@ final class RecommendationDetailFooterContainerView: UIView {
       make.bottom.equalToSuperview()
     }
   }
-  
+
   func update(buttons: [UIView]) {
     contentStackView.arrangedSubviews.forEach {
       $0.removeFromSuperview()

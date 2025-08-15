@@ -89,7 +89,7 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
       make.height.equalTo(1)
       make.width.equalToSuperview()
     }
-    
+
     let timeUntilDrawStackView = makeTextStackView(
       title: "추첨까지 남은 시간", descriptionLabel: timeUntilDrawLabel)
     contentStackView.addArrangedSubview(timeUntilDrawStackView)
