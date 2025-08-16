@@ -8,17 +8,17 @@
 import Foundation
 
 public struct UserDTO: Decodable {
-  
+
   enum CodingKeys: String, CodingKey {
     case id, name, gender
     case birthDate = "birth_date"
   }
-  
+
   public let id: String
   public let name: String
   public let birthDate: String?
   public let gender: GenderDTO
-  
+
   // TODO: 사주 정보?
 }
 

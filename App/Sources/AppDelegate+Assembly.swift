@@ -5,12 +5,12 @@
 //  Created by ttozzi on 8/15/25.
 //
 
-import Foundation
-import DIInjector
-import Setting
 import Auth
-import NetworkCore
+import DIInjector
+import Foundation
 import Lib
+import NetworkCore
+import Setting
 
 extension AppDelegate {
   func dependencyInjection() {
@@ -18,7 +18,7 @@ extension AppDelegate {
       SettingAssembly(),
       AuthAssembly(),
       NetworkCoreAssembly(),
-      LibAssembly()
+      LibAssembly(),
     ])
   }
 }

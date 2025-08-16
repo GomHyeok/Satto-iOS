@@ -11,12 +11,12 @@ import Foundation
 import NetworkCore
 
 public final class UserDataManager {
-  
+
   public static let shared = UserDataManager()
   @Injected private var deviceUUIDManager: DeviceUUIDManager
   @Injected private var networkProvider: NetworkProvider
   public var user: UserDTO?
-  
+
   @discardableResult
   public func fetch() async throws -> UserDTO {
     let userID = user?.id ?? deviceUUIDManager.deviceUUID

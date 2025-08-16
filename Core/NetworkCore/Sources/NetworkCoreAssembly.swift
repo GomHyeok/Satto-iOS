@@ -17,4 +17,3 @@ public final class NetworkCoreAssembly: Assembly {
 
   public init() {}
 }
-

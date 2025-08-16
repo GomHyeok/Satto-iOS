@@ -12,9 +12,9 @@ public typealias HTTPTask = Moya.Task
 public typealias HTTPMethod = Moya.Method
 
 public protocol BaseTargetType<Response>: TargetType {
-  
+
   associatedtype Response: Decodable
-  
+
   var httpTask: HTTPTask { get }
   var httpMethod: HTTPMethod { get }
 }

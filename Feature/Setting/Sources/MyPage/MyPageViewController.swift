@@ -228,7 +228,7 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
     DependencyInjector.shared.assemble([
       AuthAssembly(),
       SettingAssembly(),
-      NetworkCoreAssembly()
+      NetworkCoreAssembly(),
     ])
     return MyPageViewController(viewModel: MyPageViewModel())
   }

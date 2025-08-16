@@ -17,20 +17,21 @@ struct MyPageService {
 
   func fetch() async throws -> [MyPageSection] {
     let userData = try await userDataManager.fetch()
-    let gender = switch userData.gender {
-    case .male:
-      "남"
-    case .female:
-      "여"
-    }
+    let gender =
+      switch userData.gender {
+      case .male:
+        "남"
+      case .female:
+        "여"
+      }
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     return [
       .profile(
         MyProfileInfoCollectionViewCellModel(
           nickname: userData.name,
           gender: gender,
-          birthDate: "1999-12-25", // TODO: 서버 데이터 양식 확인 필요
-          birthTime: "01:00 ~ 02:59" // TODO: 서버 데이터 양식 확인 필요
+          birthDate: "1999-12-25",  // TODO: 서버 데이터 양식 확인 필요
+          birthTime: "01:00 ~ 02:59"  // TODO: 서버 데이터 양식 확인 필요
         )
       ),
       .feedback(
