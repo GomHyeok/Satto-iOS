@@ -5,7 +5,6 @@
 //  Created by 최재혁 on 7/28/25.
 //
 
-import DesignSystem
 import SnapKit
 import Then
 import UIKit
@@ -38,7 +37,7 @@ public final class PickerButton: UIButton {
     }
   }
 
-  var isActive: Bool = false {
+  public var isActive: Bool = false {
     didSet {
       updateBorderColor()
     }

@@ -396,10 +396,6 @@ extension OnboardingViewController {
       $0.leading.trailing.equalToSuperview()
     }
 
-    //        dateTypeChipsView.snp.makeConstraints {
-    //            $0.leading.trailing.equalToSuperview()
-    //        }
-
     bornTimeSetButton.snp.makeConstraints {
       $0.height.equalTo(43)
       $0.leading.trailing.equalToSuperview()
@@ -455,17 +451,6 @@ extension OnboardingViewController {
 
 // MARK: functions
 extension OnboardingViewController {
-  @objc private func bornTimeInputButtonTapped() {
-    // 버튼이 탭되었을 때 활성 상태로 변경
-    bornTimeSetButton.isActive = true
-
-    let bottomSheetVC = TimePickerBottomSheetViewController()
-    bottomSheetVC.delegate = self
-    bottomSheetVC.modalPresentationStyle = .overFullScreen
-    present(bottomSheetVC, animated: true, completion: nil)
-
-  }
-
   @objc private func dontKonwButtonTapped() {
     viewModel.send(
       input: .bornTimeSelected(bornTime: .dontKnow(isSelected: self.dontKnowButton.isSelected)))
@@ -579,13 +564,6 @@ extension OnboardingViewController: GenderSelectionViewDelegate {
     }
   }
 }
-
-// MARK: DateTypeChipGroupDelegate
-//extension OnboardingViewController : DateTypeChipGroupViewDelegate {
-//    func dateTypeChipGroupView(_ view: DateTypeChipGroupView, didSelectDateType dateType: String?) {
-//        guard let dateType = dateType else { return }
-//    }
-//}
 
 extension OnboardingViewController: TimePickerBottomSheetDelegate {
   func timePickerBottomSheet(
