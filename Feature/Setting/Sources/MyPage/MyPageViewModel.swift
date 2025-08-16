@@ -24,8 +24,8 @@ public final class MyPageViewModel {
 
   @Injected private var myPageService: MyPageService
   let output: Output = Output()
-  
-  public init() { }
+
+  public init() {}
 
   func send(input: Input) {
     switch input {

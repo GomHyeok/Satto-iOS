@@ -195,7 +195,9 @@ extension FortuneViewController: UICollectionViewDataSource, UICollectionViewDel
     return viewModel.output.sections.value.count
   }
 
-  public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+  public func collectionView(
+    _ collectionView: UICollectionView, numberOfItemsInSection section: Int
+  )
     -> Int
   {
     return 1

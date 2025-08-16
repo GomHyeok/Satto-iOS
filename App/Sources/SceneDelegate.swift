@@ -1,6 +1,6 @@
+import Lib
 import Onboarding
 import UIKit
-import Lib
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

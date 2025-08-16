@@ -102,7 +102,9 @@ public final class HomeViewController: UIViewController {
 
 extension HomeViewController: UICollectionViewDataSource {
 
-  public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+  public func collectionView(
+    _ collectionView: UICollectionView, numberOfItemsInSection section: Int
+  )
     -> Int
   {
     return viewModel.output.sections.value.count

@@ -8,7 +8,7 @@
 import Foundation
 
 public enum DependencyKey {
-  
+
   public enum App {
     public static let configureTabBarController = "configureTabBarController"
   }

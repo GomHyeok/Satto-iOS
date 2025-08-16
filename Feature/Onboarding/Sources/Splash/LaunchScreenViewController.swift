@@ -8,12 +8,12 @@
 import Base
 import DesignSystem
 import Foundation
+import Lib
 import SnapKit
 import UIKit
-import Lib
 
 public final class LaunchScreenViewController: BaseViewController {
-  
+
   private let viewModel: LaunchScreenViewModel
 
   public init(viewModel: LaunchScreenViewModel) {
@@ -53,7 +53,7 @@ extension LaunchScreenViewController {
       $0.trailing.equalToSuperview().offset(-109)
     }
   }
-  
+
   private func setupBinding() {
     viewModel.output.moveToSplash
       .receive(on: DispatchQueue.main)
@@ -66,9 +66,9 @@ extension LaunchScreenViewController {
   private func moveToSplashView() {
     let router = OnboardingRouter()
     let splashViewController = SplashViewcontroller(viewModel: SplashViewModel(), router: router)
-    
+
     let navigationController = UINavigationController(rootViewController: splashViewController)
-    
+
     if let window = UIApplication.shared.windows.first {
       window.rootViewController = navigationController
       window.makeKeyAndVisible()

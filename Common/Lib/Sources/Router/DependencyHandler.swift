@@ -8,7 +8,7 @@
 import Foundation
 
 public final class DependencyHandler {
-  
+
   public static let shared = DependencyHandler()
 
   private var handlers: [String: () -> Void] = [:]
@@ -20,11 +20,11 @@ public final class DependencyHandler {
       $0.register(to: self)
     }
   }
-  
+
   public func register(key: String, handler: @escaping () -> Void) {
     handlers[key] = handler
   }
-  
+
   public func handle(key: String) {
     handlers[key]?()
   }

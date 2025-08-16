@@ -22,8 +22,8 @@ public final class HomeViewModel {
   }
 
   let output: Output = Output()
-  
-  public init() { }
+
+  public init() {}
 
   func send(input: Input) {
     switch input {

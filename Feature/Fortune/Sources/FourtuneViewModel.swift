@@ -20,8 +20,8 @@ public final class FortuneViewModel {
 
   @Injected private var fortuneService: FortuneService
   let output: Output = Output()
-  
-  public init() { }
+
+  public init() {}
 
   func send(input: Input) {
     switch input {

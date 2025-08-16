@@ -7,26 +7,26 @@
 
 import Auth
 import Combine
-import Foundation
 import DIInjector
+import Foundation
 import Lib
 
 public final class LaunchScreenViewModel {
-  
+
   enum Input {
     case viewDidLoad
   }
-  
+
   struct Output {
     let moveToSplash = PassthroughSubject<Void, Never>()
   }
-  
+
   @Injected var userDataManager: UserDataManager
   @Injected var dependencyHandler: DependencyHandler
   let output = Output()
-  
-  public init() { }
-  
+
+  public init() {}
+
   func send(input: Input) {
     switch input {
     case .viewDidLoad:

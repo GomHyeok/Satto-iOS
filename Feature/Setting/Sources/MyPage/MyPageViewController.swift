@@ -147,7 +147,9 @@ extension MyPageViewController: UICollectionViewDataSource {
     return viewModel.output.sections.value.count
   }
 
-  public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+  public func collectionView(
+    _ collectionView: UICollectionView, numberOfItemsInSection section: Int
+  )
     -> Int
   {
     guard let selectedSection = viewModel.output.sections.value[safe: section] else {
@@ -202,7 +204,9 @@ extension MyPageViewController: UICollectionViewDataSource {
 }
 
 extension MyPageViewController: UICollectionViewDelegateFlowLayout {
-  public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+  public func collectionView(
+    _ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath
+  ) {
     guard let section = viewModel.output.sections.value[safe: indexPath.section] else { return }
     switch section {
     case .profile:
