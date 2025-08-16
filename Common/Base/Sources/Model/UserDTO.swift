@@ -18,7 +18,7 @@ public struct UserDTO: Decodable {
   public let id: String
   public let name: String
   public let birthDate: String?
-  public let birthTime : [String]?
+  public let birthTime: [String]?
   public let gender: GenderDTO
 
   // TODO: 사주 정보?

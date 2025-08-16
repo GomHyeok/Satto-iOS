@@ -9,19 +9,19 @@ import Combine
 import Foundation
 
 public final class HistoryWebViewModel {
-  
+
   enum Input {
     case viewDidLoad
   }
-  
+
   struct Output {
     let loadURL = PassthroughSubject<URLRequest, Never>()
   }
-  
+
   let output = Output()
-  
+
   public init() {}
-  
+
   func send(input: Input) {
     switch input {
     case .viewDidLoad:

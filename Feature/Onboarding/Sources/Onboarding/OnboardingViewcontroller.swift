@@ -5,15 +5,15 @@
 //  Created by 최재혁 on 7/23/25.
 //
 
+import Base
 import Combine
 import DesignSystem
 import Foundation
 import SnapKit
 import Then
 import UIKit
-import Base
 
-public final class OnboardingViewController : BaseViewController {
+public final class OnboardingViewController: BaseViewController {
   private var store: Set<AnyCancellable> = []
   private let viewModel: OnboardingViewModel
 
@@ -323,10 +323,10 @@ extension OnboardingViewController {
         }
       }
       .store(in: &store)
-    
+
     viewModel.output.isBornTimeButtonEnabled
       .receive(on: RunLoop.main)
-      .sink { [ weak self ] isEnable in
+      .sink { [weak self] isEnable in
         guard let self else { return }
         self.bornTimeSetButton.isEnabled = isEnable
       }
@@ -612,18 +612,18 @@ extension UIResponder {
 
 #if targetEnvironment(simulator)
 
-import DIInjector
-import Auth
-import Setting
-import NetworkCore
+  import DIInjector
+  import Auth
+  import Setting
+  import NetworkCore
 
-@available(iOS 17.0, *)
-#Preview {
-  DependencyInjector.shared.assemble([
-    AuthAssembly(),
-    SettingAssembly(),
-    NetworkCoreAssembly(),
-  ])
-  return OnboardingViewController(router: OnboardingRouter())
-}
+  @available(iOS 17.0, *)
+  #Preview {
+    DependencyInjector.shared.assemble([
+      AuthAssembly(),
+      SettingAssembly(),
+      NetworkCoreAssembly(),
+    ])
+    return OnboardingViewController(router: OnboardingRouter())
+  }
 #endif

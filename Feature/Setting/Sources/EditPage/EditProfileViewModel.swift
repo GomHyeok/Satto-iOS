@@ -5,10 +5,10 @@
 //  Created by 최재혁 on 8/16/25.
 //
 
+import Base
 import Combine
 import Foundation
 import Lib
-import Base
 
 final class EditProfileViewModel {
   enum Input {

@@ -21,30 +21,30 @@ enum AuthTarget {
     var headers: [String: String]? { nil }
     let userID: String
   }
-  
-  struct PostUser : BaseTargetType {
+
+  struct PostUser: BaseTargetType {
     typealias Response = UserDTO
-    
-    var path : String { "/users"}
+
+    var path: String { "/users" }
     var httpTask: HTTPTask { .requestJSONEncodable(userModel) }
     var httpMethod: HTTPMethod { .post }
     var headers: [String: String]? {
       ["Content-Type": "application/json"]
     }
-    
-    let userModel : UserModel
+
+    let userModel: UserModel
   }
-  
-  struct PutUser : BaseTargetType {
+
+  struct PutUser: BaseTargetType {
     typealias Response = UserDTO
-    
-    var path : String { "users/\(userModel.id)" }
+
+    var path: String { "users/\(userModel.id)" }
     var httpTask: HTTPTask { .requestJSONEncodable(userModel) }
     var httpMethod: HTTPMethod { .put }
     var headers: [String: String]? {
       ["Content-Type": "application/json"]
     }
-    
-    let userModel : UserModel
+
+    let userModel: UserModel
   }
 }

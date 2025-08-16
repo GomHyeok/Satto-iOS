@@ -5,12 +5,12 @@
 //  Created by 최재혁 on 7/29/25.
 //
 
+import Auth
+import Base
 import Combine
+import DIInjector
 import Foundation
 import Lib
-import Auth
-import DIInjector
-import Base
 
 public class OnboardingViewModel {
 
@@ -28,14 +28,14 @@ public class OnboardingViewModel {
     let showNameError: PassthroughSubject<Bool, Never> = .init()
     let showBirthError: PassthroughSubject<Bool, Never> = .init()
     let isNextButtonEnabled: PassthroughSubject<Bool, Never> = .init()
-    let isBornTimeButtonEnabled : PassthroughSubject<Bool, Never> = .init()
+    let isBornTimeButtonEnabled: PassthroughSubject<Bool, Never> = .init()
     let navigate: PassthroughSubject<OnboardingRoute, Never> = .init()
   }
 
   let output: Output = Output()
-  
-  @Injected private var userDataManager : UserDataManager
-  
+
+  @Injected private var userDataManager: UserDataManager
+
   private var _isNameValid: Bool = false
   private var _isBirthDateValid: Bool = false
   private var _isBornTimeValied: Bool = false
@@ -80,7 +80,8 @@ public class OnboardingViewModel {
         }
         Task {
           do {
-            let test = try await self.userDataManager.create(name: name, birthDate: birthDate, birthTime: birthTime , gender: genderDTO)
+            let test = try await self.userDataManager.create(
+              name: name, birthDate: birthDate, birthTime: birthTime, gender: genderDTO)
             print(test)
           } catch {
             // TODO: API 호출 에러처리
