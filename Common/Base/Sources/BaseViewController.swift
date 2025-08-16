@@ -30,6 +30,11 @@ open class BaseViewController: UIViewController {
     setupNavigationBar()
     setNavigationBarHidden(false)
   }
+  
+  open override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+    updateBottomSafeArea()
+  }
 
   public func setNavigationBarHidden(_ isHidden: Bool) {
     navigationBar.isHidden = isHidden
@@ -52,5 +57,14 @@ open class BaseViewController: UIViewController {
       make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
       make.horizontalEdges.equalToSuperview()
     }
+  }
+  
+  private func updateBottomSafeArea() {
+    guard let tabBarController = tabBarController as? BaseTabBarController,
+    tabBarController.customTabBar.isHidden == false else {
+      additionalSafeAreaInsets.bottom = .zero
+      return
+    }
+    additionalSafeAreaInsets.bottom = TabBarView.Constant.tabBarHeight
   }
 }

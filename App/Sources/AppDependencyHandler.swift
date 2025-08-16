@@ -8,6 +8,7 @@
 import Base
 import Fortune
 import Foundation
+import History
 import Home
 import Lib
 import Setting
@@ -28,7 +29,7 @@ struct AppDependencyHandler: DependencyRegistrable {
     tabBarController.viewControllers = [
       HomeViewController(viewModel: HomeViewModel()),
       FortuneViewController(viewModel: FortuneViewModel()),
-      UIViewController(),  // TODO: 뭐 나왔지
+      HistoryWebViewController(viewModel: HistoryWebViewModel()),
       MyPageViewController(viewModel: MyPageViewModel()),
     ]
     UIApplication.shared.activeWindow?.rootViewController = tabBarController
