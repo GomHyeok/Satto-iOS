@@ -9,11 +9,11 @@ import DIInjector
 import Foundation
 
 public final class FortuneAssembly: Assembly {
-    public func assemble(container: Container) {
-        container.register(FortuneService.self) { _ in
-            return FortuneService()
-        }
+  public func assemble(container: Container) {
+    container.register(FortuneService.self) { _ in
+      return FortuneService()
     }
-    
-    public init(){ }
+  }
+
+  public init() {}
 }

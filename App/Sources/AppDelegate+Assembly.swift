@@ -7,11 +7,11 @@
 
 import Auth
 import DIInjector
+import Fortune
 import Foundation
 import Lib
 import NetworkCore
 import Setting
-import Fortune
 
 extension AppDelegate {
   func dependencyInjection() {
@@ -20,7 +20,7 @@ extension AppDelegate {
       AuthAssembly(),
       NetworkCoreAssembly(),
       LibAssembly(),
-      FortuneAssembly()
+      FortuneAssembly(),
     ])
   }
 }

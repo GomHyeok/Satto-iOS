@@ -1,8 +1,8 @@
 import Auth
+import Fortune
 import Lib
 import Onboarding
 import Setting
-import Fortune
 import UIKit
 
 @main
