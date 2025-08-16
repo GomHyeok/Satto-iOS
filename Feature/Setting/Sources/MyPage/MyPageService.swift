@@ -5,28 +5,32 @@
 //  Created by ttozzi on 7/29/25.
 //
 
+import Auth
+import DIInjector
 import DesignSystem
 import Foundation
 import NetworkCore
 
 struct MyPageService {
 
-  private let networkProvider: NetworkProvider
-
-  init(networkProvider: NetworkProvider = .shared) {
-    self.networkProvider = networkProvider
-  }
+  @Injected private var userDataManager: UserDataManager
 
   func fetch() async throws -> [MyPageSection] {
-    // TODO: 서버 통신
-    try await Task.sleep(for: .seconds(2))
+    let userData = try await userDataManager.fetch()
+    let gender = switch userData.gender {
+    case .male:
+      "남"
+    case .female:
+      "여"
+    }
+    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     return [
       .profile(
         MyProfileInfoCollectionViewCellModel(
-          nickname: "콩떡",
-          gender: "여",
-          birthDate: "1999-12-25",
-          birthTime: "01:00 ~ 02:59"
+          nickname: userData.name,
+          gender: gender,
+          birthDate: "1999-12-25", // TODO: 서버 데이터 양식 확인 필요
+          birthTime: "01:00 ~ 02:59" // TODO: 서버 데이터 양식 확인 필요
         )
       ),
       .feedback(
@@ -42,7 +46,7 @@ struct MyPageService {
           style: .icon(STImages.chevronRightS.image), title: "이용약관"),
         MyPageMenuCollectionViewCellModel(
           style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침"),
-        MyPageMenuCollectionViewCellModel(style: .text("1.0.0"), title: "앱 버전"),
+        MyPageMenuCollectionViewCellModel(style: .text(appVersion ?? "1.0.0"), title: "앱 버전"),
       ]),
     ]
   }

@@ -8,14 +8,14 @@
 import Foundation
 import Lib
 
-public final class DeviceUUIDManager {
+final class DeviceUUIDManager {
 
   private enum Constant {
     static let uuidKey = "device-uuid"
   }
 
-  public static let shared = DeviceUUIDManager()
-  public var deviceUUID: String {
+  static let shared = DeviceUUIDManager()
+  var deviceUUID: String {
     do {
       return try KeyChainService.getString(forKey: Constant.uuidKey)
     } catch {
@@ -35,11 +35,5 @@ public final class DeviceUUIDManager {
 
   func deleteUUID() {
     try? KeyChainService.remove(forKey: Constant.uuidKey)
-  }
-}
-
-extension DeviceUUIDManager {
-  public static func setup() {
-    _ = shared.deviceUUID
   }
 }

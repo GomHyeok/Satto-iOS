@@ -219,12 +219,16 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
 }
 
 #if targetEnvironment(simulator)
+  import Auth
   import DIInjector
+  import NetworkCore
 
   @available(iOS 17.0, *)
   #Preview {
     DependencyInjector.shared.assemble([
-      SettingAssembly()
+      AuthAssembly(),
+      SettingAssembly(),
+      NetworkCoreAssembly()
     ])
     return MyPageViewController(viewModel: MyPageViewModel())
   }

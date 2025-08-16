@@ -1,5 +1,4 @@
 import Auth
-import DIInjector
 import Lib
 import Onboarding
 import Setting
@@ -12,9 +11,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    DeviceUUIDManager.setup()
+    dependencyInjection()
     registRouter()
-
     return true
   }
 
@@ -35,13 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Called when the user discards a scene session.
     // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
     // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-  }
-
-  private func dependencyInjection() {
-    DependencyInjector.shared.assemble([
-      CoreLayerAssembly(),
-      SettingAssembly(),
-    ])
   }
 
   private func registRouter() {
