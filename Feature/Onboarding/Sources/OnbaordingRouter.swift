@@ -33,21 +33,19 @@ public final class OnboardingRouter: Routable {
     guard let onboardingRoute = route as? OnboardingRoute else { return }
     guard let factory = factories[onboardingRoute] else { return }
     let viewController = factory()
-
-    if onboardingRoute == .agreement {
-      if let agreementVC = viewController as? AgreementViewController,
-        let delegate = data["delegate"] as? AgreementViewDelegate
-      {
-        agreementVC.delegate = delegate
+      
+      if onboardingRoute == .agreement {
+          if let agreementVC = viewController as? AgreementViewController,
+             let delegate = data["delegate"] as? AgreementViewDelegate {
+              agreementVC.delegate = delegate
+          }
+      } else if onboardingRoute == .timePicker {
+          if let timePickerVC = viewController as? TimePickerBottomSheetViewController,
+             let delegate = data["delegate"] as? TimePickerBottomSheetDelegate {
+              timePickerVC.delegate = delegate
+          }
       }
-    } else if onboardingRoute == .timePicker {
-      if let timePickerVC = viewController as? TimePickerBottomSheetViewController,
-        let delegate = data["delegate"] as? TimePickerBottomSheetDelegate
-      {
-        timePickerVC.delegate = delegate
-      }
-    }
-
+ 
     manageViewController(viewController, how: how)
   }
 }

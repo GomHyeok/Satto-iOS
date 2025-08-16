@@ -2,6 +2,7 @@ import Auth
 import Lib
 import Onboarding
 import Setting
+import Fortune
 import UIKit
 
 @main

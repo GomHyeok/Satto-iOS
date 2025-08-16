@@ -34,3 +34,32 @@ extension NaivgationBarButtonItem {
     return item
   }
 }
+
+public final class NavigationImageItem : UIImageView, NavigationBarItem {
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupUI() {
+        contentMode = .scaleAspectFit
+        snp.makeConstraints { make in
+            make.width.equalTo(74)
+            make.height.equalTo(20)
+        }
+    }
+}
+
+extension NavigationImageItem {
+    public static var logo: NavigationImageItem {
+        let item = NavigationImageItem(frame: .zero)
+        item.image = STImages.navigationLogo.image
+        return item
+    }
+    
+}
