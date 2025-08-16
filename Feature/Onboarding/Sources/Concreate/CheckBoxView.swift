@@ -42,13 +42,13 @@ public final class CheckBox: UIControl {
     }
   }
 
-    public override var isSelected: Bool {
+  public override var isSelected: Bool {
     didSet {
       updateAppearance()
     }
   }
 
-    public override var isEnabled: Bool {
+  public override var isEnabled: Bool {
     didSet {
       updateAppearance()
     }
@@ -124,7 +124,7 @@ public final class CheckBox: UIControl {
   }
 
   // MARK: - 터치 처리
-    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+  public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
     super.touchesEnded(touches, with: event)
     if isEnabled {
       isSelected.toggle()

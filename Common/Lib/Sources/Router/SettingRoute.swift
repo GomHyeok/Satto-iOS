@@ -6,8 +6,8 @@
 //
 
 public enum SettingRoute {
-    case myPage
-    case pushSetting
-    case editProfile
-    case timePicker
+  case myPage
+  case pushSetting
+  case editProfile
+  case timePicker
 }

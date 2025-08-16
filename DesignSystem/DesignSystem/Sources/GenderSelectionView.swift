@@ -84,14 +84,14 @@ public final class GenderSelectionView: UIView {
     }
     selectedGender = radioButtons[index].title
   }
-    
-    public func setInitialSelection(gender: String) {
-        if gender == "남성", let index = radioButtons.firstIndex(where: { $0.title == "남성" }) {
-            selectRadioButton(at: index)
-        } else if gender == "여성", let index = radioButtons.firstIndex(where: { $0.title == "여성" }) {
-            selectRadioButton(at: index)
-        }
+
+  public func setInitialSelection(gender: String) {
+    if gender == "남성", let index = radioButtons.firstIndex(where: { $0.title == "남성" }) {
+      selectRadioButton(at: index)
+    } else if gender == "여성", let index = radioButtons.firstIndex(where: { $0.title == "여성" }) {
+      selectRadioButton(at: index)
     }
+  }
 }
 
 extension GenderSelectionView: RadioButtonViewDelegate {

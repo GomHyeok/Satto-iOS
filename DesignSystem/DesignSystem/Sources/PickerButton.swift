@@ -43,7 +43,7 @@ public final class PickerButton: UIButton {
     }
   }
 
-    public override var isEnabled: Bool {
+  public override var isEnabled: Bool {
     didSet {
       updateBorderColor()
     }

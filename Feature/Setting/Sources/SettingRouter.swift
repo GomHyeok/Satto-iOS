@@ -9,27 +9,27 @@ import Foundation
 import Lib
 import UIKit
 
-public final class SettingRouter : Routable {
-    private var factories: [SettingRoute: () -> UIViewController]
+public final class SettingRouter: Routable {
+  private var factories: [SettingRoute: () -> UIViewController]
 
-    public init() {
-        self.factories = [:]
-        self.setFactories()
-    }
+  public init() {
+    self.factories = [:]
+    self.setFactories()
+  }
 
-    public func setFactories() {
-        self.factories = [
-            .myPage: { MyPageViewController(viewModel: MyPageViewModel()) },
-            .pushSetting: { PushSettingViewController(viewModel: PushSettingViewModel()) },
-            .editProfile: { EditProfileViewController(router: self) }
-        ]
-    }
+  public func setFactories() {
+    self.factories = [
+      .myPage: { MyPageViewController(viewModel: MyPageViewModel()) },
+      .pushSetting: { PushSettingViewController(viewModel: PushSettingViewModel()) },
+      .editProfile: { EditProfileViewController(router: self) },
+    ]
+  }
 
-    public func navigate(to route: Any, how: NavigateType, with data: [String: Any]) {
-        guard let settingRoute = route as? SettingRoute else { return }
-        guard let factory = factories[settingRoute] else { return }
-        let viewController = factory()
+  public func navigate(to route: Any, how: NavigateType, with data: [String: Any]) {
+    guard let settingRoute = route as? SettingRoute else { return }
+    guard let factory = factories[settingRoute] else { return }
+    let viewController = factory()
 
-        manageViewController(viewController, how: how)
-    }
+    manageViewController(viewController, how: how)
+  }
 }
