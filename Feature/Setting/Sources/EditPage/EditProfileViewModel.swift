@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 import Lib
-import Onboarding
+import Base
 
 final class EditProfileViewModel {
   enum Input {

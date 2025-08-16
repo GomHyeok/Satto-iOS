@@ -30,4 +30,32 @@ public final class UserDataManager {
       throw error
     }
   }
+  
+  @discardableResult
+  public func create(name : String, birthDate : String, birthTime : [String]?, gender : GenderDTO) async throws -> UserDTO {
+    let userID = user?.id ?? deviceUUIDManager.deviceUUID
+    let userModel = UserModel(id: userID, name: name, birthDate: birthDate, birthTime: birthTime, gender: gender)
+    let target = AuthTarget.PostUser(userModel: userModel)
+    do {
+      let user = try await networkProvider.request(target: target)
+      self.user = user
+      return user
+    } catch {
+      throw error
+    }
+  }
+  
+  @discardableResult
+  public func update(name : String, birthDate : String, birthTime : [String]?, gender : GenderDTO) async throws -> UserDTO {
+    let userID = user?.id ?? deviceUUIDManager.deviceUUID
+    let userModel = UserModel(id: userID, name: name, birthDate: birthDate, birthTime: birthTime, gender: gender)
+    let target = AuthTarget.PutUser(userModel: userModel)
+    do {
+      let user = try await networkProvider.request(target: target)
+      self.user = user
+      return user
+    } catch {
+      throw error
+    }
+  }
 }

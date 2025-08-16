@@ -20,7 +20,7 @@ public final class NetworkProvider {
   public func request<T: BaseTargetType>(target: T) async throws -> T.Response {
     // TODO: Reachability 확인 필요할지
     do {
-      let responseData = try await internalProvider.request(MultiTarget(target))
+      let responseData = try await internalProvider.request(MultiTarget(target)).filterSuccessfulStatusCodes()
       let response = try JSONDecoder().decode(T.Response.self, from: responseData.data)
       return response
     } catch {

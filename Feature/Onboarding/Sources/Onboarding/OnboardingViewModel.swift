@@ -8,6 +8,9 @@
 import Combine
 import Foundation
 import Lib
+import Auth
+import DIInjector
+import Base
 
 public class OnboardingViewModel {
 
@@ -25,14 +28,18 @@ public class OnboardingViewModel {
     let showNameError: PassthroughSubject<Bool, Never> = .init()
     let showBirthError: PassthroughSubject<Bool, Never> = .init()
     let isNextButtonEnabled: PassthroughSubject<Bool, Never> = .init()
+    let isBornTimeButtonEnabled : PassthroughSubject<Bool, Never> = .init()
     let navigate: PassthroughSubject<OnboardingRoute, Never> = .init()
   }
 
   let output: Output = Output()
-
+  
+  @Injected private var userDataManager : UserDataManager
+  
   private var _isNameValid: Bool = false
   private var _isBirthDateValid: Bool = false
   private var _isBornTimeValied: Bool = false
+  private var _isDontKnowSelected: Bool = false
 
   private var state: State = .init()
 
@@ -54,15 +61,35 @@ public class OnboardingViewModel {
       switch bornTime {
       case .dontKnow(let isSelected):
         self._isBornTimeValied = (self.state.bornTime != nil || !isSelected)
+        self._isDontKnowSelected = !isSelected
+        self.output.isBornTimeButtonEnabled.send(isSelected)
       case .time(let time):
         self._isBornTimeValied = true
-        self.state.bornTime = time
+        let components = time.components(separatedBy: " ~ ")
+        self.state.bornTime = components
       }
       self.output.isNextButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
     case .nextButtonTap:
       self.output.navigate.send(.agreement)
     case .completeButtonTap:
-      break
+      if let name = state.name, let birthDate = state.birthDate, let gender = state.gender {
+        let genderDTO = gender == .male ? GenderDTO.male : GenderDTO.female
+        var birthTime: [String]? = nil
+        if !self._isDontKnowSelected {
+          birthTime = self.state.bornTime
+        }
+        Task {
+          do {
+            let test = try await self.userDataManager.create(name: name, birthDate: birthDate, birthTime: birthTime , gender: genderDTO)
+            print(test)
+          } catch {
+            // TODO: API 호출 에러처리
+            print(error)
+          }
+        }
+      } else {
+        // TODO: 입력값에 대한 에러 처리
+      }
     case .timePickerTap:
       self.output.navigate.send(.timePicker)
     }
@@ -76,7 +103,7 @@ extension OnboardingViewModel {
     var name: String?
     var gender: GenderType?
     var birthDate: String?
-    var bornTime: String?
+    var bornTime: [String]?
   }
 }
 

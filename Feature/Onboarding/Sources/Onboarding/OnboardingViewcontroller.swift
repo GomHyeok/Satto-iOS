@@ -11,8 +11,9 @@ import Foundation
 import SnapKit
 import Then
 import UIKit
+import Base
 
-public final class OnboardingViewController: UIViewController {
+public final class OnboardingViewController : BaseViewController {
   private var store: Set<AnyCancellable> = []
   private let viewModel: OnboardingViewModel
 
@@ -182,8 +183,8 @@ public final class OnboardingViewController: UIViewController {
   override public func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = .white
-    self.navigationController?.navigationBar.topItem?.title = ""
-    self.navigationController?.navigationBar.tintColor = STColors.gray1.color
+    let backButtonItem = NaivgationBarButtonItem.back
+    self.setNavigationBarLeftButtonItems(items: [backButtonItem])
     setupBind()
     setupHierarchy()
     setupLayout()
@@ -322,6 +323,14 @@ extension OnboardingViewController {
         }
       }
       .store(in: &store)
+    
+    viewModel.output.isBornTimeButtonEnabled
+      .receive(on: RunLoop.main)
+      .sink { [ weak self ] isEnable in
+        guard let self else { return }
+        self.bornTimeSetButton.isEnabled = isEnable
+      }
+      .store(in: &store)
 
     nextButton.tapPublisher
       .sink { [weak self] _ in
@@ -454,7 +463,6 @@ extension OnboardingViewController {
   @objc private func dontKonwButtonTapped() {
     viewModel.send(
       input: .bornTimeSelected(bornTime: .dontKnow(isSelected: self.dontKnowButton.isSelected)))
-    bornTimeSetButton.isEnabled.toggle()
   }
 }
 
@@ -601,3 +609,21 @@ extension UIResponder {
     UIResponder._currentFirstResponder = self
   }
 }
+
+#if targetEnvironment(simulator)
+
+import DIInjector
+import Auth
+import Setting
+import NetworkCore
+
+@available(iOS 17.0, *)
+#Preview {
+  DependencyInjector.shared.assemble([
+    AuthAssembly(),
+    SettingAssembly(),
+    NetworkCoreAssembly(),
+  ])
+  return OnboardingViewController(router: OnboardingRouter())
+}
+#endif
