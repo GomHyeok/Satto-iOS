@@ -1,5 +1,6 @@
 import Onboarding
 import UIKit
+import Lib
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -13,7 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window = UIWindow(windowScene: windowScene)
     window?.windowScene = windowScene
 
-    let viewController = LaunchScreenViewController()
+    let viewController = LaunchScreenViewController(viewModel: LaunchScreenViewModel())
 
     window?.rootViewController = viewController
     window?.makeKeyAndVisible()

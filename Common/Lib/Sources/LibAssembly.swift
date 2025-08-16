@@ -10,8 +10,8 @@ import Foundation
 
 public final class LibAssembly: Assembly {
   public func assemble(container: Container) {
-    container.register(AppRouter.self) { _ in
-      return AppRouter.shared
+    container.register(DependencyHandler.self) { _ in
+      return DependencyHandler.shared
     }
   }
 

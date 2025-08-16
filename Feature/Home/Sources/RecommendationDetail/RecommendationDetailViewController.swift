@@ -45,7 +45,6 @@ final class RecommendationDetailViewController: BaseViewController {
     $0.text = "결과가 나왔소! 번호 보러 오시오."
   }
   private let viewModel: RecommendationDetailViewModel
-  private var cancellables = Set<AnyCancellable>()
 
   init(viewModel: RecommendationDetailViewModel) {
     self.viewModel = viewModel

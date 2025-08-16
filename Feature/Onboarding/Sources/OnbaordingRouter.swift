@@ -10,11 +10,12 @@ import Lib
 import UIKit
 
 public final class OnboardingRouter: Routable {
-  private var factories: [OnboardingRoute: () -> UIViewController]
+  private var factories: [OnboardingRoute: () -> UIViewController] = [:]
 
-  public init() {
-    self.factories = [:]
-    self.setFactories()
+  public nonisolated init() {
+    Task { @MainActor in
+      self.setFactories()
+    }
   }
 
   public func setFactories() {

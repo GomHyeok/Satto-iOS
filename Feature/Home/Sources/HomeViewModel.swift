@@ -10,7 +10,7 @@ import Foundation
 
 protocol HomeCellModel {}
 
-final class HomeViewModel {
+public final class HomeViewModel {
 
   enum Input {
     case viewDidLoad
@@ -22,6 +22,8 @@ final class HomeViewModel {
   }
 
   let output: Output = Output()
+  
+  public init() { }
 
   func send(input: Input) {
     switch input {

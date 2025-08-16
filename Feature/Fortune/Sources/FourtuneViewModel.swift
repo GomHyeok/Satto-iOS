@@ -9,7 +9,7 @@ import Combine
 import DIInjector
 import Foundation
 
-final class FortuneViewModel {
+public final class FortuneViewModel {
   enum Input {
     case viewDidLoad
   }
@@ -20,6 +20,8 @@ final class FortuneViewModel {
 
   @Injected private var fortuneService: FortuneService
   let output: Output = Output()
+  
+  public init() { }
 
   func send(input: Input) {
     switch input {

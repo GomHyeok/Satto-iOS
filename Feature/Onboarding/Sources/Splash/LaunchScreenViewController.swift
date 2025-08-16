@@ -5,14 +5,19 @@
 //  Created by 최재혁 on 7/26/25.
 //
 
+import Base
 import DesignSystem
 import Foundation
 import SnapKit
 import UIKit
+import Lib
 
-public final class LaunchScreenViewController: UIViewController {
+public final class LaunchScreenViewController: BaseViewController {
+  
+  private let viewModel: LaunchScreenViewModel
 
-  public init() {
+  public init(viewModel: LaunchScreenViewModel) {
+    self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -25,7 +30,8 @@ public final class LaunchScreenViewController: UIViewController {
     self.view.backgroundColor = DesignSystemAsset.Colors.primary2.color
     setupHierarchy()
     setupLayout()
-    moveToSplashView()
+    setupBinding()
+    viewModel.send(input: .viewDidLoad)
   }
 
   private lazy var launchImageView: UIImageView = UIImageView().then {
@@ -47,18 +53,25 @@ extension LaunchScreenViewController {
       $0.trailing.equalToSuperview().offset(-109)
     }
   }
+  
+  private func setupBinding() {
+    viewModel.output.moveToSplash
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] in
+        self?.moveToSplashView()
+      }
+      .store(in: &cancellables)
+  }
 
   private func moveToSplashView() {
-    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-      let router = OnboardingRouter()
-      let splashViewController = SplashViewcontroller(viewModel: SplashViewModel(), router: router)
-
-      let navigationController = UINavigationController(rootViewController: splashViewController)
-
-      if let window = UIApplication.shared.windows.first {
-        window.rootViewController = navigationController
-        window.makeKeyAndVisible()
-      }
+    let router = OnboardingRouter()
+    let splashViewController = SplashViewcontroller(viewModel: SplashViewModel(), router: router)
+    
+    let navigationController = UINavigationController(rootViewController: splashViewController)
+    
+    if let window = UIApplication.shared.windows.first {
+      window.rootViewController = navigationController
+      window.makeKeyAndVisible()
     }
   }
 }

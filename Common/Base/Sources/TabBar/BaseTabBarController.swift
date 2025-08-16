@@ -11,20 +11,20 @@ import SnapKit
 import Then
 import UIKit
 
-final class BaseTabBarController: UITabBarController {
+public final class BaseTabBarController: UITabBarController {
 
   private lazy var customTabBar = TabBarView().then {
     $0.backgroundColor = STColors.white.color
   }
   private var cancellables = Set<AnyCancellable>()
 
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     setupTabBar()
     setupBindings()
   }
 
-  override func viewDidLayoutSubviews() {
+  public override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
 
     if let window = view.window {

@@ -8,79 +8,10 @@
 import Foundation
 import UIKit
 
-public enum AppRoute: Hashable {
-  case fortune
-  case history
-  case home
-  case onboarding(onboardingRoute: OnboardingRoute?)
-  case setting
-
-  public func hash(into hasher: inout Hasher) {
-    switch self {
-    case .fortune:
-      hasher.combine(0)
-    case .history:
-      hasher.combine(1)
-    case .home:
-      hasher.combine(2)
-    case .onboarding(let onboardingRoute):
-      hasher.combine(3)
-    case .setting:
-      hasher.combine(4)
-    }
-  }
-
-  public static func == (lhs: AppRoute, rhs: AppRoute) -> Bool {
-    switch (lhs, rhs) {
-    case (.fortune, .fortune), (.history, .history), (.home, .home), (.setting, .setting):
-      return true
-    case (.onboarding, .onboarding):
-      return true
-    default:
-      return false
-    }
-  }
-}
-
 @MainActor
 public protocol Routable: AnyObject {
   func navigate(to route: Any, how: NavigateType, with data: [String: Any])
   func setFactories()
-}
-
-public final class AppRouter: Routable {
-  public static let shared = AppRouter()
-
-  private var factories: [AppRoute: () -> Routable] = [:]
-
-  private init() {}
-
-  public func register(route: AppRoute, factory: @escaping () -> Routable) {
-    factories[route] = factory
-  }
-
-  public func navigate(to route: Any, how: NavigateType, with data: [String: Any]) {
-    guard let appRoute = route as? AppRoute else { return }
-    guard let factory = factories[appRoute] else { return }
-    let subRouter = factory()
-
-    switch appRoute {
-    case .fortune:
-      break
-    case .history:
-      break
-    case .home:
-      break
-    case .onboarding(let onboardingRoute):
-      guard let onboardingRoute = onboardingRoute else { return }
-
-      subRouter.navigate(to: onboardingRoute, how: how, with: data)
-    case .setting:
-      break
-    }
-  }
-
-  public func setFactories() {}
 }
 
 extension Routable {

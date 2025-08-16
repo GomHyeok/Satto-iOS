@@ -5,6 +5,7 @@
 //  Created by ttozzi on 8/10/25.
 //
 
+import Combine
 import SnapKit
 import UIKit
 
@@ -22,6 +23,7 @@ open class BaseViewController: UIViewController {
     set { navigationBar.title = newValue }
   }
   private var navigationAreaHeight: Constraint?
+  public var cancellables = Set<AnyCancellable>()
 
   open override func viewDidLoad() {
     super.viewDidLoad()

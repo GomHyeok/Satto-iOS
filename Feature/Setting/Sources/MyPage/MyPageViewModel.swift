@@ -9,7 +9,7 @@ import Combine
 import DIInjector
 import Foundation
 
-final class MyPageViewModel {
+public final class MyPageViewModel {
 
   enum Input {
     case viewDidLoad
@@ -24,6 +24,8 @@ final class MyPageViewModel {
 
   @Injected private var myPageService: MyPageService
   let output: Output = Output()
+  
+  public init() { }
 
   func send(input: Input) {
     switch input {

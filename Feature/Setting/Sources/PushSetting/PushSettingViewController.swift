@@ -27,7 +27,6 @@ final class PushSettingViewController: BaseViewController {
       forCellWithReuseIdentifier: PushSettingToggleCollectionViewCell.typeName)
   }
   private let viewModel: PushSettingViewModel
-  private var cancellables = Set<AnyCancellable>()
 
   init(viewModel: PushSettingViewModel) {
     self.viewModel = viewModel

@@ -9,7 +9,7 @@ import Combine
 import DesignSystem
 import UIKit
 
-final class HomeViewController: UIViewController {
+public final class HomeViewController: UIViewController {
 
   private enum Constant {
     static let horizontalMargin: CGFloat = 20
@@ -37,7 +37,7 @@ final class HomeViewController: UIViewController {
   private let viewModel: HomeViewModel
   private var cancellables = Set<AnyCancellable>()
 
-  init(viewModel: HomeViewModel) {
+  public init(viewModel: HomeViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -46,7 +46,7 @@ final class HomeViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
     setupBinding()
@@ -102,13 +102,13 @@ final class HomeViewController: UIViewController {
 
 extension HomeViewController: UICollectionViewDataSource {
 
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+  public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
     -> Int
   {
     return viewModel.output.sections.value.count
   }
 
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+  public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
     -> UICollectionViewCell
   {
     guard let item = viewModel.output.sections.value[safe: indexPath.item] else {

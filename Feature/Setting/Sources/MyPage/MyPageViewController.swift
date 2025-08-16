@@ -18,7 +18,7 @@ enum MyPageSection {
   case menu([MyPageMenuCollectionViewCellModel])
 }
 
-final class MyPageViewController: UIViewController {
+public final class MyPageViewController: UIViewController {
 
   private enum Constant {
     static let menuItemHeight: CGFloat = 48
@@ -44,7 +44,7 @@ final class MyPageViewController: UIViewController {
   private let viewModel: MyPageViewModel
   private var cancellables = Set<AnyCancellable>()
 
-  init(viewModel: MyPageViewModel) {
+  public init(viewModel: MyPageViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
@@ -53,7 +53,7 @@ final class MyPageViewController: UIViewController {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func viewDidLoad() {
+  public override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
     setupBinding()
@@ -143,11 +143,11 @@ final class MyPageViewController: UIViewController {
 }
 
 extension MyPageViewController: UICollectionViewDataSource {
-  func numberOfSections(in collectionView: UICollectionView) -> Int {
+  public func numberOfSections(in collectionView: UICollectionView) -> Int {
     return viewModel.output.sections.value.count
   }
 
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
+  public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int)
     -> Int
   {
     guard let selectedSection = viewModel.output.sections.value[safe: section] else {
@@ -161,7 +161,7 @@ extension MyPageViewController: UICollectionViewDataSource {
     }
   }
 
-  func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
+  public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath)
     -> UICollectionViewCell
   {
     guard let section = viewModel.output.sections.value[safe: indexPath.section] else {
@@ -202,7 +202,7 @@ extension MyPageViewController: UICollectionViewDataSource {
 }
 
 extension MyPageViewController: UICollectionViewDelegateFlowLayout {
-  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+  public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     guard let section = viewModel.output.sections.value[safe: indexPath.section] else { return }
     switch section {
     case .profile:

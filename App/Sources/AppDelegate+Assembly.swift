@@ -12,15 +12,17 @@ import Foundation
 import Lib
 import NetworkCore
 import Setting
+import Onboarding
 
 extension AppDelegate {
-  func dependencyInjection() {
+  func setupDependencyInjector() {
     DependencyInjector.shared.assemble([
       SettingAssembly(),
       AuthAssembly(),
       NetworkCoreAssembly(),
       LibAssembly(),
       FortuneAssembly(),
+      OnboardingAssembly()
     ])
   }
 }
