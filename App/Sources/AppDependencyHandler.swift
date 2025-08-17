@@ -27,6 +27,7 @@ struct AppDependencyHandler: DependencyRegistrable {
     // TODO: 이미 TabBarController 가 있는 경우에 대한 예외 처리
     let tabBarController = BaseTabBarController()
     tabBarController.viewControllers = [
+
       BaseNavigationController(rootViewController: HomeViewController(viewModel: HomeViewModel())),
       BaseNavigationController(
         rootViewController: FortuneViewController(viewModel: FortuneViewModel())),

@@ -20,6 +20,14 @@ public struct UserDTO: Decodable {
   public let birthDate: String?
   public let birthTime: [String]?
   public let gender: GenderDTO
+  
+  public init(id: String, name: String, birthDate: String?, birthTime: [String]?, gender: GenderDTO) {
+    self.id = id
+    self.name = name
+    self.birthDate = birthDate
+    self.birthTime = birthTime
+    self.gender = gender
+  }
 
   // TODO: 사주 정보?
 }

@@ -42,8 +42,6 @@ struct MyPageService {
       ),
       .menu([
         MyPageMenuCollectionViewCellModel(
-          style: .icon(STImages.chevronRightS.image), title: "푸시알림"),
-        MyPageMenuCollectionViewCellModel(
           style: .icon(STImages.chevronRightS.image), title: "이용약관"),
         MyPageMenuCollectionViewCellModel(
           style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침"),

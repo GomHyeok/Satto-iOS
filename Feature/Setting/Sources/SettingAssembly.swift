@@ -13,6 +13,10 @@ public final class SettingAssembly: Assembly {
     container.register(MyPageService.self) { _ in
       return MyPageService()
     }
+    
+    container.register(SettingRouter.self) { _ in
+      return SettingRouter()
+    }
   }
 
   public init() {}

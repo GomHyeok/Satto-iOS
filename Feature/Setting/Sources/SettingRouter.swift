@@ -10,18 +10,20 @@ import Lib
 import UIKit
 
 public final class SettingRouter: Routable {
-  private var factories: [SettingRoute: () -> UIViewController]
-
-  public init() {
-    self.factories = [:]
-    self.setFactories()
+  private var factories: [SettingRoute: () -> UIViewController] = [:]
+  
+  public nonisolated init() {
+    Task { @MainActor in
+      self.setFactories()
+    }
   }
 
   public func setFactories() {
     self.factories = [
       .myPage: { MyPageViewController(viewModel: MyPageViewModel()) },
       .pushSetting: { PushSettingViewController(viewModel: PushSettingViewModel()) },
-      .editProfile: { EditProfileViewController(router: self) },
+      .editProfile: { EditProfileViewController() },
+      .timePicker: { TimePickerBottomSheetViewController()}
     ]
   }
 
@@ -30,6 +32,13 @@ public final class SettingRouter: Routable {
     guard let factory = factories[settingRoute] else { return }
     let viewController = factory()
 
+    if settingRoute == .timePicker {
+      if let timePickerVC = viewController as? TimePickerBottomSheetViewController,
+        let delegate = data["delegate"] as? TimePickerBottomSheetDelegate
+      {
+        timePickerVC.delegate = delegate
+      }
+    }
     manageViewController(viewController, how: how)
   }
 }

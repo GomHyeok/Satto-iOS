@@ -8,6 +8,7 @@
 import Combine
 import DIInjector
 import Foundation
+import Lib
 
 public final class MyPageViewModel {
 
@@ -23,6 +24,8 @@ public final class MyPageViewModel {
   }
 
   @Injected private var myPageService: MyPageService
+  @Injected private var router : SettingRouter
+  
   let output: Output = Output()
 
   public init() {}
@@ -42,9 +45,10 @@ public final class MyPageViewModel {
       }
 
     case .editButtonTapped:
-      // TODO: 프로필 수정 화면 이동
-      break
-
+      Task { @MainActor [ weak self ] in
+        guard let self else { return }
+        self.router.navigate(to: SettingRoute.editProfile, how: .push(hidesBottomBarWhenPushed: true), with: [:])
+      }
     case .feedBackButtonTapped:
       // TODO: 피드백 전송 링크
       break

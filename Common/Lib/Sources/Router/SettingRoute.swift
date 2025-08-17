@@ -10,4 +10,6 @@ public enum SettingRoute {
   case pushSetting
   case editProfile
   case timePicker
+  case back
+  case pop
 }

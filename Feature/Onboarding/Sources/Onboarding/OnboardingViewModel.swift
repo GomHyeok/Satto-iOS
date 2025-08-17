@@ -82,7 +82,6 @@ public class OnboardingViewModel {
           do {
             let test = try await self.userDataManager.create(
               name: name, birthDate: birthDate, birthTime: birthTime, gender: genderDTO)
-            print(test)
           } catch {
             // TODO: API 호출 에러처리
             print(error)

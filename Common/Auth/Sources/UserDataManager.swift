@@ -20,6 +20,7 @@ public final class UserDataManager {
 
   @discardableResult
   public func fetch() async throws -> UserDTO {
+
     let target = AuthTarget.GetUser(userID: userID)
     do {
       let user = try await networkProvider.request(target: target)

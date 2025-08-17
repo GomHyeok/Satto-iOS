@@ -11,6 +11,7 @@ import Extension
 import SnapKit
 import Then
 import UIKit
+import Base
 
 enum MyPageSection {
   case profile(MyProfileInfoCollectionViewCellModel)
@@ -18,7 +19,7 @@ enum MyPageSection {
   case menu([MyPageMenuCollectionViewCellModel])
 }
 
-public final class MyPageViewController: UIViewController {
+public final class MyPageViewController: BaseViewController {
 
   private enum Constant {
     static let menuItemHeight: CGFloat = 48
@@ -42,7 +43,6 @@ public final class MyPageViewController: UIViewController {
       forCellWithReuseIdentifier: MyPageMenuCollectionViewCell.typeName)
   }
   private let viewModel: MyPageViewModel
-  private var cancellables = Set<AnyCancellable>()
 
   public init(viewModel: MyPageViewModel) {
     self.viewModel = viewModel
@@ -58,6 +58,11 @@ public final class MyPageViewController: UIViewController {
     setupUI()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
+  }
+  
+  public override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+
   }
 
   private func setupUI() {
@@ -96,7 +101,7 @@ public final class MyPageViewController: UIViewController {
         itemCount = 1
       case .feedback:
         itemHeight = .fractionalHeight(1.0)
-        groupHeight = .estimated(126)
+        groupHeight = .estimated(130)
         itemCount = 1
       case .menu(let items):
         let count = items.count
@@ -234,6 +239,7 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
       SettingAssembly(),
       NetworkCoreAssembly(),
     ])
+    
     return MyPageViewController(viewModel: MyPageViewModel())
   }
 #endif
