@@ -5,13 +5,13 @@
 //  Created by ttozzi on 7/26/25.
 //
 
+import Base
 import Combine
 import DesignSystem
 import Extension
 import SnapKit
 import Then
 import UIKit
-import Base
 
 enum MyPageSection {
   case profile(MyProfileInfoCollectionViewCellModel)
@@ -59,7 +59,7 @@ public final class MyPageViewController: BaseViewController {
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-  
+
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -239,7 +239,7 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
       SettingAssembly(),
       NetworkCoreAssembly(),
     ])
-    
+
     return MyPageViewController(viewModel: MyPageViewModel())
   }
 #endif

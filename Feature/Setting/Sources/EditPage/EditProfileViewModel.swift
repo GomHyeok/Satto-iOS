@@ -5,12 +5,12 @@
 //  Created by 최재혁 on 8/16/25.
 //
 
+import Auth
 import Base
 import Combine
+import DIInjector
 import Foundation
 import Lib
-import Auth
-import DIInjector
 
 final class EditProfileViewModel {
   enum Input {
@@ -38,15 +38,15 @@ final class EditProfileViewModel {
     let showBirthError: PassthroughSubject<Bool, Never> = .init()
     let isSaveButtonEnabled: PassthroughSubject<Bool, Never> = .init()
     let navigate: PassthroughSubject<SettingRoute, Never> = .init()
-    let setTimePickerLabel : PassthroughSubject<String, Never> = .init()
-    let updatePopupHiden : PassthroughSubject<Bool, Never> = .init()
+    let setTimePickerLabel: PassthroughSubject<String, Never> = .init()
+    let updatePopupHiden: PassthroughSubject<Bool, Never> = .init()
   }
 
   let output: Output = Output()
 
   private var state: State = .init()
-  
-  @Injected private var userDataManager : UserDataManager
+
+  @Injected private var userDataManager: UserDataManager
   @Injected private var router: SettingRouter
 
   private var _isNameValid: Bool = true
@@ -81,32 +81,34 @@ final class EditProfileViewModel {
         self.output.setTimePickerLabel.send(time)
         self._isDontKnowButtonSelected = false
       }
-      
+
     case .checkBirthFormat(let birth):
       self._isBirthDateValid = checkBirthFormat(birth: birth)
       if self._isBirthDateValid { self.state.birthDate = birth }
       self.output.showBirthError.send(self._isBirthDateValid)
       self.output.isSaveButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
-      
+
     case .checkNameFormat(let name):
       self._isNameValid = checkNameFormat(name: name)
       if self._isNameValid { self.state.name = name }
       self.output.showNameError.send(self._isNameValid)
       self.output.isSaveButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
-      
+
     case .genderSelected(let isSelected):
       self.state.gender = isSelected
-      
+
     case .timePickerTap:
       Task { @MainActor in
-        self.router.navigate(to: SettingRoute.timePicker, how: .overFullScreen, with: ["delegate" : self ])
+        self.router.navigate(
+          to: SettingRoute.timePicker, how: .overFullScreen, with: ["delegate": self])
       }
     case .saveButtonTap:
       if let userDTO = generateUserDTO() {
         Task {
           do {
             let result = try await self.userDataManager.update(
-              name: userDTO.name, birthDate: userDTO.birthDate!, birthTime: userDTO.birthTime, gender: userDTO.gender)
+              name: userDTO.name, birthDate: userDTO.birthDate!, birthTime: userDTO.birthTime,
+              gender: userDTO.gender)
             self.state.originalUser = result
             self.state.name = nil
             self.state.bornTime = nil
@@ -118,7 +120,7 @@ final class EditProfileViewModel {
           }
         }
       }
-    case .backButtonTapped :
+    case .backButtonTapped:
       if hasChanges() {
         self.output.updatePopupHiden.send(false)
       } else {
@@ -168,7 +170,7 @@ extension EditProfileViewModel {
 
     return true
   }
-  
+
   func generateUserDTO() -> UserDTO? {
     guard let originalUser = self.state.originalUser else { return nil }
 
@@ -176,57 +178,62 @@ extension EditProfileViewModel {
     var updatedGender = originalUser.gender
     let updatedBirthDate = self.state.birthDate ?? originalUser.birthDate
     var updatedBornTime: [String]? = nil
-    if let bornTimeState = self.state.bornTime { updatedBornTime = bornTimeState }
-    else if self.state.bornTime == nil && self._isDontKnowButtonSelected == false {
-        updatedBornTime = originalUser.birthTime
+    if let bornTimeState = self.state.bornTime {
+      updatedBornTime = bornTimeState
+    } else if self.state.bornTime == nil && self._isDontKnowButtonSelected == false {
+      updatedBornTime = originalUser.birthTime
     }
-    if let gender = self.state.gender { updatedGender = gender == .male ? GenderDTO.male : GenderDTO.female }
-    
+    if let gender = self.state.gender {
+      updatedGender = gender == .male ? GenderDTO.male : GenderDTO.female
+    }
+
     return UserDTO(
       id: "",
-      name : updatedName,
+      name: updatedName,
       birthDate: updatedBirthDate,
       birthTime: updatedBornTime,
       gender: updatedGender
     )
   }
-  
+
   private func hasChanges() -> Bool {
     guard let originalUser = self.state.originalUser else { return false }
 
     if let name = self.state.name, name != originalUser.name {
-        return true
+      return true
     }
 
     if let gender = self.state.gender, gender.rawValue != originalUser.gender.rawValue {
-        return true
+      return true
     }
 
     if let birthDate = self.state.birthDate, birthDate != originalUser.birthDate {
-        return true
+      return true
     }
 
     let originalBornTimeIsNil = originalUser.birthTime == nil
     if self._isDontKnowButtonSelected != originalBornTimeIsNil {
-        return true
+      return true
     }
 
     if let bornTimeState = self.state.bornTime {
-        if bornTimeState != originalUser.birthTime {
-            return true
-        }
+      if bornTimeState != originalUser.birthTime {
+        return true
+      }
     }
-    
+
     return false
   }
 }
 
-extension EditProfileViewModel : TimePickerBottomSheetDelegate {
-  func timePickerBottomSheet(_ controller: TimePickerBottomSheetViewController, didSelectTimeRange timeRange: String?) {
+extension EditProfileViewModel: TimePickerBottomSheetDelegate {
+  func timePickerBottomSheet(
+    _ controller: TimePickerBottomSheetViewController, didSelectTimeRange timeRange: String?
+  ) {
     self.send(input: .bornTimeSelected(bornTime: .time(time: timeRange ?? "")))
   }
-  
+
   func timePickerBottomSheetDidCancel(_ controller: TimePickerBottomSheetViewController) {
-    
+
   }
 }

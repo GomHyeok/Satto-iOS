@@ -36,21 +36,21 @@ final class SendFeedbackCollectionViewCell: UICollectionViewCell {
     $0.clipsToBounds = true
     $0.layer.cornerRadius = 6
   }
-  
+
   private lazy var sendFeedbackLabel = UILabel().then {
     $0.backgroundColor = .clear
     $0.style = Typography.Caption_12_B
     $0.textColor = STColors.primary2.color
     $0.styledText = "의견 보내기"
   }
-  
+
   private lazy var arrowRightView = UIImageView().then {
     $0.image = STImages.iconArrow.image.withRenderingMode(.alwaysTemplate)
     $0.contentMode = .scaleAspectFit
     $0.transform = CGAffineTransform(rotationAngle: .pi)
     $0.tintColor = STColors.primary2.color
   }
-  
+
   private lazy var imageView = UIImageView().then {
     $0.backgroundColor = .gray  // TODO: 이미지 리소스 확인 필요
   }
@@ -78,24 +78,24 @@ final class SendFeedbackCollectionViewCell: UICollectionViewCell {
     feedbackAreaStackView.addArrangedSubview(sendFeedbackButton)
 
     contentStackView.addArrangedSubview(imageView)
-    
+
     imageView.snp.makeConstraints { make in
       make.width.height.equalTo(86)
     }
-    
+
     sendFeedbackButton.addSubview(sendFeedbackLabel)
     sendFeedbackButton.addSubview(arrowRightView)
-    
+
     sendFeedbackButton.snp.makeConstraints { make in
       make.height.equalTo(40)
       make.width.greaterThanOrEqualTo(103)
     }
-    
+
     sendFeedbackLabel.snp.makeConstraints { make in
       make.leading.equalToSuperview().offset(12)
       make.centerY.equalToSuperview()
     }
-    
+
     arrowRightView.snp.makeConstraints { make in
       make.height.width.equalTo(15)
       make.trailing.equalToSuperview().inset(12)

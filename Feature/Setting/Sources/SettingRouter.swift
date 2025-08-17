@@ -11,7 +11,7 @@ import UIKit
 
 public final class SettingRouter: Routable {
   private var factories: [SettingRoute: () -> UIViewController] = [:]
-  
+
   public nonisolated init() {
     Task { @MainActor in
       self.setFactories()
@@ -23,7 +23,7 @@ public final class SettingRouter: Routable {
       .myPage: { MyPageViewController(viewModel: MyPageViewModel()) },
       .pushSetting: { PushSettingViewController(viewModel: PushSettingViewModel()) },
       .editProfile: { EditProfileViewController() },
-      .timePicker: { TimePickerBottomSheetViewController()}
+      .timePicker: { TimePickerBottomSheetViewController() },
     ]
   }
 
