@@ -21,9 +21,9 @@ enum HomeTarget {
     var headers: [String: String]? { nil }
     let userID: String
   }
-  
+
   struct CreateLottoRecommendation: BaseTargetType {
-    
+
     typealias Response = LottoRecommendationDTO
 
     var path: String { "users/\(userID)/lotto-recommendation" }

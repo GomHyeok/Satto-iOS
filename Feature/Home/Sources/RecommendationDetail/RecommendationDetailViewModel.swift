@@ -30,7 +30,7 @@ final class RecommendationDetailViewModel {
   @Injected var recommendationDetailService: RecommendationDetailService
   let output: Output = Output()
   private let shouldCreateRecommendation: Bool
-  
+
   init(shouldCreateRecommendation: Bool) {
     self.shouldCreateRecommendation = shouldCreateRecommendation
   }
@@ -54,10 +54,10 @@ final class RecommendationDetailViewModel {
           print(error)
         }
       }
-      
+
     case .timerFinished:
       output.isResultAvailable.send(true)
-      
+
     case .createNewRecommendationButtonTapped:
       Task {
         do {
@@ -69,7 +69,7 @@ final class RecommendationDetailViewModel {
           print(error)
         }
       }
-      
+
     case .showResultsButtonTapped:
       // TODO: 결과 안내 화면
       break

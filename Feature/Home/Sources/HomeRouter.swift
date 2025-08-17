@@ -30,7 +30,9 @@ final class HomeRouter: Routable {
       },
       .recommendationDetail: { data in
         let shouldCreateRecommendation = data["shouldCreateRecommendation"] as? Bool
-        return RecommendationDetailViewController(viewModel: RecommendationDetailViewModel(shouldCreateRecommendation: shouldCreateRecommendation ?? true))
+        return RecommendationDetailViewController(
+          viewModel: RecommendationDetailViewModel(
+            shouldCreateRecommendation: shouldCreateRecommendation ?? true))
       },
     ]
   }

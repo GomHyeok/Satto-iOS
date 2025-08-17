@@ -15,20 +15,23 @@ struct NumberRecommendationCollectionViewCellModel: RecommendationDetailCellMode
   let roundText: String
   let title: String
   let numbers: [Int]
-  var secondsUntilResult: Int { // TODO: 기기 시간 설정을 바꾼 경우, 오후 8시 35분이 지났으나 서버에서 결과 조회가 준비되지 않은 경우 논의 필요
+  var secondsUntilResult: Int {  // TODO: 기기 시간 설정을 바꾼 경우, 오후 8시 35분이 지났으나 서버에서 결과 조회가 준비되지 않은 경우 논의 필요
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = .current
     calendar.locale = Locale(identifier: "ko_KR")
     calendar.firstWeekday = 2
     calendar.minimumDaysInFirstWeek = 4
-    
+
     let now = Date()
-    guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)),
-          let saturday = calendar.date(byAdding: .day, value: 5, to: weekStart),
-          let target = calendar.date(bySettingHour: 20, minute: 35, second: 0, of: saturday) else {
+    guard
+      let weekStart = calendar.date(
+        from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)),
+      let saturday = calendar.date(byAdding: .day, value: 5, to: weekStart),
+      let target = calendar.date(bySettingHour: 20, minute: 35, second: 0, of: saturday)
+    else {
       return 0
     }
-    
+
     let diff = target.timeIntervalSince(now)
     if diff >= 0 {
       return Int(diff)
@@ -72,7 +75,7 @@ final class NumberRecommendationCollectionViewCell: BaseCollectionViewCell {
   private var countdownCancellable: AnyCancellable?
   private let timerFinishedSubject = PassthroughSubject<Void, Never>()
   var timerFinished: AnyPublisher<Void, Never> { timerFinishedSubject.eraseToAnyPublisher() }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -87,7 +90,7 @@ final class NumberRecommendationCollectionViewCell: BaseCollectionViewCell {
     countdownCancellable?.cancel()
     countdownCancellable = nil
   }
-  
+
   private func setupUI() {
     contentView.backgroundColor = STColors.white.color
     contentView.layer.cornerRadius = 12
@@ -142,17 +145,18 @@ final class NumberRecommendationCollectionViewCell: BaseCollectionViewCell {
     }
     startCountdown(seconds: model.secondsUntilResult)
   }
-  
+
   private func startCountdown(seconds: Int) {
     countdownCancellable?.cancel()
-    
+
     let secs = max(0, seconds)
     let target = Date().addingTimeInterval(TimeInterval(secs))
-    
+
     countdownCancellable = Timer.publish(every: 1, on: .main, in: .common)
       .autoconnect()
       .handleEvents(receiveSubscription: { [weak self] _ in
-        self?.timeUntilDrawLabel.styledText = self?.countdownText(from: Int(target.timeIntervalSinceNow))
+        self?.timeUntilDrawLabel.styledText = self?.countdownText(
+          from: Int(target.timeIntervalSinceNow))
       })
       .map { _ in
         return max(0, Int(target.timeIntervalSinceNow))
@@ -166,7 +170,7 @@ final class NumberRecommendationCollectionViewCell: BaseCollectionViewCell {
         }
       }
   }
-  
+
   private func countdownText(from seconds: Int) -> String {
     if seconds <= 0 {
       return "0초"
@@ -175,7 +179,7 @@ final class NumberRecommendationCollectionViewCell: BaseCollectionViewCell {
     let h = (seconds % 86_400) / 3_600
     let m = (seconds % 3_600) / 60
     let s = seconds % 60
-    
+
     var parts: [String] = []
     if d > 0 {
       parts.append("\(d)일")

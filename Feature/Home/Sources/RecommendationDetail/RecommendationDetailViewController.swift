@@ -121,11 +121,11 @@ final class RecommendationDetailViewController: BaseViewController {
       make.width.equalToSuperview().inset(24)
       make.centerX.equalToSuperview()
     }
-    
+
     showResultsButton.snp.makeConstraints { make in
       make.height.equalTo(Constant.footerButtonHeight)
     }
-    
+
     createNewRecommendationButton.snp.makeConstraints { make in
       make.height.equalTo(Constant.footerButtonHeight)
     }
@@ -137,27 +137,27 @@ final class RecommendationDetailViewController: BaseViewController {
         self?.viewModel.send(input: .createNewRecommendationButtonTapped)
       }
       .store(in: &cancellables)
-    
+
     showResultsButton.tapPublisher
       .sink { [weak self] _ in
         self?.viewModel.send(input: .showResultsButtonTapped)
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.navigationTitle
       .receive(on: DispatchQueue.main)
       .sink { [weak self] title in
         self?.title = title
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.sections
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
         self?.collectionView.reloadData()
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.isResultAvailable
       .removeDuplicates()
       .receive(on: DispatchQueue.main)
