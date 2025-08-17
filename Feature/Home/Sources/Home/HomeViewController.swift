@@ -5,11 +5,12 @@
 //  Created by ttozzi on 7/31/25.
 //
 
+import Base
 import Combine
 import DesignSystem
 import UIKit
 
-public final class HomeViewController: UIViewController {
+public final class HomeViewController: BaseViewController {
 
   private enum Constant {
     static let horizontalMargin: CGFloat = 20
@@ -35,7 +36,6 @@ public final class HomeViewController: UIViewController {
   }
 
   private let viewModel: HomeViewModel
-  private var cancellables = Set<AnyCancellable>()
 
   public init(viewModel: HomeViewModel) {
     self.viewModel = viewModel
@@ -54,6 +54,8 @@ public final class HomeViewController: UIViewController {
   }
 
   private func setupUI() {
+    setNavigationBarHidden(true)
+    
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
       $0.edges.equalToSuperview()

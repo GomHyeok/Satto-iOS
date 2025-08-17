@@ -27,10 +27,10 @@ struct AppDependencyHandler: DependencyRegistrable {
     // TODO: 이미 TabBarController 가 있는 경우에 대한 예외 처리
     let tabBarController = BaseTabBarController()
     tabBarController.viewControllers = [
-      HomeViewController(viewModel: HomeViewModel()),
-      FortuneViewController(viewModel: FortuneViewModel()),
-      HistoryWebViewController(viewModel: HistoryWebViewModel()),
-      MyPageViewController(viewModel: MyPageViewModel()),
+      BaseNavigationController(rootViewController: HomeViewController(viewModel: HomeViewModel())),
+      BaseNavigationController(rootViewController: FortuneViewController(viewModel: FortuneViewModel())),
+      BaseNavigationController(rootViewController: HistoryWebViewController(viewModel: HistoryWebViewModel())),
+      BaseNavigationController(rootViewController: MyPageViewController(viewModel: MyPageViewModel())),
     ]
     UIApplication.shared.activeWindow?.rootViewController = tabBarController
   }

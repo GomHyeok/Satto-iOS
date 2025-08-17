@@ -33,6 +33,10 @@ public final class BaseTabBarController: UITabBarController {
       }
     }
   }
+  
+  override public func setTabBarHidden(_ hidden: Bool, animated: Bool) {
+    customTabBar.isHidden = hidden
+  }
 
   private func setupTabBar() {
     tabBar.isHidden = true

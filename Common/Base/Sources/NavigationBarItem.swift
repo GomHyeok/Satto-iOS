@@ -25,6 +25,12 @@ public final class NaivgationBarButtonItem: UIButton, NavigationBarItem {
       make.size.equalTo(24)
     }
   }
+  
+  override public func tintColorDidChange() {
+    super.tintColorDidChange()
+    let image = image(for: .normal)?.withRenderingMode(.alwaysTemplate)
+    setImage(image?.withTintColor(tintColor), for: .normal)
+  }
 }
 
 extension NaivgationBarButtonItem {

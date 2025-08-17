@@ -315,7 +315,7 @@ extension OnboardingViewController {
         case .splash:
           router.navigate(to: route, how: .clear, with: [:])
         case .onboarding:
-          router.navigate(to: route, how: .push, with: [:])
+          router.navigate(to: route, how: .push(), with: [:])
         case .agreement:
           router.navigate(to: route, how: .overFullScreen, with: ["delegate": self])
         case .timePicker:
@@ -614,14 +614,14 @@ extension UIResponder {
 
   import DIInjector
   import Auth
-  import Setting
+//  import Setting
   import NetworkCore
 
   @available(iOS 17.0, *)
   #Preview {
     DependencyInjector.shared.assemble([
       AuthAssembly(),
-      SettingAssembly(),
+//      SettingAssembly(),
       NetworkCoreAssembly(),
     ])
     return OnboardingViewController(router: OnboardingRouter())

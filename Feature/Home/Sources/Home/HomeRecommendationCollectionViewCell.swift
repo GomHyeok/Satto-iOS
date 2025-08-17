@@ -19,7 +19,6 @@ struct HomeRecommendationCollectionViewCellModel: HomeCellModel {
     case needsResultCheck(numbers: [Int])
   }
 
-  let dateText: String
   let title: String
   let state: State
 }
@@ -34,10 +33,6 @@ final class HomeRecommendationCollectionViewCell: BaseCollectionViewCell {
     $0.spacing = .zero
     $0.axis = .vertical
     $0.alignment = .center
-  }
-  private lazy var dateLabel = UILabel().then {
-    $0.style = Typography.Caption_12_M
-    $0.textColor = STColors.gray3.color
   }
   private lazy var titleLabel = UILabel().then {
     $0.style = Typography.Body_18_B
@@ -55,7 +50,7 @@ final class HomeRecommendationCollectionViewCell: BaseCollectionViewCell {
   private lazy var emptyMessageLabel = UILabel().then {
     $0.style = Typography.Body_14_R
     $0.textColor = STColors.gray5.color
-    $0.styledText = "아직 받은 번호가 없어요"
+    $0.styledText = "번호를 받아보시오"
   }
   private lazy var recommendButton = UIButton().then {
     $0.backgroundColor = STColors.primary2.color
@@ -89,12 +84,6 @@ final class HomeRecommendationCollectionViewCell: BaseCollectionViewCell {
       make.top.equalToSuperview().inset(24)
       make.horizontalEdges.equalToSuperview().inset(20)
     }
-
-    contentStackView.addArrangedSubview(dateLabel)
-    dateLabel.snp.makeConstraints { make in
-      make.height.equalTo(18)
-    }
-    contentStackView.setCustomSpacing(4, after: dateLabel)
 
     contentStackView.addArrangedSubview(titleLabel)
     titleLabel.snp.makeConstraints { make in
@@ -155,7 +144,6 @@ final class HomeRecommendationCollectionViewCell: BaseCollectionViewCell {
   }
 
   func update(with model: HomeRecommendationCollectionViewCellModel) {
-    dateLabel.styledText = model.dateText
     titleLabel.styledText = model.title
 
     switch model.state {
@@ -213,7 +201,6 @@ final class HomeRecommendationCollectionViewCell: BaseCollectionViewCell {
 @available(iOS 17.0, *)
 #Preview("번호 추천 X") {
   let cellModel = HomeRecommendationCollectionViewCellModel(
-    dateText: "2025년 07월 17일 기준",
     title: "콩떡님을 위한 로또 번호 추천",
     state: .needsRecommendation
   )
@@ -228,7 +215,6 @@ final class HomeRecommendationCollectionViewCell: BaseCollectionViewCell {
 @available(iOS 17.0, *)
 #Preview("번호 추천 O") {
   let cellModel = HomeRecommendationCollectionViewCellModel(
-    dateText: "2025년 07월 17일 기준",
     title: "콩떡님을 위한 로또 번호 추천",
     state: .recommended(numbers: [9, 11, 18, 24, 26, 33])
   )
@@ -243,7 +229,6 @@ final class HomeRecommendationCollectionViewCell: BaseCollectionViewCell {
 @available(iOS 17.0, *)
 #Preview("홈 - 번호 추천 O and 결과 오픈") {
   let cellModel = HomeRecommendationCollectionViewCellModel(
-    dateText: "2025년 07월 17일 기준",
     title: "콩떡님을 위한 로또 번호 추천",
     state: .needsResultCheck(numbers: [9, 11, 18, 24, 26, 33])
   )

@@ -34,8 +34,9 @@ extension Routable {
 
   public func manageViewController(_ viewController: UIViewController, how: NavigateType) {
     switch how {
-    case .push:
+    case .push(let hidesBottomBarWhenPushed):
       if let navigationController = topViewController()?.navigationController {
+        viewController.hidesBottomBarWhenPushed = hidesBottomBarWhenPushed
         navigationController.pushViewController(viewController, animated: true)
       }
     case .present:

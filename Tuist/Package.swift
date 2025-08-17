@@ -11,6 +11,7 @@ import PackageDescription
       "SnapKit": .staticFramework,
       "Swinject": .staticFramework,
       "SwiftRichString": .staticFramework,
+      "Kingfisher": .staticFramework
     ]
   )
 #endif
@@ -23,5 +24,6 @@ let package = Package(
     .package(url: "https://github.com/SnapKit/SnapKit.git", from: "5.7.1"),
     .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
     .package(url: "https://github.com/malcommac/SwiftRichString.git", from: "3.7.2"),
+    .package(url: "https://github.com/onevcat/Kingfisher.git", from: "8.5.0"),
   ]
 )

@@ -70,7 +70,7 @@ extension SplashViewcontroller {
     self.viewModel.output.navigate
       .sink { [weak self] route in
         guard let self = self else { return }
-        self.router.navigate(to: route, how: .push, with: [:])
+        self.router.navigate(to: route, how: .push(), with: [:])
       }
       .store(in: &store)
   }

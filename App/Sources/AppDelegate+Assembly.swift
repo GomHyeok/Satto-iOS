@@ -13,6 +13,7 @@ import Lib
 import NetworkCore
 import Onboarding
 import Setting
+import Home
 
 extension AppDelegate {
   func setupDependencyInjector() {
@@ -23,6 +24,7 @@ extension AppDelegate {
       LibAssembly(),
       FortuneAssembly(),
       OnboardingAssembly(),
+      HomeAssembly()
     ])
   }
 }

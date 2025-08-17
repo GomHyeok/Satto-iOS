@@ -12,7 +12,6 @@ import UIKit
 struct HomeHeaderCollectionViewCellModel: HomeCellModel {
   let roundText: String
   let message: String
-  let imageURL: String?
 }
 
 final class HomeHeaderCollectionViewCell: UICollectionViewCell {
@@ -78,8 +77,7 @@ final class HomeHeaderCollectionViewCell: UICollectionViewCell {
 #Preview {
   let cellModel = HomeHeaderCollectionViewCellModel(
     roundText: "1181회",
-    message: "잘 되면 꼭 기억해 주세요",
-    imageURL: ""
+    message: "잘 되면 꼭 기억해 주세요"
   )
   let cell = HomeHeaderCollectionViewCell()
   cell.update(with: cellModel)

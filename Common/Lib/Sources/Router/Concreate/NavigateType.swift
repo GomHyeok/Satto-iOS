@@ -6,7 +6,7 @@
 //
 
 public enum NavigateType {
-  case push  // NavigationController.pushViewController
+  case push(hidesBottomBarWhenPushed: Bool = false)  // NavigationController.pushViewController
   case present  // 기본 present (모달)
   case fullscreen  // modalPresentationStyle = .fullScreen
   case currentContext  // modalPresentationStyle = .currentContext

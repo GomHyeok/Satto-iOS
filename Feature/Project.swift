@@ -42,7 +42,12 @@ struct FeatureLayer: Layer {
           .project(target: "CommonLayer", path: "../Common")
         ]
       ),
-      .createTarget(name: "History"),
+      .createTarget(
+        name: "History",
+        dependencies: [
+          .project(target: "CommonLayer", path: "../Common")
+        ]
+      ),
       .createTarget(
         name: "Fortune",
         dependencies: [

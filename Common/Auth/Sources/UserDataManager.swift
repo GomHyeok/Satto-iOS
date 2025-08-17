@@ -16,10 +16,10 @@ public final class UserDataManager {
   @Injected private var deviceUUIDManager: DeviceUUIDManager
   @Injected private var networkProvider: NetworkProvider
   public var user: UserDTO?
+  public var userID: String { user?.id ?? deviceUUIDManager.deviceUUID }
 
   @discardableResult
   public func fetch() async throws -> UserDTO {
-    let userID = user?.id ?? deviceUUIDManager.deviceUUID
     let target = AuthTarget.GetUser(userID: userID)
     do {
       let user = try await networkProvider.request(target: target)
@@ -35,7 +35,6 @@ public final class UserDataManager {
   public func create(name: String, birthDate: String, birthTime: [String]?, gender: GenderDTO)
     async throws -> UserDTO
   {
-    let userID = user?.id ?? deviceUUIDManager.deviceUUID
     let userModel = UserModel(
       id: userID, name: name, birthDate: birthDate, birthTime: birthTime, gender: gender)
     let target = AuthTarget.PostUser(userModel: userModel)
@@ -52,7 +51,6 @@ public final class UserDataManager {
   public func update(name: String, birthDate: String, birthTime: [String]?, gender: GenderDTO)
     async throws -> UserDTO
   {
-    let userID = user?.id ?? deviceUUIDManager.deviceUUID
     let userModel = UserModel(
       id: userID, name: name, birthDate: birthDate, birthTime: birthTime, gender: gender)
     let target = AuthTarget.PutUser(userModel: userModel)

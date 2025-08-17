@@ -185,4 +185,9 @@ extension Style {
     color = value
     return self
   }
+  
+  public func alignment(_ value: NSTextAlignment) -> Style {
+    alignment = value
+    return self
+  }
 }

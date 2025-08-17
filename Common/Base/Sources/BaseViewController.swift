@@ -53,7 +53,6 @@ open class BaseViewController: UIViewController {
     navigationController?.setNavigationBarHidden(true, animated: false)
     view.addSubview(navigationBar)
     navigationBar.snp.makeConstraints { make in
-      make.top.equalTo(view.snp.top)
       make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
       make.horizontalEdges.equalToSuperview()
     }

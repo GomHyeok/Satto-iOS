@@ -45,6 +45,7 @@ struct CommonLayer: Layer {
         dependencies: [
           .external(name: "Then"),
           .external(name: "SnapKit"),
+          .external(name: "Kingfisher"),
           .project(target: "CoreLayer", path: "../Core"),
         ]
       ),
