@@ -11,7 +11,7 @@ import PackageDescription
       "SnapKit": .staticFramework,
       "Swinject": .staticFramework,
       "SwiftRichString": .staticFramework,
-      "Kingfisher": .staticFramework
+      "Kingfisher": .staticFramework,
     ]
   )
 #endif

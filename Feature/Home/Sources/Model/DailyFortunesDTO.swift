@@ -8,15 +8,15 @@
 import Foundation
 
 struct DailyFortunesDTO: Decodable {
-  
+
   struct FortuneItem: Decodable {
-    
+
     enum CodingKeys: String, CodingKey {
       case fortuneType = "fortune_type"
       case imageURL = "image_url"
       case description
     }
-    
+
     let fortuneType: String
     let imageURL: String
     let description: String

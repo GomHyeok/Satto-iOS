@@ -5,8 +5,8 @@
 //  Created by ttozzi on 7/31/25.
 //
 
-import DIInjector
 import Combine
+import DIInjector
 import Foundation
 
 protocol HomeCellModel {}
@@ -40,12 +40,14 @@ public final class HomeViewModel {
           print(error)
         }
       }
-      
+
     case .recommendationButtonTapped(let state):
       switch state {
       case .needsRecommendation:
         Task { @MainActor in
-          homeRouter.navigate(to: HomeRoute.recommendationLoading, how: .push(hidesBottomBarWhenPushed: true), with: [:])
+          homeRouter.navigate(
+            to: HomeRoute.recommendationLoading, how: .push(hidesBottomBarWhenPushed: true),
+            with: [:])
         }
       case .recommended:
         // TODO: 번호 상세

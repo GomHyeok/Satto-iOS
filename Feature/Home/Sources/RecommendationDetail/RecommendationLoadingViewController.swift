@@ -5,9 +5,9 @@
 //  Created by ttozzi on 8/17/25.
 //
 
-import DIInjector
 import Auth
 import Base
+import DIInjector
 import DesignSystem
 import UIKit
 
@@ -45,20 +45,21 @@ final class RecommendationLoadingViewController: BaseViewController {
   }
   @Injected var userDataManager: UserDataManager
   @Injected var homeRouter: HomeRouter
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupNavigationBar()
     setupUI()
   }
-  
+
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     playAnimation { [weak self] in
-      self?.homeRouter.navigate(to: HomeRoute.recommendationDetail, how: .push(hidesBottomBarWhenPushed: true), with: [:])
+      self?.homeRouter.navigate(
+        to: HomeRoute.recommendationDetail, how: .push(hidesBottomBarWhenPushed: true), with: [:])
     }
   }
-  
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     gradientLayer.frame = view.bounds
@@ -77,32 +78,32 @@ final class RecommendationLoadingViewController: BaseViewController {
 
   private func setupUI() {
     view.layer.insertSublayer(gradientLayer, at: .zero)
-    
+
     view.addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
       make.horizontalEdges.equalToSuperview()
       make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom)
     }
-    
+
     contentStackView.addArrangedSubview(titleLabel)
     contentStackView.setCustomSpacing(8, after: titleLabel)
-    
+
     contentStackView.addArrangedSubview(descriptionLabel)
     contentStackView.setCustomSpacing(55, after: descriptionLabel)
-    
+
     contentStackView.addArrangedSubview(loadingImageView)
     loadingImageView.snp.makeConstraints { make in
       make.width.equalToSuperview()
     }
-    
+
     if let username = userDataManager.user?.name {
       titleLabel.styledText = "\(username)의 사주 분석 완료"
     } else {
       titleLabel.styledText = "사주 분석 완료"
     }
   }
-  
+
   private func playAnimation(completion: @escaping () -> Void) {
     UIView.animateKeyframes(
       withDuration: 2.0,

@@ -85,7 +85,7 @@ final class RecommendationDetailViewController: BaseViewController {
 
   private func setupUI() {
     view.backgroundColor = STColors.primary9.color
-    
+
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
       $0.top.equalTo(view.safeAreaLayoutGuide.snp.top)

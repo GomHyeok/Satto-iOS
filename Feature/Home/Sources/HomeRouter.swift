@@ -29,7 +29,7 @@ final class HomeRouter: Routable {
       },
       .recommendationDetail: {
         return RecommendationDetailViewController(viewModel: RecommendationDetailViewModel())
-      }
+      },
     ]
   }
 

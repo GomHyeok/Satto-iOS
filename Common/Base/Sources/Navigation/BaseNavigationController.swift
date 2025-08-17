@@ -25,9 +25,12 @@ public final class BaseNavigationController: UINavigationController {
     return popped
   }
 
-  public override func popToViewController(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
+  public override func popToViewController(_ viewController: UIViewController, animated: Bool)
+    -> [UIViewController]?
+  {
     let poppedControllers = super.popToViewController(viewController, animated: animated)
-    (tabBarController as? BaseTabBarController)?.setTabBarHidden(viewController.hidesBottomBarWhenPushed, animated: false)
+    (tabBarController as? BaseTabBarController)?.setTabBarHidden(
+      viewController.hidesBottomBarWhenPushed, animated: false)
     return poppedControllers
   }
 

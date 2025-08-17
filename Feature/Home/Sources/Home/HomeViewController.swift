@@ -55,7 +55,7 @@ public final class HomeViewController: BaseViewController {
 
   private func setupUI() {
     setNavigationBarHidden(true)
-    
+
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
       $0.edges.equalToSuperview()

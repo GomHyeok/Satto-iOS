@@ -7,8 +7,8 @@
 
 import DesignSystem
 import Extension
-import UIKit
 import Kingfisher
+import UIKit
 
 struct FortuneItemCollectionViewCellModel {
   let title: String
@@ -32,7 +32,7 @@ final class FortuneItemCollectionViewCell: UICollectionViewCell {
     $0.layer.borderColor = STColors.primary7.color.cgColor
   }
   private lazy var imageView = UIImageView().then {
-    $0.backgroundColor = UIColor(hexString: "#F6F7F9") // TODO: 확인 필요
+    $0.backgroundColor = UIColor(hexString: "#F6F7F9")  // TODO: 확인 필요
     $0.layer.cornerRadius = 8
     $0.clipsToBounds = true
     $0.contentMode = .scaleAspectFit
@@ -51,7 +51,7 @@ final class FortuneItemCollectionViewCell: UICollectionViewCell {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func prepareForReuse() {
     super.prepareForReuse()
     imageView.kf.cancelDownloadTask()
@@ -83,7 +83,7 @@ final class FortuneItemCollectionViewCell: UICollectionViewCell {
   func update(with model: FortuneItemCollectionViewCellModel) {
     titleLabel.styledText = model.title
     messageLabel.styledText = model.message
-    if let imageURL = URL(string: model.imageURL) { // TODO: 서버 이미지가 2배 크기로 내려오고 있어 확인 필요
+    if let imageURL = URL(string: model.imageURL) {  // TODO: 서버 이미지가 2배 크기로 내려오고 있어 확인 필요
       imageView.kf.setImage(with: imageURL)
     }
   }

@@ -28,9 +28,12 @@ struct AppDependencyHandler: DependencyRegistrable {
     let tabBarController = BaseTabBarController()
     tabBarController.viewControllers = [
       BaseNavigationController(rootViewController: HomeViewController(viewModel: HomeViewModel())),
-      BaseNavigationController(rootViewController: FortuneViewController(viewModel: FortuneViewModel())),
-      BaseNavigationController(rootViewController: HistoryWebViewController(viewModel: HistoryWebViewModel())),
-      BaseNavigationController(rootViewController: MyPageViewController(viewModel: MyPageViewModel())),
+      BaseNavigationController(
+        rootViewController: FortuneViewController(viewModel: FortuneViewModel())),
+      BaseNavigationController(
+        rootViewController: HistoryWebViewController(viewModel: HistoryWebViewModel())),
+      BaseNavigationController(
+        rootViewController: MyPageViewController(viewModel: MyPageViewModel())),
     ]
     UIApplication.shared.activeWindow?.rootViewController = tabBarController
   }

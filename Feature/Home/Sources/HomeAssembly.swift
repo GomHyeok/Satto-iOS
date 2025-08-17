@@ -20,4 +20,3 @@ public final class HomeAssembly: Assembly {
 
   public init() {}
 }
-

@@ -9,11 +9,11 @@ import Auth
 import DIInjector
 import Fortune
 import Foundation
+import Home
 import Lib
 import NetworkCore
 import Onboarding
 import Setting
-import Home
 
 extension AppDelegate {
   func setupDependencyInjector() {
@@ -24,7 +24,7 @@ extension AppDelegate {
       LibAssembly(),
       FortuneAssembly(),
       OnboardingAssembly(),
-      HomeAssembly()
+      HomeAssembly(),
     ])
   }
 }
