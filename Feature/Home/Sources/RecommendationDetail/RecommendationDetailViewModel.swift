@@ -6,6 +6,7 @@
 //
 
 import Combine
+import DIInjector
 import DesignSystem
 import Foundation
 
@@ -15,59 +16,63 @@ final class RecommendationDetailViewModel {
 
   enum Input {
     case viewDidLoad
+    case timerFinished
+    case createNewRecommendationButtonTapped
+    case showResultsButtonTapped
   }
 
   struct Output {
+    let navigationTitle = CurrentValueSubject<String?, Never>(nil)
     let sections = CurrentValueSubject<[any RecommendationDetailCellModel], Never>([])
+    let isResultAvailable = CurrentValueSubject<Bool, Never>(false)
   }
 
+  @Injected var recommendationDetailService: RecommendationDetailService
   let output: Output = Output()
+  private let shouldCreateRecommendation: Bool
+  
+  init(shouldCreateRecommendation: Bool) {
+    self.shouldCreateRecommendation = shouldCreateRecommendation
+  }
 
   func send(input: Input) {
     switch input {
     case .viewDidLoad:
-      // TODO: 분리 필요
-
-      let description = "콩떡님은 화(火) 기운이 강하여\n‘지존 만수르’ 예요"  // TODO: 확인 필요
-      let attributedString = NSMutableAttributedString(
-        string: description,
-        attributes: Typography.Body_14_B.color(STColors.gray1.color).attributes
-      )
-      if let range = (description as NSString).range(of: "‘지존 만수르’") as NSRange? {
-        attributedString.addAttributes(
-          Typography.Body_14_B.color(STColors.primary2.color).attributes, range: range)
+      output.navigationTitle.send(recommendationDetailService.navigationTitle)
+      Task {
+        do {
+          // TODO: 로딩 인디케이터
+          if shouldCreateRecommendation {
+            let sections = try await recommendationDetailService.createRecommendation()
+            output.sections.send(sections)
+          } else {
+            let sections = try await recommendationDetailService.fetchRecommendation()
+            output.sections.send(sections)
+          }
+        } catch {
+          // TODO: 에러 처리
+          print(error)
+        }
       }
-
-      output.sections.send([
-        NumberRecommendationCollectionViewCellModel(
-          roundText: "1181회",
-          title: "콩떡님을 위한 로또 번호 추천",
-          numbers: [9, 11, 18, 24, 33, 42],
-          timeUntilDraw: "6일 2시간 59분 32초"
-        ),
-        AIAnalysisResultCollectionViewCellModel(
-          description: attributedString,
-          items: [
-            .init(title: "화(火) 기운과 잘 맞는 숫자", numbers: [9, 11]),
-            .init(title: "재물운 좋을 때 잘 나오는 숫자", numbers: [24, 33]),
-            .init(title: "최근 자주 나온 번호", numbers: [18, 42]),
-          ]
-        ),
-        DescriptionListCollectionViewCellModel(
-          descriptions: [
-            "요즘 많이 나오는 번호가 들어 있어요",
-            "끝자리가 같은 숫자가 1쌍 있어요",
-            "연속 숫자 3개 이상 없이 안정적인 조합이에요",
-            "홀수랑 짝수가 고르게 섞였어요",
-          ]
-        ),
-        AvoidNumberCollectionViewCellModel(
-          items: [
-            .init(title: "수(水) 기운과\n상충하는 숫자", numbers: [9, 11, 18]),
-            .init(title: "최근 100회 동안\n거의 안 나온 숫자", numbers: [24, 33]),
-          ]
-        ),
-      ])
+      
+    case .timerFinished:
+      output.isResultAvailable.send(true)
+      
+    case .createNewRecommendationButtonTapped:
+      Task {
+        do {
+          // TODO: 로딩 인디케이터
+          let sections = try await recommendationDetailService.createRecommendation()
+          output.sections.send(sections)
+        } catch {
+          // TODO: 에러 처리
+          print(error)
+        }
+      }
+      
+    case .showResultsButtonTapped:
+      // TODO: 결과 안내 화면
+      break
     }
   }
 }

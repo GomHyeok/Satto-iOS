@@ -10,7 +10,7 @@ import Extension
 import UIKit
 
 struct AIAnalysisResultCollectionViewCellModel: RecommendationDetailCellModel {
-  let description: NSAttributedString  // TODO: 확인 필요
+  let description: String
   let items: [NumberRecommendationItem]
 }
 
@@ -32,7 +32,7 @@ final class AIAnalysisResultCollectionViewCell: UICollectionViewCell {
     $0.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
   }
   private lazy var descriptionLabel = UILabel().then {
-    $0.style = Typography.Body_14_B
+    $0.style = Typography.Body_14_B.lineHeightMultiple(1.2)
     $0.textColor = STColors.gray1.color
     $0.numberOfLines = .zero
   }
@@ -70,7 +70,7 @@ final class AIAnalysisResultCollectionViewCell: UICollectionViewCell {
   }
 
   func update(with model: AIAnalysisResultCollectionViewCellModel) {
-    descriptionLabel.attributedText = model.description
+    descriptionLabel.styledText = model.description
 
     recommendationStackView.arrangedSubviews.forEach {
       $0.removeFromSuperview()
@@ -85,17 +85,8 @@ final class AIAnalysisResultCollectionViewCell: UICollectionViewCell {
 
 @available(iOS 17.0, *)
 #Preview {
-  let description = "콩떡님은 화(火) 기운이 강하여\n‘지존 만수르’ 예요"
-  let attributedString = NSMutableAttributedString(
-    string: description,
-    attributes: Typography.Body_14_B.color(STColors.gray1.color).attributes
-  )
-  if let range = (description as NSString).range(of: "‘지존 만수르’") as NSRange? {
-    attributedString.addAttributes(
-      Typography.Body_14_B.color(STColors.primary2.color).attributes, range: range)
-  }
   let cellModel = AIAnalysisResultCollectionViewCellModel(
-    description: attributedString,
+    description: "콩떡님은 화(火) 기운이 강하여\n‘지존 만수르’ 예요",
     items: [
       .init(title: "화(火) 기운과 잘 맞는 숫자", numbers: [9, 11]),
       .init(title: "재물운 좋을 때 잘 나오는 숫자", numbers: [24, 33]),

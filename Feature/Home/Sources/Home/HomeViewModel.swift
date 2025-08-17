@@ -50,8 +50,11 @@ public final class HomeViewModel {
             with: [:])
         }
       case .recommended:
-        // TODO: 번호 상세
-        break
+        Task { @MainActor in
+          homeRouter.navigate(
+            to: HomeRoute.recommendationDetail, how: .push(hidesBottomBarWhenPushed: true),
+            with: ["shouldCreateRecommendation": false])
+        }
       case .needsResultCheck:
         // TODO: 결과
         break

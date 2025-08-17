@@ -15,6 +15,7 @@ final class RecommendationDetailViewController: BaseViewController {
   private enum Constant {
     static let horizontalMargin: CGFloat = 20
     static let footerHeight: CGFloat = 104
+    static let footerButtonHeight: CGFloat = 48
   }
 
   private lazy var collectionView = UICollectionView(
@@ -41,8 +42,25 @@ final class RecommendationDetailViewController: BaseViewController {
     $0.contentInset.bottom = Constant.footerHeight
   }
   private lazy var footerView = RecommendationDetailFooterContainerView()
-  private lazy var tooltipView = TooltipView().then {  // TODO: 노출 조건 확인
+  private lazy var tooltipView = TooltipView().then {
     $0.text = "결과가 나왔소! 번호 보러 오시오."
+    $0.isHidden = true
+  }
+  private lazy var createNewRecommendationButton = UIButton().then {
+    $0.backgroundColor = STColors.primary9.color
+    $0.layer.cornerRadius = 8
+    $0.layer.borderColor = STColors.primary2.color.cgColor
+    $0.layer.borderWidth = 1
+    let style = Typography.Body_16_B.color(STColors.primary2.color)
+    let styledText = "번호 새로 받기".set(style: style)
+    $0.setAttributedTitle(styledText, for: .normal)
+  }
+  private lazy var showResultsButton = UIButton().then {
+    $0.backgroundColor = STColors.primary2.color
+    $0.layer.cornerRadius = 8
+    let style = Typography.Body_16_B.color(STColors.white.color)
+    let styledText = "결과 확인하기".set(style: style)
+    $0.setAttributedTitle(styledText, for: .normal)
   }
   private let viewModel: RecommendationDetailViewModel
 
@@ -60,7 +78,6 @@ final class RecommendationDetailViewController: BaseViewController {
     setupNavigationBar()
     setupUI()
     setupBinding()
-    updateFooterView()  // TODO: 임시
     viewModel.send(input: .viewDidLoad)
   }
 
@@ -75,7 +92,6 @@ final class RecommendationDetailViewController: BaseViewController {
   }
 
   private func setupNavigationBar() {
-    title = "콩떡님의 로또 번호"  // TODO: username 확인 필요
     navigationBar.backgroundColor = STColors.primary9.color
     let backButtonItem = NaivgationBarButtonItem.back
     setNavigationBarLeftButtonItems(items: [
@@ -105,13 +121,49 @@ final class RecommendationDetailViewController: BaseViewController {
       make.width.equalToSuperview().inset(24)
       make.centerX.equalToSuperview()
     }
+    
+    showResultsButton.snp.makeConstraints { make in
+      make.height.equalTo(Constant.footerButtonHeight)
+    }
+    
+    createNewRecommendationButton.snp.makeConstraints { make in
+      make.height.equalTo(Constant.footerButtonHeight)
+    }
   }
 
   private func setupBinding() {
+    createNewRecommendationButton.tapPublisher
+      .sink { [weak self] _ in
+        self?.viewModel.send(input: .createNewRecommendationButtonTapped)
+      }
+      .store(in: &cancellables)
+    
+    showResultsButton.tapPublisher
+      .sink { [weak self] _ in
+        self?.viewModel.send(input: .showResultsButtonTapped)
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.navigationTitle
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] title in
+        self?.title = title
+      }
+      .store(in: &cancellables)
+    
     viewModel.output.sections
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
         self?.collectionView.reloadData()
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.isResultAvailable
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] isResultAvailable in
+        self?.updateFooterView(isResultAvailable: isResultAvailable)
+        self?.tooltipView.isHidden = !isResultAvailable
       }
       .store(in: &cancellables)
   }
@@ -146,18 +198,12 @@ final class RecommendationDetailViewController: BaseViewController {
     return layout
   }
 
-  private func updateFooterView() {  // TODO: 상태에 따른 업데이트
-    let showResultsButton = UIButton().then {
-      $0.backgroundColor = STColors.primary2.color
-      $0.layer.cornerRadius = 8
-      let style = Typography.Body_16_B.color(STColors.white.color)
-      let styledText = "결과 확인하기".set(style: style)
-      $0.setAttributedTitle(styledText, for: .normal)
+  private func updateFooterView(isResultAvailable: Bool) {
+    if isResultAvailable {
+      footerView.update(buttons: [showResultsButton])
+    } else {
+      footerView.update(buttons: [createNewRecommendationButton])
     }
-    showResultsButton.snp.makeConstraints { make in
-      make.height.equalTo(48)
-    }
-    footerView.update(buttons: [showResultsButton])
   }
 }
 
@@ -183,6 +229,11 @@ extension RecommendationDetailViewController: UICollectionViewDataSource {
       )
       if let cell = cell as? NumberRecommendationCollectionViewCell {
         cell.update(with: item)
+        cell.timerFinished
+          .sink { [weak self] in
+            self?.viewModel.send(input: .timerFinished)
+          }
+          .store(in: &cell.cancellables)
       }
       return cell
 
@@ -220,10 +271,4 @@ extension RecommendationDetailViewController: UICollectionViewDataSource {
       return UICollectionViewCell()
     }
   }
-}
-
-@available(iOS 17.0, *)
-#Preview {
-  let vc = RecommendationDetailViewController(viewModel: RecommendationDetailViewModel())
-  return UINavigationController(rootViewController: vc)
 }

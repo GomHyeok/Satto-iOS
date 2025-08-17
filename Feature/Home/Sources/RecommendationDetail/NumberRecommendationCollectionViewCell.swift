@@ -5,6 +5,8 @@
 //  Created by ttozzi on 8/7/25.
 //
 
+import Base
+import Combine
 import DesignSystem
 import Extension
 import UIKit
@@ -13,10 +15,30 @@ struct NumberRecommendationCollectionViewCellModel: RecommendationDetailCellMode
   let roundText: String
   let title: String
   let numbers: [Int]
-  let timeUntilDraw: String  // TODO: 확인 필요
+  var secondsUntilResult: Int { // TODO: 기기 시간 설정을 바꾼 경우, 오후 8시 35분이 지났으나 서버에서 결과 조회가 준비되지 않은 경우 논의 필요
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = .current
+    calendar.locale = Locale(identifier: "ko_KR")
+    calendar.firstWeekday = 2
+    calendar.minimumDaysInFirstWeek = 4
+    
+    let now = Date()
+    guard let weekStart = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: now)),
+          let saturday = calendar.date(byAdding: .day, value: 5, to: weekStart),
+          let target = calendar.date(bySettingHour: 20, minute: 35, second: 0, of: saturday) else {
+      return 0
+    }
+    
+    let diff = target.timeIntervalSince(now)
+    if diff >= 0 {
+      return Int(diff)
+    }
+    let next = calendar.date(byAdding: .day, value: 7, to: target)!
+    return max(0, Int(next.timeIntervalSince(now)))
+  }
 }
 
-final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
+final class NumberRecommendationCollectionViewCell: BaseCollectionViewCell {
 
   private lazy var contentStackView = UIStackView().then {
     $0.spacing = 16
@@ -47,7 +69,10 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
     $0.textColor = STColors.gray1.color
     $0.textAlignment = .right
   }
-
+  private var countdownCancellable: AnyCancellable?
+  private let timerFinishedSubject = PassthroughSubject<Void, Never>()
+  var timerFinished: AnyPublisher<Void, Never> { timerFinishedSubject.eraseToAnyPublisher() }
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -57,6 +82,12 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    countdownCancellable?.cancel()
+    countdownCancellable = nil
+  }
+  
   private func setupUI() {
     contentView.backgroundColor = STColors.white.color
     contentView.layer.cornerRadius = 12
@@ -109,7 +140,54 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
       ball.number = String(number)
       numberBallStackView.addArrangedSubview(ball)
     }
-    timeUntilDrawLabel.styledText = model.timeUntilDraw
+    startCountdown(seconds: model.secondsUntilResult)
+  }
+  
+  private func startCountdown(seconds: Int) {
+    countdownCancellable?.cancel()
+    
+    let secs = max(0, seconds)
+    let target = Date().addingTimeInterval(TimeInterval(secs))
+    
+    countdownCancellable = Timer.publish(every: 1, on: .main, in: .common)
+      .autoconnect()
+      .handleEvents(receiveSubscription: { [weak self] _ in
+        self?.timeUntilDrawLabel.styledText = self?.countdownText(from: Int(target.timeIntervalSinceNow))
+      })
+      .map { _ in
+        return max(0, Int(target.timeIntervalSinceNow))
+      }
+      .sink { [weak self] remaining in
+        self?.timeUntilDrawLabel.styledText = self?.countdownText(from: remaining)
+        if remaining == 0 {
+          self?.countdownCancellable?.cancel()
+          self?.timeUntilDrawLabel.textColor = STColors.red3.color
+          self?.timerFinishedSubject.send(())
+        }
+      }
+  }
+  
+  private func countdownText(from seconds: Int) -> String {
+    if seconds <= 0 {
+      return "0초"
+    }
+    let d = seconds / 86_400
+    let h = (seconds % 86_400) / 3_600
+    let m = (seconds % 3_600) / 60
+    let s = seconds % 60
+    
+    var parts: [String] = []
+    if d > 0 {
+      parts.append("\(d)일")
+    }
+    if h > 0 || d > 0 {
+      parts.append("\(h)시간")
+    }
+    if m > 0 || h > 0 || d > 0 {
+      parts.append("\(m)분")
+    }
+    parts.append("\(s)초")
+    return parts.joined(separator: " ")
   }
 
   private func makeTextStackView(title: String, descriptionLabel: UILabel) -> UIStackView {
@@ -138,8 +216,7 @@ final class NumberRecommendationCollectionViewCell: UICollectionViewCell {
   let cellModel = NumberRecommendationCollectionViewCellModel(
     roundText: "1181회",
     title: "콩떡님을 위한 로또 번호 추천",
-    numbers: [9, 11, 18, 24, 33, 42],
-    timeUntilDraw: "6일 2시간 59분 32초"
+    numbers: [9, 11, 18, 24, 33, 42]
   )
   let cell = NumberRecommendationCollectionViewCell()
   cell.update(with: cellModel)

@@ -13,6 +13,9 @@ public final class HomeAssembly: Assembly {
     container.register(HomeService.self) { _ in
       return HomeService()
     }
+    container.register(RecommendationDetailService.self) { _ in
+      return RecommendationDetailService()
+    }
     container.register(HomeRouter.self) { _ in
       return HomeRouter()
     }

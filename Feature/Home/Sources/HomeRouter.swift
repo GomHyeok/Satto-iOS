@@ -14,7 +14,8 @@ enum HomeRoute {
 }
 
 final class HomeRouter: Routable {
-  private var factories: [HomeRoute: () -> UIViewController] = [:]
+  // TODO: 생성 시점 data 주입을 위한 구조 논의 필요
+  private var factories: [HomeRoute: ([String: Any]) -> UIViewController] = [:]
 
   public nonisolated init() {
     Task { @MainActor in
@@ -24,11 +25,12 @@ final class HomeRouter: Routable {
 
   public func setFactories() {
     self.factories = [
-      .recommendationLoading: {
+      .recommendationLoading: { _ in
         return RecommendationLoadingViewController()
       },
-      .recommendationDetail: {
-        return RecommendationDetailViewController(viewModel: RecommendationDetailViewModel())
+      .recommendationDetail: { data in
+        let shouldCreateRecommendation = data["shouldCreateRecommendation"] as? Bool
+        return RecommendationDetailViewController(viewModel: RecommendationDetailViewModel(shouldCreateRecommendation: shouldCreateRecommendation ?? true))
       },
     ]
   }
@@ -36,7 +38,7 @@ final class HomeRouter: Routable {
   public func navigate(to route: Any, how: NavigateType, with data: [String: Any]) {
     guard let homeRoute = route as? HomeRoute else { return }
     guard let factory = factories[homeRoute] else { return }
-    let viewController = factory()
+    let viewController = factory(data)
     manageViewController(viewController, how: how)
   }
 }

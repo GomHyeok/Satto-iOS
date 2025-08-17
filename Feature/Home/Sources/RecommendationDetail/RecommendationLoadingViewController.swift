@@ -56,7 +56,10 @@ final class RecommendationLoadingViewController: BaseViewController {
     super.viewDidAppear(animated)
     playAnimation { [weak self] in
       self?.homeRouter.navigate(
-        to: HomeRoute.recommendationDetail, how: .push(hidesBottomBarWhenPushed: true), with: [:])
+        to: HomeRoute.recommendationDetail,
+        how: .push(hidesBottomBarWhenPushed: true),
+        with: ["shouldCreateRecommendation": true]
+      )
     }
   }
 
