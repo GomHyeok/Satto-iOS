@@ -79,12 +79,13 @@ final class RecommendationLoadingView: UIView {
     loadingImageView.snp.makeConstraints { make in
       make.width.equalToSuperview()
     }
-    
-    titleLabel.styledText = if let username = userDataManager.user?.name {
-      "\(username)의 사주 분석 완료"
-    } else {
-      "사주 분석 완료"
-    }
+
+    titleLabel.styledText =
+      if let username = userDataManager.user?.name {
+        "\(username)의 사주 분석 완료"
+      } else {
+        "사주 분석 완료"
+      }
   }
 
   func play() {

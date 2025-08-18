@@ -49,14 +49,14 @@ public final class HomeViewModel {
             to: HomeRoute.recommendationDetail, how: .push(hidesBottomBarWhenPushed: true),
             with: ["shouldCreateRecommendation": true])
         }
-        
+
       case .recommended:
         Task { @MainActor in
           homeRouter.navigate(
             to: HomeRoute.recommendationDetail, how: .push(hidesBottomBarWhenPushed: true),
             with: ["shouldCreateRecommendation": false])
         }
-        
+
       case .needsResultCheck:
         Task { @MainActor in
           homeRouter.navigate(

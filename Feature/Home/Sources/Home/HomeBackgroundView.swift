@@ -9,7 +9,7 @@ import DesignSystem
 import UIKit
 
 final class HomeBackgroundView: UIView {
-  
+
   private let gradientLayer = CAGradientLayer().then {
     $0.colors = [
       UIColor(hexString: "#ECE2FF").cgColor,
@@ -27,7 +27,7 @@ final class HomeBackgroundView: UIView {
     $0.contentMode = .scaleAspectFit
     $0.image = STImages.homePattern2.image
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -36,21 +36,21 @@ final class HomeBackgroundView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
     gradientLayer.frame = bounds
   }
-  
+
   private func setupUI() {
     layer.insertSublayer(gradientLayer, at: .zero)
-    
+
     addSubview(patternImageView1)
     patternImageView1.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(27)
       make.leading.equalToSuperview()
     }
-    
+
     addSubview(patternImageView2)
     patternImageView2.snp.makeConstraints { make in
       make.top.equalToSuperview().offset(155)

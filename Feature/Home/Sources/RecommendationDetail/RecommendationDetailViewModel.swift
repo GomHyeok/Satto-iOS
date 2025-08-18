@@ -13,7 +13,7 @@ import Foundation
 protocol RecommendationDetailCellModel {}
 
 final class RecommendationDetailViewModel {
-  
+
   enum Constant {
     static let minimumLoadingDuration: TimeInterval = 2.0
   }
@@ -93,7 +93,7 @@ final class RecommendationDetailViewModel {
           to: HomeRoute.lottoResult, how: .push(hidesBottomBarWhenPushed: true),
           with: [:])
       }
-      
+
     case .backButtonTapped:
       output.back.send(())
     }

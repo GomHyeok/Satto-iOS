@@ -19,8 +19,9 @@ final class RecommendationDetailViewController: BaseViewController {
   }
 
   private lazy var loadingView = RecommendationLoadingView(
-    duration: RecommendationDetailViewModel.Constant.minimumLoadingDuration)
-    .then {
+    duration: RecommendationDetailViewModel.Constant.minimumLoadingDuration
+  )
+  .then {
     $0.alpha = 0
   }
   private lazy var collectionView = UICollectionView(
@@ -138,7 +139,7 @@ final class RecommendationDetailViewController: BaseViewController {
     createNewRecommendationButton.snp.makeConstraints { make in
       make.height.equalTo(Constant.footerButtonHeight)
     }
-    
+
     view.addSubview(loadingView)
     loadingView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
@@ -184,7 +185,6 @@ final class RecommendationDetailViewController: BaseViewController {
       }
       .store(in: &cancellables)
 
-    
     viewModel.output.navigationTitle
       .receive(on: DispatchQueue.main)
       .sink { [weak self] title in
@@ -207,7 +207,7 @@ final class RecommendationDetailViewController: BaseViewController {
         self?.tooltipView.isHidden = !isResultAvailable
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.back
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
