@@ -11,6 +11,7 @@ import UIKit
 enum HomeRoute {
   case recommendationLoading
   case recommendationDetail
+  case lottoResult
 }
 
 final class HomeRouter: Routable {
@@ -34,6 +35,9 @@ final class HomeRouter: Routable {
           viewModel: RecommendationDetailViewModel(
             shouldCreateRecommendation: shouldCreateRecommendation ?? true))
       },
+      .lottoResult: { _ in
+        return LottoResultViewController(viewModel: LottoResultViewModel())
+      }
     ]
   }
 

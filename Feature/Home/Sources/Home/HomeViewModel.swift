@@ -56,8 +56,11 @@ public final class HomeViewModel {
             with: ["shouldCreateRecommendation": false])
         }
       case .needsResultCheck:
-        // TODO: 결과
-        break
+        Task { @MainActor in
+          homeRouter.navigate(
+            to: HomeRoute.lottoResult, how: .push(hidesBottomBarWhenPushed: true),
+            with: [:])
+        }
       }
     }
   }

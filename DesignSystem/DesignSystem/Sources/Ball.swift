@@ -20,13 +20,20 @@ public final class Ball: UIView {
   }
   private lazy var backgroundImageView = UIImageView().then {
     $0.contentMode = .scaleAspectFit
+    $0.backgroundColor = STColors.gray8.color
+    $0.clipsToBounds = true
   }
-  public var number: String? {  // TODO: 타입 확인
+  public var number: String? {
     get { numberLabel.text }
     set {
       let backgroundImage = BallBackgroundImageFactory.makeImage(of: newValue)
       backgroundImageView.image = backgroundImage
       numberLabel.styledText = newValue
+    }
+  }
+  public var isColored: Bool = true {
+    didSet {
+      update(isColored: isColored)
     }
   }
 
@@ -37,6 +44,11 @@ public final class Ball: UIView {
 
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
+  }
+  
+  public override func layoutSubviews() {
+    super.layoutSubviews()
+    backgroundImageView.layer.cornerRadius = min(backgroundImageView.bounds.width, backgroundImageView.bounds.height)/2
   }
 
   private func setupUI() {
@@ -50,6 +62,15 @@ public final class Ball: UIView {
       make.center.equalToSuperview()
     }
   }
+  
+  private func update(isColored: Bool) {
+    if isColored {
+      let backgroundImage = BallBackgroundImageFactory.makeImage(of: number)
+      backgroundImageView.image = backgroundImage
+    } else {
+      backgroundImageView.image = nil
+    }
+  }
 }
 
 private enum BallBackgroundImageFactory {
@@ -60,15 +81,15 @@ private enum BallBackgroundImageFactory {
       return nil
     }
     switch n {
-    case 1...9:
+    case 1...10:
       return STImages.ballYellow.image
-    case 10...19:
+    case 11...20:
       return STImages.ballBlue.image
-    case 20...29:
+    case 21...30:
       return STImages.ballRed.image
-    case 30...39:
+    case 31...40:
       return STImages.ballGray.image
-    case 40...45:
+    case 41...45:
       return STImages.ballGreen.image
     default:
       return nil
@@ -87,6 +108,15 @@ private enum BallBackgroundImageFactory {
     let ball = Ball()
     ball.number = number
     stackView.addArrangedSubview(ball)
+  }
+  let uncoloredBall = Ball()
+  uncoloredBall.number = "1"
+  uncoloredBall.isColored = false
+  stackView.addArrangedSubview(uncoloredBall)
+  stackView.arrangedSubviews.forEach {
+    $0.snp.makeConstraints { make in
+      make.size.equalTo(32)
+    }
   }
   return stackView
 }

@@ -14,6 +14,7 @@ struct DesignSystemLayer: Layer {
         dependencies: [
           .external(name: "SwiftRichString"),
           .external(name: "Then"),
+          .external(name: "Lottie"),
         ],
         settings: .settings(
           base: [

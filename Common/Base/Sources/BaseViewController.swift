@@ -34,6 +34,7 @@ open class BaseViewController: UIViewController {
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     updateBottomSafeArea()
+    view.bringSubviewToFront(navigationBar)
   }
 
   public func setNavigationBarHidden(_ isHidden: Bool) {
