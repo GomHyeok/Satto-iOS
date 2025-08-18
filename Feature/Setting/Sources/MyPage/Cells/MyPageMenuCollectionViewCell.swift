@@ -5,11 +5,11 @@
 //  Created by ttozzi on 7/26/25.
 //
 
+import Base
 import DesignSystem
 import SnapKit
 import Then
 import UIKit
-import Base
 
 struct MyPageMenuCollectionViewCellModel {
 

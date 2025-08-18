@@ -21,12 +21,12 @@ public final class MyPageViewModel {
 
   struct Output {
     let sections = CurrentValueSubject<[MyPageSection], Never>([])
-    let showToadt : PassthroughSubject<Void, Never> = .init()
+    let showToadt: PassthroughSubject<Void, Never> = .init()
   }
 
   @Injected private var myPageService: MyPageService
-  @Injected private var router : SettingRouter
-  
+  @Injected private var router: SettingRouter
+
   let output: Output = Output()
 
   public init() {}
@@ -44,16 +44,18 @@ public final class MyPageViewModel {
           // TODO: 에러 처리
         }
       }
-      
+
     case .editButtonTapped:
       Task { @MainActor [weak self] in
         guard let self else { return }
-        self.router.navigate(to: SettingRoute.editProfile, how: .push(hidesBottomBarWhenPushed: true), with: ["delegate":self])
+        self.router.navigate(
+          to: SettingRoute.editProfile, how: .push(hidesBottomBarWhenPushed: true),
+          with: ["delegate": self])
       }
     case .feedBackButtonTapped:
       // TODO: 피드백 전송 링크
       break
-      
+
     case .menuTapped(let item):
       // TODO: menu 핸들링
       break

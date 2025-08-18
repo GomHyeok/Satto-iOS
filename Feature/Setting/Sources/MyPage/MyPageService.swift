@@ -25,13 +25,13 @@ struct MyPageService {
         "여"
       }
     let birthTime = {
-      if let time = userData.birthTime  {
+      if let time = userData.birthTime {
         return "\(time[0]) ~ \(time[1])"
       }
-      
+
       return "알수 없소"
     }()
-    
+
     let birthDate = userData.birthDate ?? "알수 없소"
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     return [

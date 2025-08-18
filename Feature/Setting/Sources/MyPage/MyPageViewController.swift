@@ -12,7 +12,6 @@ import Extension
 import SnapKit
 import Then
 import UIKit
-import Base
 
 enum MyPageSection {
   case profile(MyProfileInfoCollectionViewCellModel)
@@ -60,7 +59,7 @@ public final class MyPageViewController: BaseViewController {
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-  
+
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -87,7 +86,7 @@ public final class MyPageViewController: BaseViewController {
         self?.collectionView.reloadData()
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.showToadt
       .receive(on: DispatchQueue.main)
       .sink { [weak self] in
@@ -95,7 +94,7 @@ public final class MyPageViewController: BaseViewController {
         let toast = Toast().then {
           $0.update(message: "프로필 수정이 완료됐소.")
         }
-        
+
         guard let tabBar = self.tabBarController?.view else { return }
         tabBar.addSubview(toast)
         toast.snp.makeConstraints { make in
@@ -104,12 +103,15 @@ public final class MyPageViewController: BaseViewController {
           make.trailing.equalToSuperview().offset(-24)
           make.height.equalTo(44)
         }
-        
-        UIView.animate(withDuration : 0.5, delay: 3, options: .curveEaseOut, animations: {
-          toast.alpha = 0.0
-        }, completion: { _ in
-          toast.removeFromSuperview()
-        })
+
+        UIView.animate(
+          withDuration: 0.5, delay: 3, options: .curveEaseOut,
+          animations: {
+            toast.alpha = 0.0
+          },
+          completion: { _ in
+            toast.removeFromSuperview()
+          })
       }
       .store(in: &cancellables)
   }
@@ -205,7 +207,7 @@ extension MyPageViewController: UICollectionViewDataSource {
     guard let section = viewModel.output.sections.value[safe: indexPath.section] else {
       return UICollectionViewCell()
     }
-    
+
     switch section {
     case .profile(let model):
       let cell = collectionView.dequeueReusableCell(
@@ -271,7 +273,7 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
       SettingAssembly(),
       NetworkCoreAssembly(),
     ])
-    
+
     return MyPageViewController(viewModel: MyPageViewModel())
   }
 #endif
