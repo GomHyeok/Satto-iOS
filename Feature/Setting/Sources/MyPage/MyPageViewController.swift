@@ -65,11 +65,6 @@ public final class MyPageViewController: BaseViewController {
 
   }
 
-  public override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-
-  }
-
   private func setupUI() {
     view.backgroundColor = STColors.primary9.color
 

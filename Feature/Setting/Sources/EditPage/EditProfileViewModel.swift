@@ -48,10 +48,6 @@ final class EditProfileViewModel {
 
   @Injected private var userDataManager: UserDataManager
   @Injected private var router: SettingRouter
-
-  @Injected private var userDataManager: UserDataManager
-  @Injected private var router: SettingRouter
-
   private var _isNameValid: Bool = true
   private var _isBirthDateValid: Bool = true
   private var _isBornTimeValied: Bool = true

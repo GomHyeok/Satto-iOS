@@ -49,18 +49,6 @@ final class EditProfileViewController: BaseViewController {
       actionButtonTitle: "계속 수정하기", outButtonTitle: "나가기")
   }
 
-  private lazy var backgourndView = UIView().then {
-    $0.isHidden = true
-    $0.backgroundColor = STColors.black.color.withAlphaComponent(0.5)
-  }
-
-  private lazy var popup = PopUp().then {
-    $0.isHidden = true
-    $0.update(
-      titile: "수정 중인 내용이 있소", description: "저장하지 않고 화면을 벗어나면\n감쪽같이 사라질 것이오",
-      actionButtonTitle: "계속 수정하기", outButtonTitle: "나가기")
-  }
-
   private lazy var nameStack = UIStackView().then {
     $0.axis = .vertical
     $0.spacing = 8

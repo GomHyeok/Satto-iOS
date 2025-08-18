@@ -30,15 +30,6 @@ public struct UserDTO: Decodable {
     self.gender = gender
   }
 
-  public init(id: String, name: String, birthDate: String?, birthTime: [String]?, gender: GenderDTO)
-  {
-    self.id = id
-    self.name = name
-    self.birthDate = birthDate
-    self.birthTime = birthTime
-    self.gender = gender
-  }
-
   // TODO: 사주 정보?
 }
 
