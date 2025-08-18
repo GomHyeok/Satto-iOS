@@ -17,6 +17,9 @@ struct AppLayer: Layer {
           with: [
             "CFBundleDisplayName": "$(APP_NAME)",
             "UILaunchStoryboardName": "LaunchScreen",
+            "UISupportedInterfaceOrientations": [
+              "UIInterfaceOrientationPortrait"
+            ],
             "UIApplicationSceneManifest": [
               "UIApplicationSupportsMultipleScenes": false,
               "UISceneConfigurations": [
@@ -35,7 +38,8 @@ struct AppLayer: Layer {
         dependencies: [.project(target: "FeatureLayer", path: "../Feature")],
         settings: .settings(
           base: [
-            "PRODUCT_BUNDLE_IDENTIFIER": "$(APP_IDENTIFIER)"
+            "PRODUCT_BUNDLE_IDENTIFIER": "$(APP_IDENTIFIER)",
+            "TARGETED_DEVICE_FAMILY": "1"
           ],
           configurations: [
             .debug(
