@@ -35,7 +35,8 @@ final class HomeHeaderCollectionViewCell: UICollectionViewCell {
     $0.textColor = STColors.black.color
   }
   private lazy var imageView = UIImageView().then {
-    $0.backgroundColor = .gray  // TODO: 임시 영역
+    $0.image = STImages.smilePig.image
+    $0.contentMode = .scaleAspectFit
   }
 
   override init(frame: CGRect) {

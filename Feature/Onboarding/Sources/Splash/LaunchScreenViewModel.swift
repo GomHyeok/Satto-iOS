@@ -31,7 +31,7 @@ public final class LaunchScreenViewModel {
     switch input {
     case .viewDidLoad:
       Task { [weak self] in
-        async let minDelay: Void = Task.sleep(for: .seconds(3))
+        async let minDelay: Void = Task.sleep(for: .seconds(2))
         do {
           try await self?.userDataManager.fetch()
           _ = try? await minDelay

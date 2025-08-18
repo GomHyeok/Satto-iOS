@@ -9,7 +9,6 @@ import Lib
 import UIKit
 
 enum HomeRoute {
-  case recommendationLoading
   case recommendationDetail
   case lottoResult
 }
@@ -26,9 +25,6 @@ final class HomeRouter: Routable {
 
   public func setFactories() {
     self.factories = [
-      .recommendationLoading: { _ in
-        return RecommendationLoadingViewController()
-      },
       .recommendationDetail: { data in
         let shouldCreateRecommendation = data["shouldCreateRecommendation"] as? Bool
         return RecommendationDetailViewController(

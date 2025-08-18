@@ -1,5 +1,5 @@
 //
-//  RecommendationLoadingViewController.swift
+//  RecommendationLoadingView.swift
 //  Home
 //
 //  Created by ttozzi on 8/17/25.
@@ -11,8 +11,7 @@ import DIInjector
 import DesignSystem
 import UIKit
 
-// TODO: 뷰모델 구현하기
-final class RecommendationLoadingViewController: BaseViewController {
+final class RecommendationLoadingView: UIView {
 
   private let gradientLayer = CAGradientLayer().then {
     $0.colors = [
@@ -43,50 +42,31 @@ final class RecommendationLoadingViewController: BaseViewController {
     $0.contentMode = .scaleAspectFill
     $0.image = STImages.lottoLoading.image
   }
+  private let duration: TimeInterval
   @Injected var userDataManager: UserDataManager
-  @Injected var homeRouter: HomeRouter
 
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    setupNavigationBar()
+  init(duration: TimeInterval) {
+    self.duration = duration
+    super.init(frame: .zero)
     setupUI()
   }
 
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    playAnimation { [weak self] in
-      self?.homeRouter.navigate(
-        to: HomeRoute.recommendationDetail,
-        how: .push(hidesBottomBarWhenPushed: true),
-        with: ["shouldCreateRecommendation": true]
-      )
-    }
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
   }
 
-  override func viewDidLayoutSubviews() {
-    super.viewDidLayoutSubviews()
-    gradientLayer.frame = view.bounds
-  }
-
-  private func setupNavigationBar() {
-    let backButtonItem = NaivgationBarButtonItem.back
-    backButtonItem.tintColor = STColors.white.color
-    backButtonItem.tapPublisher
-      .sink { [weak self] in
-        self?.navigationController?.popViewController(animated: true)
-      }
-      .store(in: &cancellables)
-    setNavigationBarLeftButtonItems(items: [backButtonItem])
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    gradientLayer.frame = bounds
   }
 
   private func setupUI() {
-    view.layer.insertSublayer(gradientLayer, at: .zero)
+    layer.insertSublayer(gradientLayer, at: .zero)
 
-    view.addSubview(contentStackView)
+    addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
-      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      make.centerY.equalToSuperview()
       make.horizontalEdges.equalToSuperview()
-      make.bottom.lessThanOrEqualTo(view.safeAreaLayoutGuide.snp.bottom)
     }
 
     contentStackView.addArrangedSubview(titleLabel)
@@ -99,17 +79,17 @@ final class RecommendationLoadingViewController: BaseViewController {
     loadingImageView.snp.makeConstraints { make in
       make.width.equalToSuperview()
     }
-
-    if let username = userDataManager.user?.name {
-      titleLabel.styledText = "\(username)의 사주 분석 완료"
+    
+    titleLabel.styledText = if let username = userDataManager.user?.name {
+      "\(username)의 사주 분석 완료"
     } else {
-      titleLabel.styledText = "사주 분석 완료"
+      "사주 분석 완료"
     }
   }
 
-  private func playAnimation(completion: @escaping () -> Void) {
+  func play() {
     UIView.animateKeyframes(
-      withDuration: 2.0,
+      withDuration: duration,
       delay: 0,
       options: [.calculationModeLinear, .allowUserInteraction, .beginFromCurrentState]
     ) {
@@ -129,8 +109,6 @@ final class RecommendationLoadingViewController: BaseViewController {
       UIView.addKeyframe(withRelativeStartTime: 0.75, relativeDuration: 0.25) {
         self.loadingImageView.alpha = 1.0
       }
-    } completion: { _ in
-      completion()
     }
   }
 }

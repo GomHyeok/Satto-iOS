@@ -18,6 +18,11 @@ final class RecommendationDetailViewController: BaseViewController {
     static let footerButtonHeight: CGFloat = 48
   }
 
+  private lazy var loadingView = RecommendationLoadingView(
+    duration: RecommendationDetailViewModel.Constant.minimumLoadingDuration)
+    .then {
+    $0.alpha = 0
+  }
   private lazy var collectionView = UICollectionView(
     frame: .zero, collectionViewLayout: createLayout()
   ).then {
@@ -92,8 +97,12 @@ final class RecommendationDetailViewController: BaseViewController {
   }
 
   private func setupNavigationBar() {
-    navigationBar.backgroundColor = STColors.primary9.color
     let backButtonItem = NaivgationBarButtonItem.back
+    backButtonItem.tapPublisher
+      .sink { [weak self] in
+        self?.viewModel.send(input: .backButtonTapped)
+      }
+      .store(in: &cancellables)
     setNavigationBarLeftButtonItems(items: [
       backButtonItem
     ])
@@ -129,6 +138,11 @@ final class RecommendationDetailViewController: BaseViewController {
     createNewRecommendationButton.snp.makeConstraints { make in
       make.height.equalTo(Constant.footerButtonHeight)
     }
+    
+    view.addSubview(loadingView)
+    loadingView.snp.makeConstraints { make in
+      make.edges.equalToSuperview()
+    }
   }
 
   private func setupBinding() {
@@ -144,6 +158,33 @@ final class RecommendationDetailViewController: BaseViewController {
       }
       .store(in: &cancellables)
 
+    viewModel.output.isRecommendationLoading
+      .dropFirst()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] isLoading in
+        if isLoading {
+          self?.navigationBar.tintColor = STColors.white.color
+          self?.navigationBar.backgroundColor = .clear
+          self?.loadingView.alpha = 1
+          self?.loadingView.play()
+          self?.title = nil
+        } else {
+          UIView.animate(
+            withDuration: 0.25,
+            animations: {
+              self?.loadingView.alpha = 0
+              self?.title = self?.viewModel.output.navigationTitle.value
+              self?.navigationBar.tintColor = STColors.black.color
+            },
+            completion: { _ in
+              self?.navigationBar.backgroundColor = STColors.primary9.color
+            }
+          )
+        }
+      }
+      .store(in: &cancellables)
+
+    
     viewModel.output.navigationTitle
       .receive(on: DispatchQueue.main)
       .sink { [weak self] title in
@@ -164,6 +205,13 @@ final class RecommendationDetailViewController: BaseViewController {
       .sink { [weak self] isResultAvailable in
         self?.updateFooterView(isResultAvailable: isResultAvailable)
         self?.tooltipView.isHidden = !isResultAvailable
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.back
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] _ in
+        self?.navigationController?.popViewController(animated: true)
       }
       .store(in: &cancellables)
   }

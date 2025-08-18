@@ -19,7 +19,7 @@ public final class HomeViewController: BaseViewController {
   private lazy var collectionView = UICollectionView(
     frame: .zero, collectionViewLayout: createLayout()
   ).then {
-    $0.backgroundColor = STColors.primary8.color  // TODO: 확인 필요
+    $0.backgroundView = HomeBackgroundView()
     $0.dataSource = self
     $0.register(
       HomeHeaderCollectionViewCell.self,
@@ -58,7 +58,9 @@ public final class HomeViewController: BaseViewController {
 
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
-      $0.edges.equalToSuperview()
+      $0.top.equalToSuperview()
+      $0.horizontalEdges.equalToSuperview()
+      $0.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
     }
   }
 
