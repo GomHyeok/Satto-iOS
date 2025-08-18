@@ -39,7 +39,7 @@ struct AppLayer: Layer {
         settings: .settings(
           base: [
             "PRODUCT_BUNDLE_IDENTIFIER": "$(APP_IDENTIFIER)",
-            "TARGETED_DEVICE_FAMILY": "1"
+            "TARGETED_DEVICE_FAMILY": "1",
           ],
           configurations: [
             .debug(
