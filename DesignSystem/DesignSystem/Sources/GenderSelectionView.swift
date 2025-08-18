@@ -10,7 +10,7 @@ import Then
 import UIKit
 
 // MARK: - GenderSelectionViewDelegate (성별 선택 그룹에서 선택된 성별을 알리는 프로토콜)
-protocol GenderSelectionViewDelegate: AnyObject {
+public protocol GenderSelectionViewDelegate: AnyObject {
   func genderSelectionView(_ view: GenderSelectionView, didSelectGender gender: String?)
 }
 
@@ -18,7 +18,7 @@ protocol GenderSelectionViewDelegate: AnyObject {
 public final class GenderSelectionView: UIView {
 
   // 델리게이트를 통해 상위 뷰에 선택된 성별을 알림
-  weak var delegate: GenderSelectionViewDelegate?
+  public weak var delegate: GenderSelectionViewDelegate?
 
   // 라디오 버튼들을 정렬하기 위한 스택 뷰
   private let stackView = UIStackView().then {

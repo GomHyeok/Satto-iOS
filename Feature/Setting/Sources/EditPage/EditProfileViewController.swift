@@ -11,6 +11,7 @@ import DIInjector
 import DesignSystem
 import Foundation
 import UIKit
+import DIInjector
 
 public protocol EditProfileViewControllerProtocol {
   func showToast()
@@ -36,17 +37,15 @@ final class EditProfileViewController: BaseViewController {
     $0.spacing = 28
     $0.alignment = .leading
   }
-
+  
   private lazy var backgourndView = UIView().then {
     $0.isHidden = true
     $0.backgroundColor = STColors.black.color.withAlphaComponent(0.5)
   }
-
+  
   private lazy var popup = PopUp().then {
     $0.isHidden = true
-    $0.update(
-      titile: "수정 중인 내용이 있소", description: "저장하지 않고 화면을 벗어나면\n감쪽같이 사라질 것이오",
-      actionButtonTitle: "계속 수정하기", outButtonTitle: "나가기")
+    $0.update(titile: "수정 중인 내용이 있소", description: "저장하지 않고 화면을 벗어나면\n감쪽같이 사라질 것이오", actionButtonTitle: "계속 수정하기", outButtonTitle: "나가기")
   }
 
   private lazy var nameStack = UIStackView().then {
@@ -198,13 +197,13 @@ extension EditProfileViewController {
   private func setDelegate() {
     self.nameTextField.delegate = self
     self.birthTextField.delegate = self
+    genderSelectionView.delegate = self
   }
 
   private func setupUI() {
     self.view.backgroundColor = STColors.white.color
     self.view.addSubview(scrollView)
     self.view.addSubview(saveButton)
-    self.view.addSubview(backgourndView)
     backgourndView.addSubview(popup)
     scrollView.addSubview(contentView)
     contentView.addSubview(contentStackView)
@@ -240,21 +239,7 @@ extension EditProfileViewController {
       make.top.bottom.equalToSuperview()
       make.leading.trailing.equalToSuperview().inset(24)
     }
-
-    backgourndView.snp.makeConstraints { make in
-      make.edges.equalToSuperview()
-    }
-
-    popup.snp.makeConstraints { make in
-      make.center.equalToSuperview()
-      make.width.equalTo(327)
-      make.height.equalTo(206)
-    }
-
-    backgourndView.snp.makeConstraints { make in
-      make.edges.equalToSuperview()
-    }
-
+    
     popup.snp.makeConstraints { make in
       make.center.equalToSuperview()
       make.width.equalTo(327)
@@ -402,6 +387,10 @@ extension EditProfileViewController {
       .receive(on: RunLoop.main)
       .sink { [weak self] isHidden in
         guard let self else { return }
+        self.navigationController?.view.addSubview(backgourndView)
+        backgourndView.snp.makeConstraints { make in
+          make.edges.equalToSuperview()
+        }
         self.popup.isHidden = isHidden
         self.backgourndView.isHidden = isHidden
       }
@@ -410,38 +399,7 @@ extension EditProfileViewController {
     popup.outButton.tapPublisher
       .sink { [weak self] _ in
         guard let self else { return }
-        self.navigationController?.popViewController(animated: true)
-      }
-      .store(in: &store)
-
-    viewModel.output.setTimePickerLabel
-      .receive(on: RunLoop.main)
-      .sink { [weak self] time in
-        guard let self else { return }
-        self.bornTimeSetButton.selectedItem = time
-      }
-      .store(in: &store)
-
-    viewModel.output.navigate
-      .receive(on: RunLoop.main)
-      .sink { [weak self] route in
-        guard let self else { return }
-        if route == .pop { self.navigationController?.popViewController(animated: true) }
-      }
-      .store(in: &store)
-
-    viewModel.output.updatePopupHiden
-      .receive(on: RunLoop.main)
-      .sink { [weak self] isHidden in
-        guard let self else { return }
-        self.popup.isHidden = isHidden
-        self.backgourndView.isHidden = isHidden
-      }
-      .store(in: &store)
-
-    popup.outButton.tapPublisher
-      .sink { [weak self] _ in
-        guard let self else { return }
+        self.backgourndView.removeFromSuperview()
         self.navigationController?.popViewController(animated: true)
       }
       .store(in: &store)
@@ -449,6 +407,7 @@ extension EditProfileViewController {
     popup.actionButton.tapPublisher
       .sink { [weak self] _ in
         guard let self else { return }
+        self.backgourndView.removeFromSuperview()
         self.popup.isHidden = true
         self.backgourndView.isHidden = true
       }
@@ -525,6 +484,18 @@ extension EditProfileViewController {
     scrollView.contentInset = contentInsets
     scrollView.scrollIndicatorInsets = contentInsets
   }
+}
+
+extension EditProfileViewController : GenderSelectionViewDelegate {
+  func genderSelectionView(_ view: DesignSystem.GenderSelectionView, didSelectGender gender: String?) {
+    guard let gender = gender else { return }
+
+    var genderType: GenderType
+
+    if gender == "남성" { genderType = .male } else { genderType = .female }
+    viewModel.send(input: .genderSelected(isSelected: genderType))
+  }
+  
 }
 
 extension EditProfileViewController: UITextFieldDelegate {

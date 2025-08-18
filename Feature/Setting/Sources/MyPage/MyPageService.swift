@@ -31,7 +31,6 @@ struct MyPageService {
 
       return "알수 없소"
     }()
-
     let birthDate = userData.birthDate ?? "알수 없소"
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     return [

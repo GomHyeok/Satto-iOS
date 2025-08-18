@@ -12,6 +12,7 @@ import Extension
 import SnapKit
 import Then
 import UIKit
+import Base
 
 enum MyPageSection {
   case profile(MyProfileInfoCollectionViewCellModel)
@@ -59,7 +60,7 @@ public final class MyPageViewController: BaseViewController {
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-
+  
   public override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
 
@@ -89,7 +90,6 @@ public final class MyPageViewController: BaseViewController {
         let toast = Toast().then {
           $0.update(message: "프로필 수정이 완료됐소.")
         }
-
         guard let tabBar = self.tabBarController?.view else { return }
         tabBar.addSubview(toast)
         toast.snp.makeConstraints { make in
@@ -98,7 +98,6 @@ public final class MyPageViewController: BaseViewController {
           make.trailing.equalToSuperview().offset(-24)
           make.height.equalTo(44)
         }
-
         UIView.animate(
           withDuration: 0.5, delay: 3, options: .curveEaseOut,
           animations: {
@@ -268,7 +267,7 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
       SettingAssembly(),
       NetworkCoreAssembly(),
     ])
-
+    
     return MyPageViewController(viewModel: MyPageViewModel())
   }
 #endif

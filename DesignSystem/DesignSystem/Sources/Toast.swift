@@ -73,7 +73,6 @@ public final class Toast: UIView {
   }
 
   stackView.addArrangedSubview(toast)
-
   toast.snp.makeConstraints { make in
     make.width.equalTo(327)
     make.height.equalTo(44)
