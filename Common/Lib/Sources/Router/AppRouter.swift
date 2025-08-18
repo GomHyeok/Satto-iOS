@@ -63,6 +63,12 @@ extension Routable {
       } else {
         topViewController()?.dismiss(animated: true, completion: nil)
       }
+    case .pop :
+      if let navigationController = topViewController()?.navigationController {
+        navigationController.popViewController(animated: true)
+      } else {
+        topViewController()?.dismiss(animated: true, completion: nil)
+      }
     }
   }
 }

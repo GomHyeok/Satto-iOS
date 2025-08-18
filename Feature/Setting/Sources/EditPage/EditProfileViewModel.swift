@@ -11,6 +11,8 @@ import Combine
 import DIInjector
 import Foundation
 import Lib
+import Auth
+import DIInjector
 
 final class EditProfileViewModel {
   enum Input {
@@ -45,6 +47,9 @@ final class EditProfileViewModel {
   let output: Output = Output()
 
   private var state: State = .init()
+  
+  @Injected private var userDataManager : UserDataManager
+  @Injected private var router: SettingRouter
 
   @Injected private var userDataManager: UserDataManager
   @Injected private var router: SettingRouter
@@ -81,22 +86,22 @@ final class EditProfileViewModel {
         self.output.setTimePickerLabel.send(time)
         self._isDontKnowButtonSelected = false
       }
-
+      
     case .checkBirthFormat(let birth):
       self._isBirthDateValid = checkBirthFormat(birth: birth)
       if self._isBirthDateValid { self.state.birthDate = birth }
       self.output.showBirthError.send(self._isBirthDateValid)
       self.output.isSaveButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
-
+      
     case .checkNameFormat(let name):
       self._isNameValid = checkNameFormat(name: name)
       if self._isNameValid { self.state.name = name }
       self.output.showNameError.send(self._isNameValid)
       self.output.isSaveButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
-
+      
     case .genderSelected(let isSelected):
       self.state.gender = isSelected
-
+      
     case .timePickerTap:
       Task { @MainActor in
         self.router.navigate(
@@ -106,25 +111,27 @@ final class EditProfileViewModel {
       if let userDTO = generateUserDTO() {
         Task {
           do {
-            let result = try await self.userDataManager.update(
-              name: userDTO.name, birthDate: userDTO.birthDate!, birthTime: userDTO.birthTime,
-              gender: userDTO.gender)
-            self.state.originalUser = result
-            self.state.name = nil
-            self.state.bornTime = nil
-            self.state.birthDate = nil
-            self.state.gender = nil
+            let _ = try await self.userDataManager.update(
+              name: userDTO.name, birthDate: userDTO.birthDate!, birthTime: userDTO.birthTime, gender: userDTO.gender)
+            await MainActor.run {
+              self.output.navigate.send(.popWithToast)
+              self.router.navigate(to: SettingRoute.myPage, how: .pop, with: [:])
+            }
+            
           } catch {
             // TODO: API 호출 에러처리
             print(error)
           }
         }
       }
+      
     case .backButtonTapped:
       if hasChanges() {
         self.output.updatePopupHiden.send(false)
       } else {
-        self.output.navigate.send(.pop)
+        Task { @MainActor in
+          self.router.navigate(to: SettingRoute.myPage, how: .pop, with: [:])
+        }
       }
     }
   }
@@ -178,6 +185,7 @@ extension EditProfileViewModel {
     var updatedGender = originalUser.gender
     let updatedBirthDate = self.state.birthDate ?? originalUser.birthDate
     var updatedBornTime: [String]? = nil
+
     if let bornTimeState = self.state.bornTime {
       updatedBornTime = bornTimeState
     } else if self.state.bornTime == nil && self._isDontKnowButtonSelected == false {
@@ -221,7 +229,6 @@ extension EditProfileViewModel {
         return true
       }
     }
-
     return false
   }
 }

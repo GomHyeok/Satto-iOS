@@ -14,4 +14,5 @@ public enum NavigateType {
   case overCurrentContext  // modalPresentationStyle = .overCurrentContext
   case custom  // custom 전환 (transitioningDelegate 필요)
   case clear  //해당 router 관련 view 전부 지움
+  case pop
 }

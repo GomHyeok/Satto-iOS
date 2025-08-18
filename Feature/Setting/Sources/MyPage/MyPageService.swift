@@ -24,14 +24,23 @@ struct MyPageService {
       case .female:
         "여"
       }
+    let birthTime = {
+      if let time = userData.birthTime  {
+        return "\(time[0]) ~ \(time[1])"
+      }
+      
+      return "알수 없소"
+    }()
+    
+    let birthDate = userData.birthDate ?? "알수 없소"
     let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     return [
       .profile(
         MyProfileInfoCollectionViewCellModel(
           nickname: userData.name,
           gender: gender,
-          birthDate: "1999-12-25",  // TODO: 서버 데이터 양식 확인 필요
-          birthTime: "01:00 ~ 02:59"  // TODO: 서버 데이터 양식 확인 필요
+          birthDate: birthDate,  // TODO: 서버 데이터 양식 확인 필요
+          birthTime: birthTime  // TODO: 서버 데이터 양식 확인 필요
         )
       ),
       .feedback(

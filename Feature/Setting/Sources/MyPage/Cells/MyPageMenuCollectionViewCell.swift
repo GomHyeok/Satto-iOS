@@ -9,6 +9,7 @@ import DesignSystem
 import SnapKit
 import Then
 import UIKit
+import Base
 
 struct MyPageMenuCollectionViewCellModel {
 
@@ -22,7 +23,7 @@ struct MyPageMenuCollectionViewCellModel {
   let title: String
 }
 
-final class MyPageMenuCollectionViewCell: UICollectionViewCell {
+final class MyPageMenuCollectionViewCell: BaseCollectionViewCell {
 
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .horizontal
@@ -88,6 +89,7 @@ final class MyPageMenuCollectionViewCell: UICollectionViewCell {
   private func resetAccessoryStackView() {
     accessoryStackView.arrangedSubviews.forEach {
       accessoryStackView.removeArrangedSubview($0)
+      $0.removeFromSuperview()
     }
   }
 }

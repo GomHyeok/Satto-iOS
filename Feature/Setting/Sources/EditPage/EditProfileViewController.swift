@@ -11,12 +11,18 @@ import DIInjector
 import DesignSystem
 import Foundation
 import UIKit
+import DIInjector
+
+public protocol EditProfileViewControllerProtocol {
+  func showToast()
+}
 
 final class EditProfileViewController: BaseViewController {
 
   private var store: Set<AnyCancellable> = []
   private let viewModel: EditProfileViewModel
-  @Injected private var router: SettingRouter
+
+  var delegate : EditProfileViewControllerProtocol?
 
   private lazy var scrollView: UIScrollView = UIScrollView().then {
     $0.showsHorizontalScrollIndicator = false
@@ -30,6 +36,16 @@ final class EditProfileViewController: BaseViewController {
     $0.axis = .vertical
     $0.spacing = 28
     $0.alignment = .leading
+  }
+  
+  private lazy var backgourndView = UIView().then {
+    $0.isHidden = true
+    $0.backgroundColor = STColors.black.color.withAlphaComponent(0.5)
+  }
+  
+  private lazy var popup = PopUp().then {
+    $0.isHidden = true
+    $0.update(titile: "수정 중인 내용이 있소", description: "저장하지 않고 화면을 벗어나면\n감쪽같이 사라질 것이오", actionButtonTitle: "계속 수정하기", outButtonTitle: "나가기")
   }
 
   private lazy var backgourndView = UIView().then {
@@ -235,6 +251,16 @@ extension EditProfileViewController {
       make.top.bottom.equalToSuperview()
       make.leading.trailing.equalToSuperview().inset(24)
     }
+    
+    backgourndView.snp.makeConstraints { make in
+      make.edges.equalToSuperview()
+    }
+    
+    popup.snp.makeConstraints { make in
+      make.center.equalToSuperview()
+      make.width.equalTo(327)
+      make.height.equalTo(206)
+    }
 
     backgourndView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
@@ -363,6 +389,41 @@ extension EditProfileViewController {
         self.birthStack.layoutIfNeeded()
       }
       .store(in: &store)
+  
+    viewModel.output.setTimePickerLabel
+      .receive(on: RunLoop.main)
+      .sink { [weak self] time in
+        guard let self else { return }
+        self.bornTimeSetButton.selectedItem = time
+      }
+      .store(in: &store)
+    
+    viewModel.output.navigate
+      .receive(on: RunLoop.main)
+      .sink { [weak self ] route in
+        guard let self else { return }
+        guard let delegate else { return }
+        if route == .popWithToast {
+          delegate.showToast()
+        }
+      }
+      .store(in: &store)
+    
+    viewModel.output.updatePopupHiden
+      .receive(on: RunLoop.main)
+      .sink { [weak self] isHidden in
+        guard let self else { return }
+        self.popup.isHidden = isHidden
+        self.backgourndView.isHidden = isHidden
+      }
+      .store(in: &store)
+    
+    popup.outButton.tapPublisher
+      .sink { [weak self] _ in
+        guard let self else { return }
+        self.navigationController?.popViewController(animated: true)
+      }
+      .store(in: &store)
 
     viewModel.output.setTimePickerLabel
       .receive(on: RunLoop.main)
@@ -421,6 +482,7 @@ extension EditProfileViewController {
     dontKnowButton.gesturePublisher(gestureRecognizer: UITapGestureRecognizer())
       .sink { [weak self] _ in
         guard let self else { return }
+
         self.viewModel.send(
           input: .bornTimeSelected(bornTime: .dontKnow(isSelected: self.dontKnowButton.isSelected)))
         bornTimeSetButton.isEnabled.toggle()

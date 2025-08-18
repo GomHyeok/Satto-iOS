@@ -80,7 +80,8 @@ final class SendFeedbackCollectionViewCell: UICollectionViewCell {
     contentStackView.addArrangedSubview(imageView)
 
     imageView.snp.makeConstraints { make in
-      make.width.height.equalTo(86)
+      make.centerY.equalToSuperview()
+      make.width.equalTo(imageView.snp.height)
     }
 
     sendFeedbackButton.addSubview(sendFeedbackLabel)
@@ -95,7 +96,7 @@ final class SendFeedbackCollectionViewCell: UICollectionViewCell {
       make.leading.equalToSuperview().offset(12)
       make.centerY.equalToSuperview()
     }
-
+    
     arrowRightView.snp.makeConstraints { make in
       make.height.width.equalTo(15)
       make.trailing.equalToSuperview().inset(12)

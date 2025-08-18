@@ -12,4 +12,5 @@ public enum SettingRoute {
   case timePicker
   case back
   case pop
+  case popWithToast
 }
