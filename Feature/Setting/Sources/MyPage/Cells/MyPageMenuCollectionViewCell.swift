@@ -10,7 +10,6 @@ import DesignSystem
 import SnapKit
 import Then
 import UIKit
-import Base
 
 struct MyPageMenuCollectionViewCellModel {
 

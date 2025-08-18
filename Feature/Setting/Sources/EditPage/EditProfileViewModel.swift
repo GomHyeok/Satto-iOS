@@ -11,8 +11,6 @@ import Combine
 import DIInjector
 import Foundation
 import Lib
-import Auth
-import DIInjector
 
 final class EditProfileViewModel {
   enum Input {
@@ -47,8 +45,8 @@ final class EditProfileViewModel {
   let output: Output = Output()
 
   private var state: State = .init()
-  
-  @Injected private var userDataManager : UserDataManager
+
+  @Injected private var userDataManager: UserDataManager
   @Injected private var router: SettingRouter
 
   private var _isNameValid: Bool = true
@@ -83,19 +81,19 @@ final class EditProfileViewModel {
         self.output.setTimePickerLabel.send(time)
         self._isDontKnowButtonSelected = false
       }
-      
+
     case .checkBirthFormat(let birth):
       self._isBirthDateValid = checkBirthFormat(birth: birth)
       if self._isBirthDateValid { self.state.birthDate = birth }
       self.output.showBirthError.send(self._isBirthDateValid)
       self.output.isSaveButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
-      
+
     case .checkNameFormat(let name):
       self._isNameValid = checkNameFormat(name: name)
       if self._isNameValid { self.state.name = name }
       self.output.showNameError.send(self._isNameValid)
       self.output.isSaveButtonEnabled.send(_isNameValid && _isBirthDateValid && _isBornTimeValied)
-      
+
     case .genderSelected(let isSelected):
       self.state.gender = isSelected
     case .timePickerTap:
@@ -201,7 +199,6 @@ extension EditProfileViewModel {
 
   private func hasChanges() -> Bool {
     guard let originalUser = self.state.originalUser else { return false }
-    
 
     if let name = self.state.name, name != originalUser.name {
       return true

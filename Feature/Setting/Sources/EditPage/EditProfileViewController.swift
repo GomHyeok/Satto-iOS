@@ -11,7 +11,6 @@ import DIInjector
 import DesignSystem
 import Foundation
 import UIKit
-import DIInjector
 
 public protocol EditProfileViewControllerProtocol {
   func showToast()
@@ -37,15 +36,17 @@ final class EditProfileViewController: BaseViewController {
     $0.spacing = 28
     $0.alignment = .leading
   }
-  
+
   private lazy var backgourndView = UIView().then {
     $0.isHidden = true
     $0.backgroundColor = STColors.black.color.withAlphaComponent(0.5)
   }
-  
+
   private lazy var popup = PopUp().then {
     $0.isHidden = true
-    $0.update(titile: "수정 중인 내용이 있소", description: "저장하지 않고 화면을 벗어나면\n감쪽같이 사라질 것이오", actionButtonTitle: "계속 수정하기", outButtonTitle: "나가기")
+    $0.update(
+      titile: "수정 중인 내용이 있소", description: "저장하지 않고 화면을 벗어나면\n감쪽같이 사라질 것이오",
+      actionButtonTitle: "계속 수정하기", outButtonTitle: "나가기")
   }
 
   private lazy var nameStack = UIStackView().then {
@@ -239,7 +240,7 @@ extension EditProfileViewController {
       make.top.bottom.equalToSuperview()
       make.leading.trailing.equalToSuperview().inset(24)
     }
-    
+
     popup.snp.makeConstraints { make in
       make.center.equalToSuperview()
       make.width.equalTo(327)
@@ -486,8 +487,10 @@ extension EditProfileViewController {
   }
 }
 
-extension EditProfileViewController : GenderSelectionViewDelegate {
-  func genderSelectionView(_ view: DesignSystem.GenderSelectionView, didSelectGender gender: String?) {
+extension EditProfileViewController: GenderSelectionViewDelegate {
+  func genderSelectionView(
+    _ view: DesignSystem.GenderSelectionView, didSelectGender gender: String?
+  ) {
     guard let gender = gender else { return }
 
     var genderType: GenderType
@@ -495,7 +498,7 @@ extension EditProfileViewController : GenderSelectionViewDelegate {
     if gender == "남성" { genderType = .male } else { genderType = .female }
     viewModel.send(input: .genderSelected(isSelected: genderType))
   }
-  
+
 }
 
 extension EditProfileViewController: UITextFieldDelegate {

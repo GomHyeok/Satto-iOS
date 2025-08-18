@@ -25,8 +25,8 @@ public final class MyPageViewModel {
   }
 
   @Injected private var myPageService: MyPageService
-  @Injected private var router : SettingRouter
-  
+  @Injected private var router: SettingRouter
+
   let output: Output = Output()
 
   public init() {}
@@ -44,7 +44,7 @@ public final class MyPageViewModel {
           // TODO: 에러 처리
         }
       }
-      
+
     case .editButtonTapped:
       Task { @MainActor [weak self] in
         guard let self else { return }
@@ -55,7 +55,7 @@ public final class MyPageViewModel {
     case .feedBackButtonTapped:
       // TODO: 피드백 전송 링크
       break
-      
+
     case .menuTapped(let item):
       // TODO: menu 핸들링
       break

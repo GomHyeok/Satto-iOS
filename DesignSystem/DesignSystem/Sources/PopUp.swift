@@ -105,7 +105,7 @@ public final class PopUp: UIView {
     outButton.snp.makeConstraints { make in
       make.height.equalTo(48)
     }
-    
+
     actionButton.snp.makeConstraints { make in
       make.height.equalTo(48)
     }
