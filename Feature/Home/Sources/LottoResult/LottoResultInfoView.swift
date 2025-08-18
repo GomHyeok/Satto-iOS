@@ -6,8 +6,8 @@
 //
 
 import DesignSystem
-import UIKit
 import Lottie
+import UIKit
 
 struct LottoResultInfoModel {
   let roundText: String
@@ -16,7 +16,7 @@ struct LottoResultInfoModel {
 }
 
 final class LottoResultInfoView: UIView {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .vertical
     $0.spacing = .zero
@@ -32,7 +32,7 @@ final class LottoResultInfoView: UIView {
     $0.style = Typography.Body_16_SB.color(STColors.gray2.color)
   }
   private var confettiiiiViews: [LottieAnimationView] = []
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -41,7 +41,7 @@ final class LottoResultInfoView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   func update(with model: LottoResultInfoModel) {
     roundTextChip.update(text: model.roundText)
     titleLabel.styledText = model.title
@@ -55,10 +55,10 @@ final class LottoResultInfoView: UIView {
       make.horizontalEdges.equalToSuperview().inset(24)
       make.bottom.equalToSuperview().inset(47)
     }
-    
+
     contentStackView.addArrangedSubview(roundTextChip)
     contentStackView.setCustomSpacing(16, after: roundTextChip)
-    
+
     contentStackView.addArrangedSubview(titleLabel)
     titleLabel.snp.makeConstraints { make in
       make.height.equalTo(36)
@@ -67,7 +67,7 @@ final class LottoResultInfoView: UIView {
     descriptionLabel.snp.makeConstraints { make in
       make.height.equalTo(24)
     }
-    
+
     Task { @MainActor in
       if let confettiiiiView1 = await makeConfettiiiiAnimationView() {
         addSubview(confettiiiiView1)
@@ -87,7 +87,7 @@ final class LottoResultInfoView: UIView {
       }
     }
   }
-  
+
   private func makeConfettiiiiAnimationView() async -> LottieAnimationView? {
     guard let animationView = await LottieAnimations.loadAnimation(.confettiiii) else {
       return nil

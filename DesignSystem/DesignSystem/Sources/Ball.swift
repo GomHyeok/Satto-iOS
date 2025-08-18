@@ -45,10 +45,11 @@ public final class Ball: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   public override func layoutSubviews() {
     super.layoutSubviews()
-    backgroundImageView.layer.cornerRadius = min(backgroundImageView.bounds.width, backgroundImageView.bounds.height)/2
+    backgroundImageView.layer.cornerRadius =
+      min(backgroundImageView.bounds.width, backgroundImageView.bounds.height) / 2
   }
 
   private func setupUI() {
@@ -62,7 +63,7 @@ public final class Ball: UIView {
       make.center.equalToSuperview()
     }
   }
-  
+
   private func update(isColored: Bool) {
     if isColored {
       let backgroundImage = BallBackgroundImageFactory.makeImage(of: number)

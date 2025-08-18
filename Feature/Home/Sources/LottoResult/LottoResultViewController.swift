@@ -45,48 +45,50 @@ final class LottoResultViewController: BaseViewController {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupUI()
     setupNavigationBar()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
-    
+
     // TODO: 임시
-    infoView.update(with: LottoResultInfoModel(roundText: "1181회", title: "1등 당첨!", desciprtion: "5,000원"))
-    sattoMessageView.update(with: SattoMessageModel(title: "사또의 한마디...", message: "축하드리네!\n이번 행운의 주인공은 그대라네."))
+    infoView.update(
+      with: LottoResultInfoModel(roundText: "1181회", title: "1등 당첨!", desciprtion: "5,000원"))
+    sattoMessageView.update(
+      with: SattoMessageModel(title: "사또의 한마디...", message: "축하드리네!\n이번 행운의 주인공은 그대라네."))
     resultStackView.addArrangedSubview(makeWinningNumbersView())
     resultStackView.addArrangedSubview(makeResultView())
   }
-  
+
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     gradientLayer.frame = view.bounds
   }
-  
+
   private func setupUI() {
     view.layer.insertSublayer(gradientLayer, at: .zero)
-    
+
     view.addSubview(infoView)
     infoView.snp.makeConstraints { make in
       make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
       make.horizontalEdges.equalToSuperview()
       make.height.equalTo(176)
     }
-    
+
     view.addSubview(resultStackView)
     resultStackView.snp.makeConstraints { make in
       make.top.equalTo(infoView.snp.bottom)
       make.horizontalEdges.equalToSuperview().inset(24)
     }
-    
+
     view.addSubview(sattoMessageView)
     sattoMessageView.snp.makeConstraints { make in
       make.horizontalEdges.equalToSuperview().inset(24)
       make.height.equalTo(146)
     }
-    
+
     view.addSubview(goToMainButton)
     goToMainButton.snp.makeConstraints { make in
       make.top.greaterThanOrEqualTo(sattoMessageView.snp.bottom).offset(54)
@@ -94,13 +96,13 @@ final class LottoResultViewController: BaseViewController {
       make.horizontalEdges.equalToSuperview().inset(24)
       make.bottom.equalTo(view.safeAreaLayoutGuide).inset(24)
     }
-    
+
     view.addSubview(loadingView)
     loadingView.snp.makeConstraints { make in
       make.edges.equalToSuperview()
     }
   }
-  
+
   private func setupNavigationBar() {
     title = "당첨 결과"
     navigationBar.backgroundColor = STColors.primary9.color
@@ -116,14 +118,14 @@ final class LottoResultViewController: BaseViewController {
     navigationBar.backgroundColor = .clear
     navigationBar.tintColor = STColors.white.color
   }
-  
+
   private func setupBinding() {
     goToMainButton.tapPublisher
       .sink { [weak self] _ in
         self?.viewModel.send(input: .goToMainButtonTapped)
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.isLoading
       .receive(on: DispatchQueue.main)
       .sink { [weak self] isLoading in
@@ -138,14 +140,14 @@ final class LottoResultViewController: BaseViewController {
         }
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.back
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
         self?.navigationController?.popViewController(animated: true)
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.popToRoot
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
@@ -154,7 +156,7 @@ final class LottoResultViewController: BaseViewController {
       }
       .store(in: &cancellables)
   }
-  
+
   // TODO: 별도 뷰로 분리하기
   private func makeWinningNumbersView() -> UIView {
     let stackView = UIStackView().then {
@@ -167,10 +169,10 @@ final class LottoResultViewController: BaseViewController {
       $0.layer.cornerRadius = 30
       $0.clipsToBounds = true
     }
-    
-    let numbers = [4, 12, 18, 21, 24, 26] // TODO: 수정 필요
+
+    let numbers = [4, 12, 18, 21, 24, 26]  // TODO: 수정 필요
     let bonusNumber = 42
-    
+
     numbers.forEach { number in
       let ball = Ball()
       ball.number = String(number)
@@ -179,17 +181,17 @@ final class LottoResultViewController: BaseViewController {
         make.size.equalTo(32)
       }
     }
-    
+
     let plusView = UIImageView(image: STImages.resultPlus.image)
     plusView.snp.makeConstraints { make in
       make.size.equalTo(14)
     }
     stackView.addArrangedSubview(plusView)
-    
+
     let bonusBall = Ball()
     bonusBall.number = String(bonusNumber)
     stackView.addArrangedSubview(bonusBall)
-    
+
     stackView.snp.makeConstraints { make in
       make.height.equalTo(64)
     }
@@ -219,27 +221,27 @@ final class LottoResultViewController: BaseViewController {
         $0.kerning = .point(0.18)
         $0.color = STColors.white.color
       }
-      $0.styledText = "1등" // TODO: 수정 필요
+      $0.styledText = "1등"  // TODO: 수정 필요
     }
     rankView.addSubview(rankLabel)
     rankLabel.snp.makeConstraints { make in
       make.center.equalToSuperview()
     }
-    
+
     stackView.addArrangedSubview(rankView)
     rankView.snp.makeConstraints { make in
       make.size.equalTo(32)
     }
-    
+
     let barView = UIImageView(image: STImages.resultBar.image)
     barView.snp.makeConstraints { make in
       make.size.equalTo(14)
     }
     stackView.addArrangedSubview(barView)
-    
-    let numbers = [4, 12, 18, 21, 24, 26] // TODO: 수정 필요
+
+    let numbers = [4, 12, 18, 21, 24, 26]  // TODO: 수정 필요
     let winningNumbers = [9, 11, 18, 21, 24, 33, 42]
-    
+
     numbers.forEach { number in
       let ball = Ball()
       ball.number = String(number)
@@ -249,7 +251,7 @@ final class LottoResultViewController: BaseViewController {
         make.size.equalTo(32)
       }
     }
-    
+
     stackView.snp.makeConstraints { make in
       make.height.equalTo(64)
     }

@@ -14,7 +14,7 @@ struct SattoMessageModel {
 }
 
 final class SattoMessageView: UIView {
-  
+
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .vertical
     $0.spacing = 16
@@ -40,7 +40,7 @@ final class SattoMessageView: UIView {
     $0.style = Typography.Body_14_B.color(STColors.gray2.color).lineHeightMultiple(1.2)
     $0.numberOfLines = 2
   }
-    
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -49,7 +49,7 @@ final class SattoMessageView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   func update(with model: SattoMessageModel) {
     titleLabel.styledText = model.title
     messageLabel.styledText = model.message
@@ -59,21 +59,21 @@ final class SattoMessageView: UIView {
     backgroundColor = STColors.primary8.color
     layer.cornerRadius = 16
     clipsToBounds = true
-    
+
     addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.edges.equalToSuperview().inset(20)
     }
-    
+
     contentStackView.addArrangedSubview(titleLabel)
     titleLabel.snp.makeConstraints { make in
       make.height.greaterThanOrEqualTo(24)
     }
-    
+
     contentStackView.addArrangedSubview(messageContentStackView)
-    
+
     messageContentStackView.addArrangedSubview(pigImageView)
-    
+
     messageContentStackView.addArrangedSubview(messageBubbleImageView)
     messageBubbleImageView.addSubview(messageLabel)
     messageLabel.snp.makeConstraints { make in

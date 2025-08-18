@@ -10,7 +10,7 @@ import Lottie
 import UIKit
 
 final class LottoResultLoadingView: UIView {
-  
+
   private let gradientLayer = CAGradientLayer().then {
     $0.colors = [
       UIColor(hexString: "#581AAF").cgColor,
@@ -25,7 +25,7 @@ final class LottoResultLoadingView: UIView {
     $0.spacing = 20
     $0.alignment = .center
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -34,25 +34,26 @@ final class LottoResultLoadingView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   override func layoutSubviews() {
     super.layoutSubviews()
     gradientLayer.frame = bounds
   }
-  
+
   func play() {
     contentStackView.arrangedSubviews.forEach {
       $0.removeFromSuperview()
     }
     Task { @MainActor in
       guard let textAnimationView = await LottieAnimations.loadAnimation(.lottoResultText),
-            let pigAnimationView = await LottieAnimations.loadAnimation(.lottoResultPig) else { return }
+        let pigAnimationView = await LottieAnimations.loadAnimation(.lottoResultPig)
+      else { return }
       pigAnimationView.alpha = 0
       pigAnimationView.loopMode = .loop
-      
+
       contentStackView.addArrangedSubview(pigAnimationView)
       contentStackView.addArrangedSubview(textAnimationView)
-      
+
       textAnimationView.play { completed in
         UIView.animate(withDuration: 0.5) {
           pigAnimationView.alpha = 1
@@ -64,7 +65,7 @@ final class LottoResultLoadingView: UIView {
 
   private func setupUI() {
     layer.insertSublayer(gradientLayer, at: .zero)
-    
+
     addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in
       make.centerY.equalToSuperview()

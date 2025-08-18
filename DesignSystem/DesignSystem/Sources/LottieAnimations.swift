@@ -9,11 +9,11 @@ import Foundation
 import Lottie
 
 public enum LottieFiles: CaseIterable {
-  
+
   enum Format {
     case json
     case lottie
-    
+
     var ext: String {
       switch self {
       case .json:
@@ -23,11 +23,11 @@ public enum LottieFiles: CaseIterable {
       }
     }
   }
-  
+
   case lottoResultText
   case lottoResultPig
   case confettiiii
-  
+
   var name: String {
     switch self {
     case .lottoResultText:
@@ -41,7 +41,7 @@ public enum LottieFiles: CaseIterable {
   var format: Format {
     switch self {
     case .lottoResultText,
-        .lottoResultPig:
+      .lottoResultPig:
       return .json
     case .confettiiii:
       return .lottie
@@ -53,7 +53,7 @@ public enum LottieFiles: CaseIterable {
 }
 
 public enum LottieAnimations {
-  
+
   public static func loadAnimation(_ file: LottieFiles) async -> LottieAnimationView? {
     guard let url = file.url else {
       return nil

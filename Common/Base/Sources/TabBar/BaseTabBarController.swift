@@ -23,7 +23,7 @@ public final class BaseTabBarController: UITabBarController {
     setupTabBar()
     setupBindings()
   }
-  
+
   public override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     tabBar.isHidden = true

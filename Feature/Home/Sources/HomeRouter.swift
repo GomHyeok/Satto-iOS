@@ -37,7 +37,7 @@ final class HomeRouter: Routable {
       },
       .lottoResult: { _ in
         return LottoResultViewController(viewModel: LottoResultViewModel())
-      }
+      },
     ]
   }
 
