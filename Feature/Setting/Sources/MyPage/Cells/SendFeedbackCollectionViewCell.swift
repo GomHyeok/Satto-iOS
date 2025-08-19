@@ -87,7 +87,7 @@ final class SendFeedbackCollectionViewCell: UICollectionViewCell {
     arrowRightView.snp.makeConstraints { make in
       make.size.equalTo(20)
     }
-    
+
     contentStackView.addArrangedSubview(imageView)
     imageView.snp.makeConstraints { make in
       make.size.equalTo(86)

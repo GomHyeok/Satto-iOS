@@ -57,7 +57,7 @@ public final class MyPageViewModel {
       }
     case .feedBackButtonTapped:
       if let url = URL(string: ExternalLinks.feedbackChannel.rawValue) {
-          UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
       }
 
     case .menuTapped(let menu):
@@ -67,13 +67,13 @@ public final class MyPageViewModel {
         if let url = URL(string: urlString) {
           output.showWebView.send(url)
         }
-        
+
       case .privacyPolicy:
         let urlString = ExternalLinks.infoProvision.rawValue
         if let url = URL(string: urlString) {
           output.showWebView.send(url)
         }
-        
+
       case .appVersion:
         break
       }

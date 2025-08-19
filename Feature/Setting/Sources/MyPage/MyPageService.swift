@@ -49,27 +49,30 @@ struct MyPageService {
         )
       ),
       .menu([
-        .termsOfService(MyPageMenuCollectionViewCellModel(
-          style: .icon(STImages.chevronRightS.image), title: "이용약관")),
-        .privacyPolicy(MyPageMenuCollectionViewCellModel(
-          style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침")),
-        .appVersion(MyPageMenuCollectionViewCellModel(style: .text(appVersion ?? "1.0.0"), title: "앱 버전")),
+        .termsOfService(
+          MyPageMenuCollectionViewCellModel(
+            style: .icon(STImages.chevronRightS.image), title: "이용약관")),
+        .privacyPolicy(
+          MyPageMenuCollectionViewCellModel(
+            style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침")),
+        .appVersion(
+          MyPageMenuCollectionViewCellModel(style: .text(appVersion ?? "1.0.0"), title: "앱 버전")),
       ]),
     ]
   }
 }
 
 enum MyPageMenu {
-  
+
   case termsOfService(MyPageMenuCollectionViewCellModel)
   case privacyPolicy(MyPageMenuCollectionViewCellModel)
   case appVersion(MyPageMenuCollectionViewCellModel)
-  
+
   var item: MyPageMenuCollectionViewCellModel {
     switch self {
     case .termsOfService(let myPageMenuCollectionViewCellModel),
-        .privacyPolicy(let myPageMenuCollectionViewCellModel),
-        .appVersion(let myPageMenuCollectionViewCellModel):
+      .privacyPolicy(let myPageMenuCollectionViewCellModel),
+      .appVersion(let myPageMenuCollectionViewCellModel):
       return myPageMenuCollectionViewCellModel
     }
   }

@@ -59,7 +59,7 @@ public final class MyPageViewController: BaseViewController {
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-  
+
   private func setupUI() {
     title = "마이"
     view.backgroundColor = STColors.primary9.color
@@ -77,7 +77,7 @@ public final class MyPageViewController: BaseViewController {
         self?.collectionView.reloadData()
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.showWebView
       .receive(on: DispatchQueue.main)
       .sink { [weak self] url in
@@ -262,7 +262,7 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
   import Auth
   import DIInjector
   import NetworkCore
-import SafariServices
+  import SafariServices
 
   @available(iOS 17.0, *)
   #Preview {
