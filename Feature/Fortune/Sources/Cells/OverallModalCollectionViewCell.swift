@@ -113,11 +113,12 @@ final class OverallModalCollectionViewCell: BaseCollectionViewCell {
     with: OverallModalCollectionViewCellModel(
       type: .job,
       title: "직장운",
-      content: "오늘은 직장에서의 관계가 좋아지는 날입니다."
+      content: "돈 들어오는 소리가 들린"
     ))
 
+  cell.backgroundColor = .red
   cell.snp.makeConstraints { make in
-    make.width.equalTo(134)
+    make.width.equalTo(140)
     make.height.equalTo(136)
   }
 

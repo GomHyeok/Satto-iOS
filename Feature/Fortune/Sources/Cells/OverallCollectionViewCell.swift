@@ -89,13 +89,13 @@ final class OverallCollectionViewCell: UICollectionViewCell {
 
       let itemSize = NSCollectionLayoutSize(
         widthDimension: .absolute(134),
-        heightDimension: .estimated(200)
+        heightDimension: .estimated(140)
       )
       let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
       let groupSize = NSCollectionLayoutSize(
         widthDimension: .absolute(134),
-        heightDimension: .estimated(200)
+        heightDimension: .estimated(140)
       )
 
       let group = NSCollectionLayoutGroup.horizontal(

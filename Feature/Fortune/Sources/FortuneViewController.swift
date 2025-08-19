@@ -111,7 +111,7 @@ extension FortuneViewController {
         spacing = 32
       case .moreInfo:
         itemHeight = .fractionalHeight(1.0)
-        groupHeight = .estimated(330)
+        groupHeight = .estimated(291)
         spacing = 32
       }
 
