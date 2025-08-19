@@ -16,6 +16,8 @@ struct AppLayer: Layer {
         infoPlist: .extendingDefault(
           with: [
             "CFBundleDisplayName": "$(APP_NAME)",
+            "CFBundleShortVersionString": "$(MARKETING_VERSION)",
+            "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
             "UILaunchStoryboardName": "LaunchScreen",
             "UISupportedInterfaceOrientations": [
               "UIInterfaceOrientationPortrait"
@@ -40,13 +42,15 @@ struct AppLayer: Layer {
           base: [
             "PRODUCT_BUNDLE_IDENTIFIER": "$(APP_IDENTIFIER)",
             "TARGETED_DEVICE_FAMILY": "1",
+            "MARKETING_VERSION": "1.0.0",
+            "CURRENT_PROJECT_VERSION": "0",
           ],
           configurations: [
             .debug(
               name: .debug,
               settings: [
                 "APP_IDENTIFIER": "com.hanbang.satto.debug",
-                "APP_NAME": "Satto Debug",
+                "APP_NAME": "사또 Debug",
                 "OTHER_SWIFT_FLAGS": "$(inherited) -DDEBUG",
               ]
             ),
@@ -54,7 +58,7 @@ struct AppLayer: Layer {
               name: .release,
               settings: [
                 "APP_IDENTIFIER": "com.hanbang.satto",
-                "APP_NAME": "Satto",
+                "APP_NAME": "사또",
                 "OTHER_SWIFT_FLAGS": "$(inherited) -DRELEASE",
               ]
             ),

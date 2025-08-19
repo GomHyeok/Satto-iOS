@@ -12,6 +12,7 @@ import Extension
 import SnapKit
 import Then
 import UIKit
+import SafariServices
 
 enum MyPageSection {
   case profile(MyProfileInfoCollectionViewCellModel)
@@ -262,7 +263,6 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
   import Auth
   import DIInjector
   import NetworkCore
-  import SafariServices
 
   @available(iOS 17.0, *)
   #Preview {
