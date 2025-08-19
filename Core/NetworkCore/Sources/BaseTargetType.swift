@@ -25,4 +25,5 @@ extension BaseTargetType {
   }
   public var task: Moya.Task { httpTask }
   public var method: Moya.Method { httpMethod }
+  public var validationType: ValidationType { .successCodes }
 }

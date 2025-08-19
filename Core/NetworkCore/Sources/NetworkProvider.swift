@@ -10,18 +10,21 @@ import Moya
 
 public final class NetworkProvider {
 
-  public static let shared: NetworkProvider = .init(internalProvider: MoyaProvider<MultiTarget>())
+  public static let shared = NetworkProvider()
   private let internalProvider: MoyaProvider<MultiTarget>
 
-  public init(internalProvider: MoyaProvider<MultiTarget>) {
-    self.internalProvider = internalProvider
+  private init() {
+    let configuration = URLSessionConfiguration.default
+    configuration.timeoutIntervalForRequest = DefaultConfig.timeOutInterval
+    configuration.timeoutIntervalForResource = DefaultConfig.timeOutInterval
+    let session = Session(configuration: configuration, interceptor: RetryInterceptor())
+    self.internalProvider = MoyaProvider<MultiTarget>(session: session)
   }
 
   public func request<T: BaseTargetType>(target: T) async throws -> T.Response {
     // TODO: Reachability 확인 필요할지
     do {
       let responseData = try await internalProvider.request(MultiTarget(target))
-        .filterSuccessfulStatusCodes()
       let response = try JSONDecoder().decode(T.Response.self, from: responseData.data)
       return response
     } catch {
