@@ -109,7 +109,7 @@ extension BaseViewController {
     activityIndicator.startAnimating()
     view.bringSubviewToFront(navigationBar)
   }
-  
+
   public func hideLoading() {
     interactionBlockerView.isHidden = true
     activityIndicator.stopAnimating()

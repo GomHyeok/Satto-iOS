@@ -75,7 +75,7 @@ public final class HomeViewController: BaseViewController {
         }
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.sections
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in
