@@ -35,6 +35,7 @@ public class OnboardingViewModel {
   let output: Output = Output()
 
   @Injected private var userDataManager: UserDataManager
+  @Injected private var dependencyHandler: DependencyHandler
 
   private var _isNameValid: Bool = false
   private var _isBirthDateValid: Bool = false
@@ -80,8 +81,11 @@ public class OnboardingViewModel {
         }
         Task {
           do {
-            let test = try await self.userDataManager.create(
+            let _ = try await self.userDataManager.create(
               name: name, birthDate: birthDate, birthTime: birthTime, gender: genderDTO)
+            await MainActor.run {
+              self.dependencyHandler.handle(key: DependencyKey.App.configureTabBarController)
+            }
           } catch {
             // TODO: API 호출 에러처리
             print(error)

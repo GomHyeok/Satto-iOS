@@ -9,12 +9,14 @@ import DesignSystem
 import SnapKit
 import Then
 import UIKit
+import Base
 
 protocol AgreementViewDelegate: AnyObject {
   func agreementViewDidComplete()
 }
-final class AgreementViewController: UIViewController {
+final class AgreementViewController: BaseViewController {
 
+  let viewModel : AgreementViewModel
   weak var delegate: AgreementViewDelegate?
 
   private var agreementItems: [AgreementItem] = [
@@ -22,8 +24,7 @@ final class AgreementViewController: UIViewController {
     AgreementItem(
       id: .service, title: "서비스 이용 약관", isRequired: true, isAgreed: false, hasDetail: true),
     AgreementItem(
-      id: .privacy, title: "개인정보 수집 및 이용", isRequired: true, isAgreed: false, hasDetail: true),
-    AgreementItem(id: .age, title: "만 14세 이상", isRequired: true, isAgreed: false, hasDetail: false),
+      id: .privacy, title: "개인정보 수집 및 이용", isRequired: true, isAgreed: false, hasDetail: true)
   ]
 
   private var isAllAgree: Bool {
@@ -73,11 +74,21 @@ final class AgreementViewController: UIViewController {
     $0.setAttributedTitle(styled, for: .normal)
     $0.isEnabled = false
   }
+  
+  init(viewModel : AgreementViewModel = AgreementViewModel()) {
+    self.viewModel = viewModel
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 
   override func viewDidLoad() {
     super.viewDidLoad()
     setupView()
     setupGestures()
+    setupBind()
     bindActions()
   }
 }
@@ -94,7 +105,7 @@ extension AgreementViewController {
 
     containerView.snp.makeConstraints {
       $0.leading.trailing.bottom.equalToSuperview()
-      $0.height.equalTo(view.snp.height).multipliedBy(0.5)  // 화면 높이의 60% 차지 (조정 가능)
+      $0.height.equalTo(347)
     }
 
     titleLabel.snp.makeConstraints {
@@ -125,6 +136,15 @@ extension AgreementViewController {
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleBackgroundTap))
     tapGesture.delegate = self  // 델리게이트 설정
     view.addGestureRecognizer(tapGesture)
+  }
+  
+  private func setupBind() {
+    viewModel.output.presentSafariViewController
+      .receive(on: RunLoop.main)
+      .sink { viewController in
+        self.present(viewController, animated: true, completion: nil)
+      }
+      .store(in: &cancellables)
   }
 
   private func bindActions() {
@@ -173,6 +193,20 @@ extension AgreementViewController: UICollectionViewDataSource {
     let item = agreementItems[indexPath.item]
     cell.configure(with: item)
     cell.delegate = self
+    
+    if item.id == .service {
+      cell.detailButton.tapPublisher
+        .sink {
+          self.viewModel.send(input: .acceptTermTapped)
+        }
+        .store(in: &cancellables)
+    } else if item.id == .privacy {
+      cell.detailButton.tapPublisher
+        .sink {
+          self.viewModel.send(input: .acceptInfoProvisionTapped)
+        }
+        .store(in: &cancellables)
+    }
 
     return cell
   }
@@ -202,13 +236,6 @@ extension AgreementViewController: AgreementCellDelegate {
         agreementItems[indexPath.item].isAgreed = isAgreed
       }
       updateConfrimButton()
-    }
-  }
-
-  func agreementCellDidTapDetail(_ cell: AgreementCell) {
-    if let indexPath = collectionView.indexPath(for: cell) {
-      let item = agreementItems[indexPath.item]
-      // TODO: 약관 상세 화면으로 이동
     }
   }
 }

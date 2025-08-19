@@ -14,9 +14,8 @@ class TimeRangeCell: UICollectionViewCell {
   static let identifier = "TimeRangeCell"
 
   private let timeLabel = UILabel().then {
-    var style = Typography.Body_16_B
-    style.color = STColors.gray5.color
-    $0.style = style
+    $0.style = Typography.Body_16_B
+    $0.textColor = STColors.gray5.color
     $0.textAlignment = .center
   }
 
@@ -45,7 +44,7 @@ class TimeRangeCell: UICollectionViewCell {
   }
 
   func configure(with timeRange: String) {
-    timeLabel.text = timeRange
+    timeLabel.styledText = timeRange
   }
 
   private func updateAppearance() {

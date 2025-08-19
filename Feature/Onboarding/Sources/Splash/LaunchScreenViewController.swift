@@ -27,7 +27,7 @@ public final class LaunchScreenViewController: BaseViewController {
 
   public override func viewDidLoad() {
     super.viewDidLoad()
-    self.view.backgroundColor = DesignSystemAsset.Colors.primary2.color
+    self.view.backgroundColor = STColors.primary2.color
     setupHierarchy()
     setupLayout()
     setupBinding()
@@ -35,7 +35,7 @@ public final class LaunchScreenViewController: BaseViewController {
   }
 
   private lazy var launchImageView: UIImageView = UIImageView().then {
-    $0.image = DesignSystemAsset.Images.sattoLogoWhite.image
+    $0.image = STImages.launchLogo.image
     $0.contentMode = .scaleAspectFit
   }
 }

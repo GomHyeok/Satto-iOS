@@ -19,8 +19,16 @@ public final class SplashViewcontroller: UIViewController {
   private var router: OnboardingRouter!
 
   private lazy var splashImageView: UIImageView = UIImageView().then {
-    $0.image = DesignSystemAsset.Images.sattoLogo.image
-    $0.contentMode = .scaleAspectFit
+    $0.image = STImages.loginLogo.image
+    $0.contentMode = .scaleAspectFill
+  }
+  
+  private lazy var splashTitle  = UILabel().then {
+    $0.style = Typography.Display_28_B
+    $0.textColor = STColors.primary2.color
+    $0.styledText = "복을 가득 담아\n보내드리네"
+    $0.textAlignment = .left
+    $0.numberOfLines = 2
   }
 
   private lazy var startButton: UIButton = UIButton().then {
@@ -56,6 +64,7 @@ public final class SplashViewcontroller: UIViewController {
 extension SplashViewcontroller {
   private func setupHierarchy() {
     self.view.addSubview(splashImageView)
+    self.view.addSubview(splashTitle)
     self.view.addSubview(startButton)
   }
 
@@ -76,18 +85,21 @@ extension SplashViewcontroller {
   }
 
   private func setupLayout() {
-    splashImageView.snp.makeConstraints {
-      $0.leading.equalToSuperview().offset(109)
-      $0.top.equalToSuperview().offset(292.56)
-      $0.trailing.equalToSuperview().offset(-109.67)
-      $0.height.equalTo(44.08)
+    splashImageView.snp.makeConstraints { make in
+      make.leading.trailing.equalToSuperview().inset(40)
+      make.top.equalToSuperview().offset(110)
+      make.height.equalTo(50)
+    }
+    
+    splashTitle.snp.makeConstraints { make in
+      make.top.equalTo(splashImageView.snp.bottom).offset(24)
+      make.leading.trailing.equalToSuperview().inset(40)
     }
 
-    startButton.snp.makeConstraints {
-      $0.leading.equalToSuperview().offset(24.49)
-      $0.trailing.equalToSuperview().offset(-23.51)
-      $0.bottom.equalToSuperview().offset(-60)
-      $0.height.equalTo(56)
+    startButton.snp.makeConstraints { make in
+      make.leading.trailing.equalToSuperview().inset(24)
+      make.bottom.equalToSuperview().offset(-60)
+      make.height.equalTo(56)
     }
   }
 }

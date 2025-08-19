@@ -79,7 +79,7 @@ final class EditProfileViewController: BaseViewController {
     var style = Typography.Caption_12_M
     style.color = STColors.red3.color
     $0.style = style
-    $0.styledText = "이름은 최대 6글짜까지 입력 가능해요"
+    $0.styledText = "이름은 최대 6자까지 입력 가능하네"
   }
 
   private lazy var genderStack: UIStackView = UIStackView().then {
@@ -127,7 +127,7 @@ final class EditProfileViewController: BaseViewController {
     var style = Typography.Caption_12_M
     style.color = STColors.red3.color
     $0.style = style
-    $0.styledText = "올바른 형식으로 입력해 주세요."
+    $0.styledText = "올바른 형식으로 입력해 주시게"
   }
 
   private lazy var bornTimeStack: UIStackView = UIStackView().then {

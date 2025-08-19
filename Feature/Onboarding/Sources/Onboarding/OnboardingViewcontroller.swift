@@ -28,16 +28,16 @@ public final class OnboardingViewController: BaseViewController {
 
   private lazy var headingLabel: UILabel = UILabel().then {
     var style = Typography.Heading_22_B
-    style.color = DesignSystemAsset.Colors.gray1.color
+    style.color = STColors.gray1.color
     $0.style = style
-    $0.styledText = "정보를 입력해주세요"
+    $0.styledText = "정보를 입력해 주시겠소"
   }
 
   private lazy var subLabel: UILabel = UILabel().then {
     var style = Typography.Body_14_M
-    style.color = DesignSystemAsset.Colors.gray3.color
+    style.color = STColors.gray3.color
     $0.style = style
-    $0.styledText = "회원님의 사주를 기반으로 로또 번호를 추천해 드릴게요"
+    $0.styledText = "그대의 사주를 기반으로 로또 번호를 추천해 드리오"
   }
 
   private lazy var onBoardingStack: UIStackView = UIStackView().then {
@@ -86,7 +86,7 @@ public final class OnboardingViewController: BaseViewController {
     var style = Typography.Caption_12_M
     style.color = DesignSystemAsset.Colors.red3.color
     $0.style = style
-    $0.styledText = "이름은 최대 6글짜까지 입력 가능해요"
+    $0.styledText = "이름은 최대 6자까지 입력 가능하네"
   }
 
   private lazy var genderStack: UIStackView = UIStackView().then {
@@ -138,7 +138,7 @@ public final class OnboardingViewController: BaseViewController {
     var style = Typography.Caption_12_M
     style.color = STColors.red3.color
     $0.style = style
-    $0.styledText = "올바른 형식으로 입력해 주세요."
+    $0.styledText = "올바른 형식으로 입력해 주시게"
   }
 
   private lazy var bornTimeStack: UIStackView = UIStackView().then {
@@ -160,7 +160,7 @@ public final class OnboardingViewController: BaseViewController {
   }
 
   private lazy var dontKnowButton: CheckBox = CheckBox().then {
-    $0.title = "모르겠어요"
+    $0.title = "모르겠소"
     $0.isSelected = false
     $0.addTarget(self, action: #selector(dontKonwButtonTapped), for: .touchUpInside)
   }

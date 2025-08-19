@@ -12,19 +12,18 @@ import UIKit
 
 protocol AgreementCellDelegate: AnyObject {
   func agreementCell(_ cell: AgreementCell, didChangeAgreement isAgreed: Bool)
-  func agreementCellDidTapDetail(_ cell: AgreementCell)
 }
 
-final class AgreementCell: UICollectionViewCell {
+public final class AgreementCell: UICollectionViewCell {
   static let identifier = "AgreementCell"
 
   weak var delegate: AgreementCellDelegate?
 
-  let checkBox: CheckBox = CheckBox().then {
+  private lazy var checkBox: CheckBox = CheckBox().then {
     $0.isUserInteractionEnabled = true
   }
 
-  private let detailButton: UIButton = UIButton().then {
+  public private(set) lazy var detailButton: UIButton = UIButton().then {
     $0.setImage(STImages.line.image, for: .normal)
     $0.tintColor = STColors.gray5.color
   }
@@ -58,15 +57,10 @@ final class AgreementCell: UICollectionViewCell {
 
   private func bindActions() {
     checkBox.addTarget(self, action: #selector(checkBoxTapped), for: .valueChanged)
-    detailButton.addTarget(self, action: #selector(detailButtonTapped), for: .touchUpInside)
   }
 
   @objc private func checkBoxTapped() {
     delegate?.agreementCell(self, didChangeAgreement: checkBox.isSelected)
-  }
-
-  @objc private func detailButtonTapped() {
-    delegate?.agreementCellDidTapDetail(self)
   }
 
   func configure(with item: AgreementItem) {
