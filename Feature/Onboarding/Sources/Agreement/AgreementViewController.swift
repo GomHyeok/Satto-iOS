@@ -5,18 +5,18 @@
 //  Created by 최재혁 on 7/30/25.
 //
 
+import Base
 import DesignSystem
 import SnapKit
 import Then
 import UIKit
-import Base
 
 protocol AgreementViewDelegate: AnyObject {
   func agreementViewDidComplete()
 }
 final class AgreementViewController: BaseViewController {
 
-  let viewModel : AgreementViewModel
+  let viewModel: AgreementViewModel
   weak var delegate: AgreementViewDelegate?
 
   private var agreementItems: [AgreementItem] = [
@@ -24,7 +24,7 @@ final class AgreementViewController: BaseViewController {
     AgreementItem(
       id: .service, title: "서비스 이용 약관", isRequired: true, isAgreed: false, hasDetail: true),
     AgreementItem(
-      id: .privacy, title: "개인정보 수집 및 이용", isRequired: true, isAgreed: false, hasDetail: true)
+      id: .privacy, title: "개인정보 수집 및 이용", isRequired: true, isAgreed: false, hasDetail: true),
   ]
 
   private var isAllAgree: Bool {
@@ -74,12 +74,12 @@ final class AgreementViewController: BaseViewController {
     $0.setAttributedTitle(styled, for: .normal)
     $0.isEnabled = false
   }
-  
-  init(viewModel : AgreementViewModel = AgreementViewModel()) {
+
+  init(viewModel: AgreementViewModel = AgreementViewModel()) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
   }
-  
+
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -137,7 +137,7 @@ extension AgreementViewController {
     tapGesture.delegate = self  // 델리게이트 설정
     view.addGestureRecognizer(tapGesture)
   }
-  
+
   private func setupBind() {
     viewModel.output.presentSafariViewController
       .receive(on: RunLoop.main)
@@ -193,7 +193,7 @@ extension AgreementViewController: UICollectionViewDataSource {
     let item = agreementItems[indexPath.item]
     cell.configure(with: item)
     cell.delegate = self
-    
+
     if item.id == .service {
       cell.detailButton.tapPublisher
         .sink {

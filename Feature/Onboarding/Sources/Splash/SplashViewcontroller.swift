@@ -22,8 +22,8 @@ public final class SplashViewcontroller: UIViewController {
     $0.image = STImages.loginLogo.image
     $0.contentMode = .scaleAspectFill
   }
-  
-  private lazy var splashTitle  = UILabel().then {
+
+  private lazy var splashTitle = UILabel().then {
     $0.style = Typography.Display_28_B
     $0.textColor = STColors.primary2.color
     $0.styledText = "복을 가득 담아\n보내드리네"
@@ -90,7 +90,7 @@ extension SplashViewcontroller {
       make.top.equalToSuperview().offset(110)
       make.height.equalTo(50)
     }
-    
+
     splashTitle.snp.makeConstraints { make in
       make.top.equalTo(splashImageView.snp.bottom).offset(24)
       make.leading.trailing.equalToSuperview().inset(40)
