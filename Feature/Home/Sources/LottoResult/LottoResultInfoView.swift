@@ -10,6 +10,7 @@ import Lottie
 import UIKit
 
 struct LottoResultInfoModel {
+  let isWinner: Bool
   let roundText: String
   let title: String
   let desciprtion: String
@@ -43,6 +44,9 @@ final class LottoResultInfoView: UIView {
   }
 
   func update(with model: LottoResultInfoModel) {
+    confettiiiiViews.forEach {
+      $0.isHidden = !model.isWinner
+    }
     roundTextChip.update(text: model.roundText)
     titleLabel.styledText = model.title
     descriptionLabel.styledText = model.desciprtion

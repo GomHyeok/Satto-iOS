@@ -43,4 +43,16 @@ enum HomeTarget {
     var headers: [String: String]? { nil }
     let userID: String
   }
+  
+  struct CheckLottoResult: BaseTargetType {
+
+    typealias Response = LottoResultDTO
+
+    var path: String { "users/\(userID)/lotto-recommendation/\(round)/check" }
+    var httpTask: HTTPTask { .requestPlain }
+    var httpMethod: HTTPMethod { .post }
+    var headers: [String: String]? { nil }
+    let userID: String
+    let round: Int
+  }
 }

@@ -18,19 +18,38 @@ final class LottoResultViewModel {
   }
 
   struct Output {
+    let updateResultInfo = CurrentValueSubject<LottoResultInfoModel?, Never>(nil)
+    let updateSattoMessage = CurrentValueSubject<SattoMessageModel?, Never>(nil)
+    let updateResultNumber = CurrentValueSubject<LottoResultNumberModel?, Never>(nil)
     let isLoading = CurrentValueSubject<Bool, Never>(true)
     let back = PassthroughSubject<Void, Never>()
     let popToRoot = PassthroughSubject<Void, Never>()
   }
 
+  @Injected var lottoResultService: LottoResultService
   let output = Output()
+  private let round: Int
+  
+  init(round: Int) {
+    self.round = round
+  }
 
   func send(input: Input) {
     switch input {
     case .viewDidLoad:
-      Task { [weak self] in
-        try await Task.sleep(for: .seconds(3))
-        self?.output.isLoading.send(false)
+      Task {
+        do {
+          async let minDelay: Void = Task.sleep(for: .seconds(3))
+          let response = try await lottoResultService.fetch(round: round)
+          _ = try? await minDelay
+          output.updateResultInfo.send(response.resultInfo)
+          output.updateSattoMessage.send(response.sattoMessage)
+          output.updateResultNumber.send(response.resultNumber)
+          output.isLoading.send(false)
+        } catch {
+          output.isLoading.send(false)
+          // TODO: 에러 처리
+        }
       }
 
     case .backButtonTapped:

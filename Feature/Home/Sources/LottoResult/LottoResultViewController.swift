@@ -7,7 +7,6 @@
 
 import Base
 import DesignSystem
-import SwiftRichString
 import UIKit
 
 final class LottoResultViewController: BaseViewController {
@@ -24,10 +23,7 @@ final class LottoResultViewController: BaseViewController {
   private lazy var loadingView = LottoResultLoadingView()
   private lazy var infoView = LottoResultInfoView()
   private lazy var sattoMessageView = SattoMessageView()
-  private lazy var resultStackView = UIStackView().then {
-    $0.axis = .vertical
-    $0.spacing = 20
-  }
+  private lazy var resultNumberView = LottoResultNumberView()
   private lazy var goToMainButton = UIButton().then {
     $0.backgroundColor = STColors.primary2.color
     $0.layer.cornerRadius = 8
@@ -52,14 +48,6 @@ final class LottoResultViewController: BaseViewController {
     setupNavigationBar()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
-
-    // TODO: 임시
-    infoView.update(
-      with: LottoResultInfoModel(roundText: "1181회", title: "1등 당첨!", desciprtion: "5,000원"))
-    sattoMessageView.update(
-      with: SattoMessageModel(title: "사또의 한마디...", message: "축하드리네!\n이번 행운의 주인공은 그대라네."))
-    resultStackView.addArrangedSubview(makeWinningNumbersView())
-    resultStackView.addArrangedSubview(makeResultView())
   }
 
   override func viewDidLayoutSubviews() {
@@ -77,8 +65,8 @@ final class LottoResultViewController: BaseViewController {
       make.height.equalTo(176)
     }
 
-    view.addSubview(resultStackView)
-    resultStackView.snp.makeConstraints { make in
+    view.addSubview(resultNumberView)
+    resultNumberView.snp.makeConstraints { make in
       make.top.equalTo(infoView.snp.bottom)
       make.horizontalEdges.equalToSuperview().inset(24)
     }
@@ -116,13 +104,37 @@ final class LottoResultViewController: BaseViewController {
       backButtonItem
     ])
     navigationBar.backgroundColor = .clear
-    navigationBar.tintColor = STColors.white.color
+    navigationBar.updateColor(STColors.white.color)
   }
 
   private func setupBinding() {
     goToMainButton.tapPublisher
       .sink { [weak self] _ in
         self?.viewModel.send(input: .goToMainButtonTapped)
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.updateResultInfo
+      .compactMap(\.self)
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] model in
+        self?.infoView.update(with: model)
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.updateSattoMessage
+      .compactMap(\.self)
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] model in
+        self?.sattoMessageView.update(with: model)
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.updateResultNumber
+      .compactMap(\.self)
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] model in
+        self?.resultNumberView.update(with: model)
       }
       .store(in: &cancellables)
 
@@ -135,7 +147,7 @@ final class LottoResultViewController: BaseViewController {
         } else {
           UIView.animate(withDuration: 0.25) {
             self?.loadingView.alpha = 0
-            self?.navigationBar.tintColor = STColors.black.color
+            self?.navigationBar.updateColor(STColors.black.color)
           }
         }
       }
@@ -155,106 +167,5 @@ final class LottoResultViewController: BaseViewController {
         self?.navigationController?.popToRootViewController(animated: true)
       }
       .store(in: &cancellables)
-  }
-
-  // TODO: 별도 뷰로 분리하기
-  private func makeWinningNumbersView() -> UIView {
-    let stackView = UIStackView().then {
-      $0.axis = .horizontal
-      $0.distribution = .equalSpacing
-      $0.alignment = .center
-      $0.isLayoutMarginsRelativeArrangement = true
-      $0.layoutMargins = UIEdgeInsets(top: 16, left: 20, bottom: 16, right: 20)
-      $0.backgroundColor = STColors.white.color
-      $0.layer.cornerRadius = 30
-      $0.clipsToBounds = true
-    }
-
-    let numbers = [4, 12, 18, 21, 24, 26]  // TODO: 수정 필요
-    let bonusNumber = 42
-
-    numbers.forEach { number in
-      let ball = Ball()
-      ball.number = String(number)
-      stackView.addArrangedSubview(ball)
-      ball.snp.makeConstraints { make in
-        make.size.equalTo(32)
-      }
-    }
-
-    let plusView = UIImageView(image: STImages.resultPlus.image)
-    plusView.snp.makeConstraints { make in
-      make.size.equalTo(14)
-    }
-    stackView.addArrangedSubview(plusView)
-
-    let bonusBall = Ball()
-    bonusBall.number = String(bonusNumber)
-    stackView.addArrangedSubview(bonusBall)
-
-    stackView.snp.makeConstraints { make in
-      make.height.equalTo(64)
-    }
-    return stackView
-  }
-
-  // TODO: 별도 뷰로 분리하기
-  private func makeResultView() -> UIView {
-    let stackView = UIStackView().then {
-      $0.axis = .horizontal
-      $0.distribution = .equalSpacing
-      $0.alignment = .center
-      $0.isLayoutMarginsRelativeArrangement = true
-      $0.layoutMargins = UIEdgeInsets(top: 16, left: 20, bottom: 16, right: 20)
-      $0.backgroundColor = STColors.white.color
-      $0.layer.cornerRadius = 30
-      $0.clipsToBounds = true
-    }
-    let rankView = UIView().then {
-      $0.backgroundColor = STColors.primary2.color
-      $0.layer.cornerRadius = 16
-      $0.clipsToBounds = true
-    }
-    let rankLabel = UILabel().then {
-      $0.style = Style {
-        $0.font = DesignSystemFontFamily.Suit.extraBold.font(size: 12)
-        $0.kerning = .point(0.18)
-        $0.color = STColors.white.color
-      }
-      $0.styledText = "1등"  // TODO: 수정 필요
-    }
-    rankView.addSubview(rankLabel)
-    rankLabel.snp.makeConstraints { make in
-      make.center.equalToSuperview()
-    }
-
-    stackView.addArrangedSubview(rankView)
-    rankView.snp.makeConstraints { make in
-      make.size.equalTo(32)
-    }
-
-    let barView = UIImageView(image: STImages.resultBar.image)
-    barView.snp.makeConstraints { make in
-      make.size.equalTo(14)
-    }
-    stackView.addArrangedSubview(barView)
-
-    let numbers = [4, 12, 18, 21, 24, 26]  // TODO: 수정 필요
-    let winningNumbers = [9, 11, 18, 21, 24, 33, 42]
-
-    numbers.forEach { number in
-      let ball = Ball()
-      ball.number = String(number)
-      ball.isColored = winningNumbers.contains(number)
-      stackView.addArrangedSubview(ball)
-      ball.snp.makeConstraints { make in
-        make.size.equalTo(32)
-      }
-    }
-
-    stackView.snp.makeConstraints { make in
-      make.height.equalTo(64)
-    }
-    return stackView
   }
 }

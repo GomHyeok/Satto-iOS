@@ -57,17 +57,20 @@ public final class NavigationBar: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  public override func tintColorDidChange() {
-    super.tintColorDidChange()
-    defaultTitleLabel.textColor = tintColor
-    leftItemsSection.arrangedSubviews.forEach {
-      $0.tintColor = tintColor
-    }
-    rightItemsSection.arrangedSubviews.forEach {
-      $0.tintColor = tintColor
-    }
+  public func updateColor(_ color: UIColor) {
+    defaultTitleLabel.textColor = color
+    leftItemsSection.arrangedSubviews
+      .compactMap { $0 as? NavigationBarItem }
+      .forEach {
+        $0.updateColor(color)
+      }
+    rightItemsSection.arrangedSubviews
+      .compactMap { $0 as? NavigationBarItem }
+      .forEach {
+        $0.updateColor(color)
+      }
   }
-
+  
   private func setupUI(with style: Style, height: CGFloat) {
     addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in

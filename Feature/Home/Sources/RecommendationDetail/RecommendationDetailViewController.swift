@@ -164,7 +164,7 @@ final class RecommendationDetailViewController: BaseViewController {
       .receive(on: DispatchQueue.main)
       .sink { [weak self] isLoading in
         if isLoading {
-          self?.navigationBar.tintColor = STColors.white.color
+          self?.navigationBar.updateColor(STColors.white.color)
           self?.navigationBar.backgroundColor = .clear
           self?.loadingView.alpha = 1
           self?.loadingView.play()
@@ -176,7 +176,7 @@ final class RecommendationDetailViewController: BaseViewController {
             animations: {
               self?.loadingView.alpha = 0
               self?.title = self?.viewModel.output.navigationTitle.value
-              self?.navigationBar.tintColor = STColors.black.color
+              self?.navigationBar.updateColor(STColors.black.color)
             },
             completion: { _ in
               self?.navigationBar.backgroundColor = STColors.primary9.color

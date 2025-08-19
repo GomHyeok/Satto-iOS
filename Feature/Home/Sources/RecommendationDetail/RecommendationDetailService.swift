@@ -10,7 +10,7 @@ import DIInjector
 import Foundation
 import NetworkCore
 
-struct RecommendationDetailService {
+final class RecommendationDetailService {
 
   @Injected private var userDataManager: UserDataManager
   @Injected private var networkProvider: NetworkProvider
@@ -21,6 +21,7 @@ struct RecommendationDetailService {
     }
     return "\(username)의 로또 번호"
   }
+  var round: Int?
 
   func createRecommendation() async throws -> [any RecommendationDetailCellModel] {
     let target = HomeTarget.CreateLottoRecommendation(userID: userDataManager.userID)
@@ -32,6 +33,7 @@ struct RecommendationDetailService {
     let target = HomeTarget.GetLottoRecommendation(
       userID: userDataManager.userID)
     let lottoRecommendation = try await networkProvider.request(target: target)
+    round = lottoRecommendation.round
     return try makeSections(from: lottoRecommendation)
   }
 

@@ -8,7 +8,13 @@
 import DesignSystem
 import UIKit
 
-public protocol NavigationBarItem: UIView {}
+public protocol NavigationBarItem: UIView {
+  func updateColor(_ color: UIColor)
+}
+
+extension NavigationBarItem {
+  public func updateColor(_ color: UIColor) { }
+}
 
 public final class NaivgationBarButtonItem: UIButton, NavigationBarItem {
 
@@ -25,11 +31,10 @@ public final class NaivgationBarButtonItem: UIButton, NavigationBarItem {
       make.size.equalTo(24)
     }
   }
-
-  override public func tintColorDidChange() {
-    super.tintColorDidChange()
-    let image = image(for: .normal)?.withRenderingMode(.alwaysTemplate)
-    setImage(image?.withTintColor(tintColor), for: .normal)
+  
+  public func updateColor(_ color: UIColor) {
+    let image = image(for: .normal)?.withTintColor(color, renderingMode: .alwaysOriginal)
+    setImage(image, for: .normal)
   }
 }
 

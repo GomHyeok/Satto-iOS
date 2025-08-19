@@ -91,7 +91,7 @@ final class RecommendationDetailViewModel {
       Task { @MainActor in
         homeRouter.navigate(
           to: HomeRoute.lottoResult, how: .push(hidesBottomBarWhenPushed: true),
-          with: [:])
+          with: ["round": recommendationDetailService.round as Any])
       }
 
     case .backButtonTapped:

@@ -64,7 +64,7 @@ public final class HomeViewModel {
         Task { @MainActor in
           homeRouter.navigate(
             to: HomeRoute.lottoResult, how: .push(hidesBottomBarWhenPushed: true),
-            with: [:])
+            with: ["round": homeService.round as Any])
         }
       }
     }

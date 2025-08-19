@@ -10,13 +10,14 @@ import DIInjector
 import Foundation
 import NetworkCore
 
-struct HomeService {
+final class HomeService {
 
   @Injected private var userDataManager: UserDataManager
   @Injected private var networkProvider: NetworkProvider
   private var appVersion: String? {
     Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
   }
+  var round: Int?
 
   func fetch() async throws -> [any HomeCellModel] {
     let name = self.userDataManager.user?.name ?? ""  // TODO: 확인 필요
@@ -29,6 +30,7 @@ struct HomeService {
     let (lottoRecommendation, dailyFortunes) = try await (
       lottoRecommendationRequest, dailyFortunesRequest
     )
+    self.round = lottoRecommendation.round
 
     let recommendationCollectionViewCellModel: HomeRecommendationCollectionViewCellModel
     if let recommendationContent = lottoRecommendation.content {

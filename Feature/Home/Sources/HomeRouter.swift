@@ -31,8 +31,11 @@ final class HomeRouter: Routable {
           viewModel: RecommendationDetailViewModel(
             shouldCreateRecommendation: shouldCreateRecommendation ?? true))
       },
-      .lottoResult: { _ in
-        return LottoResultViewController(viewModel: LottoResultViewModel())
+      .lottoResult: { data in
+        guard let round = data["round"] as? Int else {
+          fatalError() // TODO: 안전하게 처리할 방법이 필요함
+        }
+        return LottoResultViewController(viewModel: LottoResultViewModel(round: round))
       },
     ]
   }
