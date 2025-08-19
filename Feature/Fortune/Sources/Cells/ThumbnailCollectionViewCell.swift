@@ -208,7 +208,7 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
     addLabel(pair: cellModel.sajuMyeongSik.sajuMyeongSik.wolJu)
     addLabel(pair: cellModel.sajuMyeongSik.sajuMyeongSik.nyeongJu)
 
-    createSajuTypeLabel(model : cellModel)
+    createSajuTypeLabel(model: cellModel)
 
     let strongStack = createStrength(info: cellModel.strongInfo, type: .strong)
     let weakStack = createStrength(info: cellModel.weakInfo, type: .weak)
@@ -235,36 +235,36 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
 extension ThumbnailCollectionViewCell {
   func getElement(for hanja: String) -> FiveElements? {
     switch hanja {
-    case "甲", "乙", "寅", "卯", "木" :
+    case "甲", "乙", "寅", "卯", "木":
       return .wood
-    case "丙", "丁", "巳", "午", "火" :
+    case "丙", "丁", "巳", "午", "火":
       return .fire
-    case "戊", "己", "辰", "戌", "丑", "未", "土" :
+    case "戊", "己", "辰", "戌", "丑", "未", "土":
       return .earth
     case "庚", "辛", "申", "酉", "金":
       return .metal
     case "壬", "癸", "亥", "子", "水":
       return .water
-    case "-" :
+    case "-":
       return .null
     default:
       return nil  // 해당하는 오행이 없는 경우
     }
   }
 
-  func createSajuTypeLabel(model : ThumbnailCollectionViewCellModel) {
-    var juLabels : [String] =  []
-    
+  func createSajuTypeLabel(model: ThumbnailCollectionViewCellModel) {
+    var juLabels: [String] = []
+
     if let pair = model.sajuMyeongSik.sajuMyeongSik.siJu {
       juLabels.append(pair.stemTenGod)
     } else {
       juLabels.append("시주 없소")
     }
-    
+
     juLabels.append(model.sajuMyeongSik.sajuMyeongSik.ilJu.stemTenGod)
     juLabels.append(model.sajuMyeongSik.sajuMyeongSik.wolJu.stemTenGod)
     juLabels.append(model.sajuMyeongSik.sajuMyeongSik.nyeongJu.stemTenGod)
-    
+
     var juLabelViews: [UILabel] = []
     juLabels.forEach { label in
       let juLabel = UILabel().then {
@@ -298,18 +298,18 @@ extension ThumbnailCollectionViewCell {
     }
 
     // jeLabelStackView도 동일하게 적용
-    var jeLabels : [String] =  []
-    
+    var jeLabels: [String] = []
+
     if let pair = model.sajuMyeongSik.sajuMyeongSik.siJu {
       jeLabels.append(pair.branchTenGod)
     } else {
       jeLabels.append("시주 없소")
     }
-    
+
     jeLabels.append(model.sajuMyeongSik.sajuMyeongSik.ilJu.branchTenGod)
     jeLabels.append(model.sajuMyeongSik.sajuMyeongSik.wolJu.branchTenGod)
     jeLabels.append(model.sajuMyeongSik.sajuMyeongSik.nyeongJu.branchTenGod)
-    
+
     var jeLabelViews: [UILabel] = []
     jeLabels.forEach { label in
       let jeLabel = UILabel().then {
@@ -363,7 +363,7 @@ extension ThumbnailCollectionViewCell {
   }
 
   func addLabel(pair: SajuPair) {
-    
+
     let juLabel = createSajuLabel(value: pair.stem)
     juStackView.addArrangedSubview(juLabel)
 

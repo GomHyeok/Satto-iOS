@@ -95,7 +95,7 @@ final class FortuneCollectionViewCell: BaseCollectionViewCell {
     scoreArcView.update(
       background: STColors.primary6.color, fill: STColors.primary4.color, lineWidth: 20,
       lineCap: .butt)
-    
+
     scoreArcView.animateInitialScore()
   }
 

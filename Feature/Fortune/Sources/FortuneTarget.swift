@@ -7,8 +7,8 @@
 
 import Base
 import Foundation
-import NetworkCore
 import Moya
+import NetworkCore
 
 enum FortuneTarget {
 
@@ -19,17 +19,17 @@ enum FortuneTarget {
     var path: String { "users/\(userID)/daily-fortune-details" }
     var httpTask: HTTPTask {
       return .requestParameters(
-        parameters: ["fortune_date" : fortuneDate], encoding: URLEncoding.queryString
+        parameters: ["fortune_date": fortuneDate], encoding: URLEncoding.queryString
       )
     }
     var httpMethod: HTTPMethod { .get }
     var headers: [String: String]? { nil }
     let userID: String
-    let fortuneDate : String
+    let fortuneDate: String
   }
-  
+
   struct GetFourPillars: BaseTargetType {
-    
+
     typealias Response = FourPillarsDTO
 
     var path: String { "users/\(userID)/four-pillar" }

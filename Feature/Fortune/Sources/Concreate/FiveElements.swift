@@ -23,7 +23,7 @@ enum FiveElements {
       return STColors.gray4.color
     case .water:
       return STColors.blue4.color
-    case .null :
+    case .null:
       return STColors.gray6.color
     }
   }
@@ -40,7 +40,7 @@ enum FiveElements {
       return "금(金)"
     case .water:
       return "수(水)"
-    case .null :
+    case .null:
       return "-"
     }
   }

@@ -8,8 +8,8 @@
 import Foundation
 
 struct DailyFortuneDTO: Decodable {
-  
-  enum CodingKeys : String, CodingKey {
+
+  enum CodingKeys: String, CodingKey {
     case id
     case userID = "user_id"
     case fortuneDate = "fortune_date"
@@ -17,17 +17,17 @@ struct DailyFortuneDTO: Decodable {
     case fortuneComment = "fortune_comment"
     case fortuneDetails = "fortune_details"
   }
-  
-  let id : Int
-  let userID : String
-  let fortuneDate : String
-  let fortuneScore : Int
-  let fortuneComment : String
-  let fortuneDetails : [Content]
-  
-  struct Content : Decodable {
-    let type : String
-    let title : String
-    let content : String
+
+  let id: Int
+  let userID: String
+  let fortuneDate: String
+  let fortuneScore: Int
+  let fortuneComment: String
+  let fortuneDetails: [Content]
+
+  struct Content: Decodable {
+    let type: String
+    let title: String
+    let content: String
   }
 }

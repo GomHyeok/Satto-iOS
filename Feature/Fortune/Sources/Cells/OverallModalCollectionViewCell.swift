@@ -9,7 +9,7 @@ import Base
 import DesignSystem
 import UIKit
 
-enum OverallModalType : String {
+enum OverallModalType: String {
   case money = "money"
   case job = "job"
   case love = "love"
@@ -17,7 +17,7 @@ enum OverallModalType : String {
 }
 
 struct OverallModalCollectionViewCellModel {
-  let type : OverallModalType
+  let type: OverallModalType
   let title: String
   let content: String
 }
@@ -93,13 +93,13 @@ final class OverallModalCollectionViewCell: BaseCollectionViewCell {
     titleLabel.styledText = cellModel.title
     descriptionLabel.styledText = cellModel.content
     switch cellModel.type {
-    case .job :
+    case .job:
       imageView.image = STImages.imageJob.image
-    case .money :
+    case .money:
       imageView.image = STImages.imageMoney.image
-    case .love :
+    case .love:
       imageView.image = STImages.imageLove.image
-    case .unknown :
+    case .unknown:
       // TODO: Error case
       imageView.image = STImages.alertTriangle.image
     }

@@ -25,6 +25,6 @@ public struct SajuMyeongSik {
 public struct SajuPair {
   public let stem: String
   public let branch: String
-  public let stemTenGod : String
-  public let branchTenGod : String
+  public let stemTenGod: String
+  public let branchTenGod: String
 }
