@@ -17,9 +17,7 @@ final class ScoreArcView: UIView {
   }
 
   var contentInsets: UIEdgeInsets = .zero {
-    didSet {
-      setNeedsLayout()
-    }
+    didSet { setNeedsLayout() }
   }
 
   private let backgroundLayer = CAShapeLayer()
@@ -45,33 +43,25 @@ final class ScoreArcView: UIView {
 
   override func layoutSubviews() {
     super.layoutSubviews()
-
+    
     let insetBounds = bounds.inset(by: contentInsets)
-
+    
     let centerPoint = CGPoint(x: insetBounds.midX, y: insetBounds.maxY)
     let radius = insetBounds.width / 2 - backgroundLayer.lineWidth / 2
-
+    
     let startAngle = CGFloat.pi
     let endAngle = 0.0
-
-    let backgroundPath = UIBezierPath(
+    
+    let arcPath = UIBezierPath(
       arcCenter: centerPoint,
       radius: radius,
       startAngle: startAngle,
       endAngle: endAngle,
-      clockwise: true)
-    backgroundLayer.path = backgroundPath.cgPath
-
-    let scoreRatio = score / 100.0
-    let fillEndAngle = startAngle * (scoreRatio - 1)
-
-    let fillPath = UIBezierPath(
-      arcCenter: centerPoint,
-      radius: radius,
-      startAngle: startAngle,
-      endAngle: fillEndAngle,
-      clockwise: true)
-    fillLayer.path = fillPath.cgPath
+      clockwise: true
+    )
+    
+    backgroundLayer.path = arcPath.cgPath
+    fillLayer.path = arcPath.cgPath
   }
 
   public func update(
@@ -84,5 +74,18 @@ final class ScoreArcView: UIView {
     fillLayer.strokeColor = fill.cgColor
     fillLayer.lineWidth = (lineWidth + 2)
     backgroundLayer.lineCap = lineCap
+  }
+  
+  public func animateInitialScore(duration : CFTimeInterval = 1.2) {
+    let targetValue = score/100.0
+    
+    let animation = CABasicAnimation(keyPath: "strokeEnd")
+    animation.fromValue = 0
+    animation.toValue = targetValue
+    animation.duration = duration
+    animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+    
+    fillLayer.strokeEnd = targetValue
+    fillLayer.add(animation, forKey: "initialScoreAnimation")
   }
 }

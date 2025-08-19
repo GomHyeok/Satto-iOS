@@ -54,18 +54,13 @@ public final class NavigationImageItem: UIImageView, NavigationBarItem {
 
   private func setupUI() {
     contentMode = .scaleAspectFit
-    snp.makeConstraints { make in
-      make.width.equalTo(74)
-      make.height.equalTo(20)
-    }
   }
 }
 
 extension NavigationImageItem {
   public static var logo: NavigationImageItem {
     let item = NavigationImageItem(frame: .zero)
-    item.image = STImages.navigationLogo.image
+    item.image = STImages.logo.image
     return item
   }
-
 }

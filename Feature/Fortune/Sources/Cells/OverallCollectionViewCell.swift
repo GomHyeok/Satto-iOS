@@ -10,7 +10,6 @@ import DesignSystem
 import UIKit
 
 struct OverallCollectionViewCellModel {
-  let title: String
   let modal: [OverallModalCollectionViewCellModel]
 }
 
@@ -34,6 +33,7 @@ final class OverallCollectionViewCell: UICollectionViewCell {
   private lazy var titleLabel = UILabel().then {
     $0.style = Typography.Body_18_B
     $0.textColor = STColors.gray2.color
+    $0.styledText = "종합 운세"
   }
 
   private lazy var modalCollectionView = UICollectionView(
@@ -79,7 +79,6 @@ final class OverallCollectionViewCell: UICollectionViewCell {
   }
 
   func update(with cellModel: OverallCollectionViewCellModel) {
-    titleLabel.styledText = cellModel.title
     modalModels = cellModel.modal
     modalCollectionView.reloadData()
   }
@@ -140,43 +139,4 @@ extension OverallCollectionViewCell: UICollectionViewDataSource, UICollectionVie
     cell.update(with: model)
     return cell
   }
-}
-
-@available(iOS 17.0, *)
-#Preview {
-  let containerView = UIView().then {
-    $0.backgroundColor = .systemBackground
-  }
-
-  let cell = OverallCollectionViewCell(frame: .zero)
-
-  let modalModels: [OverallModalCollectionViewCellModel] = [
-    OverallModalCollectionViewCellModel(
-      title: "첫 번째 모달",
-      description: "이것은 첫 번째 모달",
-      image: UIImage(systemName: "star.fill") ?? UIImage()
-    ),
-    OverallModalCollectionViewCellModel(
-      title: "두 번째 모달",
-      description: "이것은 두 번째 모달",
-      image: UIImage(systemName: "heart.fill") ?? UIImage()
-    ),
-    OverallModalCollectionViewCellModel(
-      title: "세 번째 모달",
-      description: "이것은 세 번째 모달입니다.",
-      image: UIImage(systemName: "circle.fill") ?? UIImage()
-    ),
-  ]
-  let cellModel = OverallCollectionViewCellModel(title: "종합 운세", modal: modalModels)
-
-  cell.update(with: cellModel)
-  containerView.backgroundColor = STColors.primary7.color
-
-  containerView.addSubview(cell)
-  cell.snp.makeConstraints { make in
-    make.top.leading.trailing.bottom.equalToSuperview()
-    make.height.equalTo(195)
-  }
-
-  return containerView
 }

@@ -14,7 +14,6 @@ final class MoreInfoCollectionViewCell: BaseCollectionViewCell {
     $0.axis = .vertical
     $0.spacing = 12
     $0.alignment = .leading
-    $0.isLayoutMarginsRelativeArrangement = true
   }
 
   private lazy var titleLabel = UILabel().then {
@@ -30,14 +29,14 @@ final class MoreInfoCollectionViewCell: BaseCollectionViewCell {
 
   private lazy var pigImageView = UIImageView().then {
     $0.tintColor = STColors.gray5.color
-    $0.image = STImages.pig.image
+    $0.image = STImages.imageMore.image
     $0.contentMode = .scaleAspectFit
   }
 
   private lazy var moreLabel = UILabel().then {
     $0.style = Typography.Body_14_R
     $0.textColor = STColors.gray5.color
-    $0.styledText = "업데이트를 기다려주세요"
+    $0.styledText = "행운 정보를 준비 중이에요"
   }
 
   override init(frame: CGRect) {

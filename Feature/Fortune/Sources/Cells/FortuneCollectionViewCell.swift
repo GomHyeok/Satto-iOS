@@ -81,8 +81,8 @@ final class FortuneCollectionViewCell: BaseCollectionViewCell {
     }
 
     scoreArcView.snp.makeConstraints { make in
-      make.height.equalTo(76)
-      make.width.equalTo(152)
+      make.height.equalTo(78)
+      make.width.equalTo(156)
     }
   }
 
@@ -95,6 +95,8 @@ final class FortuneCollectionViewCell: BaseCollectionViewCell {
     scoreArcView.update(
       background: STColors.primary6.color, fill: STColors.primary4.color, lineWidth: 20,
       lineCap: .butt)
+    
+    scoreArcView.animateInitialScore()
   }
 
 }

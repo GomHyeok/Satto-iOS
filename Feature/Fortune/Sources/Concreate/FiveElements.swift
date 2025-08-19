@@ -9,7 +9,7 @@ import DesignSystem
 import UIKit
 
 enum FiveElements {
-  case wood, fire, earth, metal, water
+  case wood, fire, earth, metal, water, null
 
   var color: UIColor {
     switch self {
@@ -20,9 +20,11 @@ enum FiveElements {
     case .earth:
       return STColors.yellow4.color
     case .metal:
-      return STColors.gray6.color
+      return STColors.gray4.color
     case .water:
       return STColors.blue4.color
+    case .null :
+      return STColors.gray6.color
     }
   }
 
@@ -38,6 +40,8 @@ enum FiveElements {
       return "금(金)"
     case .water:
       return "수(水)"
+    case .null :
+      return "-"
     }
   }
 }

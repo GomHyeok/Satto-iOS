@@ -9,10 +9,17 @@ import Base
 import DesignSystem
 import UIKit
 
+enum OverallModalType : String {
+  case money = "money"
+  case job = "job"
+  case love = "love"
+  case unknown = "unknown"
+}
+
 struct OverallModalCollectionViewCellModel {
+  let type : OverallModalType
   let title: String
-  let description: String
-  let image: UIImage  // TODO: 이미지 서버에서 내려주는지 확인 필요
+  let content: String
 }
 
 final class OverallModalCollectionViewCell: BaseCollectionViewCell {
@@ -84,8 +91,18 @@ final class OverallModalCollectionViewCell: BaseCollectionViewCell {
 
   func update(with cellModel: OverallModalCollectionViewCellModel) {
     titleLabel.styledText = cellModel.title
-    descriptionLabel.styledText = cellModel.description
-    imageView.image = cellModel.image
+    descriptionLabel.styledText = cellModel.content
+    switch cellModel.type {
+    case .job :
+      imageView.image = STImages.imageJob.image
+    case .money :
+      imageView.image = STImages.imageMoney.image
+    case .love :
+      imageView.image = STImages.imageLove.image
+    case .unknown :
+      // TODO: Error case
+      imageView.image = STImages.alertTriangle.image
+    }
   }
 }
 
@@ -94,9 +111,9 @@ final class OverallModalCollectionViewCell: BaseCollectionViewCell {
   let cell = OverallModalCollectionViewCell()
   cell.update(
     with: OverallModalCollectionViewCellModel(
-      title: "전체 모달",
-      description: "이곳은 전체 모달의",
-      image: UIImage(systemName: "star") ?? UIImage()
+      type: .job,
+      title: "직장운",
+      content: "오늘은 직장에서의 관계가 좋아지는 날입니다."
     ))
 
   cell.snp.makeConstraints { make in

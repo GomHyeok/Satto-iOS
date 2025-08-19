@@ -14,7 +14,7 @@ import UIKit
 struct ThumbnailCollectionViewCellModel {
   let name: String
   let birthDate: String
-  let bornTime: String
+  let birthTime: String
   let sajuMyeongSik: ThumbnailRO
   let day: String
   let strongInfo: String
@@ -42,7 +42,7 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
   private lazy var descriptionStackView = UIStackView().then {
     $0.axis = .horizontal
     $0.spacing = 4
-    $0.alignment = .leading
+    $0.alignment = .center
   }
 
   private lazy var nicknameLabel = UILabel().then {
@@ -194,7 +194,7 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
   func update(with cellModel: ThumbnailCollectionViewCellModel) {
     nicknameLabel.styledText = cellModel.name
     birthDateLabel.styledText = cellModel.birthDate
-    bornTimeLabel.styledText = cellModel.bornTime
+    bornTimeLabel.styledText = cellModel.birthTime
 
     dayLabel.styledText = "\(cellModel.day)년 토정비결"
     fortuneLabel.styledText = cellModel.sajuMyeongSik.overallFortuneText.insertLineBreaks(every: 20)
@@ -202,13 +202,13 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
     if let pair = cellModel.sajuMyeongSik.sajuMyeongSik.siJu {
       addLabel(pair: pair)
     } else {
-      addLabel(pair: SajuPair(cheonGan: "시주 없음", jiji: "시주 없음"))
+      addLabel(pair: SajuPair(stem: "-", branch: "-", stemTenGod: "시주 없소", branchTenGod: "시주 없소"))
     }
     addLabel(pair: cellModel.sajuMyeongSik.sajuMyeongSik.ilJu)
     addLabel(pair: cellModel.sajuMyeongSik.sajuMyeongSik.wolJu)
     addLabel(pair: cellModel.sajuMyeongSik.sajuMyeongSik.nyeongJu)
 
-    createSajuTypeLabel()
+    createSajuTypeLabel(model : cellModel)
 
     let strongStack = createStrength(info: cellModel.strongInfo, type: .strong)
     let weakStack = createStrength(info: cellModel.weakInfo, type: .weak)
@@ -235,23 +235,36 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
 extension ThumbnailCollectionViewCell {
   func getElement(for hanja: String) -> FiveElements? {
     switch hanja {
-    case "甲", "乙", "寅", "卯":
+    case "甲", "乙", "寅", "卯", "木" :
       return .wood
-    case "丙", "丁", "巳", "午":
+    case "丙", "丁", "巳", "午", "火" :
       return .fire
-    case "戊", "己", "辰", "戌", "丑", "未":
+    case "戊", "己", "辰", "戌", "丑", "未", "土" :
       return .earth
-    case "庚", "辛", "申", "酉":
+    case "庚", "辛", "申", "酉", "金":
       return .metal
-    case "壬", "癸", "亥", "子":
+    case "壬", "癸", "亥", "子", "水":
       return .water
+    case "-" :
+      return .null
     default:
       return nil  // 해당하는 오행이 없는 경우
     }
   }
 
-  func createSajuTypeLabel() {
-    let juLabels = ["시주", "일주", "월주", "년주"]
+  func createSajuTypeLabel(model : ThumbnailCollectionViewCellModel) {
+    var juLabels : [String] =  []
+    
+    if let pair = model.sajuMyeongSik.sajuMyeongSik.siJu {
+      juLabels.append(pair.stemTenGod)
+    } else {
+      juLabels.append("시주 없소")
+    }
+    
+    juLabels.append(model.sajuMyeongSik.sajuMyeongSik.ilJu.stemTenGod)
+    juLabels.append(model.sajuMyeongSik.sajuMyeongSik.wolJu.stemTenGod)
+    juLabels.append(model.sajuMyeongSik.sajuMyeongSik.nyeongJu.stemTenGod)
+    
     var juLabelViews: [UILabel] = []
     juLabels.forEach { label in
       let juLabel = UILabel().then {
@@ -285,7 +298,18 @@ extension ThumbnailCollectionViewCell {
     }
 
     // jeLabelStackView도 동일하게 적용
-    let jeLabels = ["정재", "겁재", "정재", "겁재"]
+    var jeLabels : [String] =  []
+    
+    if let pair = model.sajuMyeongSik.sajuMyeongSik.siJu {
+      jeLabels.append(pair.branchTenGod)
+    } else {
+      jeLabels.append("시주 없소")
+    }
+    
+    jeLabels.append(model.sajuMyeongSik.sajuMyeongSik.ilJu.branchTenGod)
+    jeLabels.append(model.sajuMyeongSik.sajuMyeongSik.wolJu.branchTenGod)
+    jeLabels.append(model.sajuMyeongSik.sajuMyeongSik.nyeongJu.branchTenGod)
+    
     var jeLabelViews: [UILabel] = []
     jeLabels.forEach { label in
       let jeLabel = UILabel().then {
@@ -339,10 +363,11 @@ extension ThumbnailCollectionViewCell {
   }
 
   func addLabel(pair: SajuPair) {
-    let juLabel = createSajuLabel(value: pair.cheonGan)
+    
+    let juLabel = createSajuLabel(value: pair.stem)
     juStackView.addArrangedSubview(juLabel)
 
-    let jeLabel = createSajuLabel(value: pair.jiji)
+    let jeLabel = createSajuLabel(value: pair.branch)
     jeStackView.addArrangedSubview(jeLabel)
   }
 
@@ -371,12 +396,8 @@ extension ThumbnailCollectionViewCell {
       $0.textAlignment = .center
       $0.clipsToBounds = true
       $0.layer.cornerRadius = 13
-      $0.styledText = element?.kor ?? "알 수 없음"
+      $0.styledText = "\(element?.kor ?? "-") \(info)"
       $0.contentInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-    }
-
-    infoLabel.snp.makeConstraints { make in
-      make.height.equalTo(28)
     }
 
     stackView.addArrangedSubview(typeLabel)
@@ -384,29 +405,4 @@ extension ThumbnailCollectionViewCell {
 
     return stackView
   }
-}
-
-@available(iOS 17.0, *)
-#Preview {
-  let cell = ThumbnailCollectionViewCell()
-  let cellModel = ThumbnailCollectionViewCellModel(
-    name: "홍길동",
-    birthDate: "1990년 1월 1일",
-    bornTime: "오전 10시",
-    sajuMyeongSik: ThumbnailRO(
-      sajuMyeongSik: SajuMyeongSik(
-        siJu: SajuPair(cheonGan: "甲", jiji: "寅"),
-        ilJu: SajuPair(cheonGan: "乙", jiji: "卯"),
-        wolJu: SajuPair(cheonGan: "丙", jiji: "巳"),
-        nyeongJu: SajuPair(cheonGan: "丁", jiji: "午")
-      ),
-      overallFortuneText: "근심과 즐거움이 상반하니 세월의 흐름을 잘 읽어보시게"
-    ),
-    day: "2025",
-    strongInfo: "甲",
-    weakInfo: "丙"
-  )
-
-  cell.update(with: cellModel)
-  return cell
 }

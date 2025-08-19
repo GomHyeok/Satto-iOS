@@ -20,21 +20,11 @@ public struct SajuMyeongSik {
   public let ilJu: SajuPair
   public let wolJu: SajuPair
   public let nyeongJu: SajuPair
-
-  public init(siJu: SajuPair?, ilJu: SajuPair, wolJu: SajuPair, nyeongJu: SajuPair) {
-    self.siJu = siJu
-    self.ilJu = ilJu
-    self.wolJu = wolJu
-    self.nyeongJu = nyeongJu
-  }
 }
 
 public struct SajuPair {
-  public let cheonGan: String
-  public let jiji: String
-
-  public init(cheonGan: String, jiji: String) {
-    self.cheonGan = cheonGan
-    self.jiji = jiji
-  }
+  public let stem: String
+  public let branch: String
+  public let stemTenGod : String
+  public let branchTenGod : String
 }

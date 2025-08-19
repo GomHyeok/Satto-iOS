@@ -100,18 +100,18 @@ extension FortuneViewController {
       case .fortune:
         itemHeight = .fractionalHeight(1.0)
         groupHeight = .estimated(218)
-        spacing = 64
+        spacing = 62
       case .overall:
         itemHeight = .fractionalHeight(1.0)
         groupHeight = .estimated(175)
         spacing = 32
       case .thumbnail:
         itemHeight = .fractionalHeight(1.0)
-        groupHeight = .estimated(520)
+        groupHeight = .estimated(518)
         spacing = 32
       case .moreInfo:
         itemHeight = .fractionalHeight(1.0)
-        groupHeight = .estimated(291)
+        groupHeight = .estimated(330)
         spacing = 32
       }
 
@@ -174,7 +174,8 @@ extension FortuneViewController {
 
     collectionView.snp.makeConstraints { make in
       make.top.equalTo(self.view.safeAreaLayoutGuide)
-      make.leading.trailing.bottom.equalToSuperview()
+      make.bottom.equalTo(self.view.safeAreaLayoutGuide)
+      make.leading.trailing.equalToSuperview()
     }
   }
 
