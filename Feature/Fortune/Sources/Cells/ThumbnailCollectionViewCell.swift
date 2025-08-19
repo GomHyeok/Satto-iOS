@@ -106,7 +106,7 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
   private lazy var strengthStackView = UIStackView().then {
     $0.axis = .horizontal
     $0.distribution = .fill
-    $0.spacing = 4
+    $0.spacing = 12
     $0.backgroundColor = STColors.gray9.color
     $0.layer.cornerRadius = 6
     $0.isLayoutMarginsRelativeArrangement = true
@@ -192,6 +192,12 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
   }
 
   func update(with cellModel: ThumbnailCollectionViewCellModel) {
+    juLabelStackView.removeAllArrangedSubviews()
+    jeLabelStackView.removeAllArrangedSubviews()
+    juStackView.removeAllArrangedSubviews()
+    jeStackView.removeAllArrangedSubviews()
+    strengthStackView.removeAllArrangedSubviews()
+    
     nicknameLabel.styledText = cellModel.name
     birthDateLabel.styledText = cellModel.birthDate
     bornTimeLabel.styledText = cellModel.birthTime
@@ -219,7 +225,7 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
     }
 
     separatorView.snp.makeConstraints { make in
-      make.height.equalTo(24)
+      make.height.equalTo(28)
       make.width.equalTo(1)
     }
     strengthStackView.addArrangedSubview(strongStack)
@@ -395,14 +401,28 @@ extension ThumbnailCollectionViewCell {
       $0.layer.borderColor = element?.color.cgColor
       $0.textAlignment = .center
       $0.clipsToBounds = true
-      $0.layer.cornerRadius = 13
+      $0.layer.cornerRadius = 14
       $0.styledText = "\(element?.kor ?? "-") \(info)"
       $0.contentInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
 
     stackView.addArrangedSubview(typeLabel)
     stackView.addArrangedSubview(infoLabel)
+    
+    infoLabel.snp.makeConstraints { make in
+      make.height.equalTo(28)
+    }
 
     return stackView
+  }
+}
+
+extension UIStackView {
+  func removeAllArrangedSubviews() {
+    let removedSubviews = arrangedSubviews
+    removedSubviews.forEach {
+      removeArrangedSubview($0)
+      $0.removeFromSuperview()
+    }
   }
 }

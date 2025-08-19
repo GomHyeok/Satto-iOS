@@ -12,16 +12,10 @@ import DesignSystem
 import Foundation
 import UIKit
 
-public protocol EditProfileViewControllerProtocol {
-  func showToast()
-}
-
 final class EditProfileViewController: BaseViewController {
 
   private var store: Set<AnyCancellable> = []
   private let viewModel: EditProfileViewModel
-
-  var delegate: EditProfileViewControllerProtocol?
 
   private lazy var scrollView: UIScrollView = UIScrollView().then {
     $0.showsHorizontalScrollIndicator = false
@@ -174,6 +168,7 @@ final class EditProfileViewController: BaseViewController {
     setupUI()
     setupBind()
     setDelegate()
+    setupDismissKeyboardGesture()
     viewModel.send(input: .viewDidLoad)
   }
 }
@@ -331,9 +326,13 @@ extension EditProfileViewController {
             nameTextField.layer.borderColor = STColors.red3.color.cgColor
           }
         } else {
+          if nameTextField.isFirstResponder {
+            nameTextField.layer.borderColor = STColors.primary2.color.cgColor
+          } else {
+            nameTextField.layer.borderColor = STColors.gray7.color.cgColor
+          }
           if nameStack.arrangedSubviews.contains(nameErrorLabel) {
             nameStack.removeArrangedSubview(nameErrorLabel)
-            nameTextField.layer.borderColor = STColors.primary2.color.cgColor
             nameErrorLabel.removeFromSuperview()
           }
         }
@@ -353,8 +352,11 @@ extension EditProfileViewController {
             birthStack.setCustomSpacing(6, after: birthTextField)
           }
         } else {
-          birthTextField.layer.borderColor = STColors.gray7.color.cgColor
-          birthTextField.resignFirstResponder()
+          if birthTextField.isFirstResponder {
+            birthTextField.layer.borderColor = STColors.primary7.color.cgColor
+          } else {
+            birthTextField.layer.borderColor = STColors.gray7.color.cgColor
+          }
           if birthStack.arrangedSubviews.contains(birthdayErrorLabel) {
             birthStack.removeArrangedSubview(birthdayErrorLabel)
             birthdayErrorLabel.removeFromSuperview()
@@ -370,17 +372,6 @@ extension EditProfileViewController {
       .sink { [weak self] time in
         guard let self else { return }
         self.bornTimeSetButton.selectedItem = time
-      }
-      .store(in: &store)
-
-    viewModel.output.navigate
-      .receive(on: RunLoop.main)
-      .sink { [weak self] route in
-        guard let self else { return }
-        guard let delegate else { return }
-        if route == .popWithToast {
-          delegate.showToast()
-        }
       }
       .store(in: &store)
 
@@ -503,11 +494,19 @@ extension EditProfileViewController: GenderSelectionViewDelegate {
 
 extension EditProfileViewController: UITextFieldDelegate {
   public func textFieldDidBeginEditing(_ textField: UITextField) {
-    textField.layer.borderColor = STColors.primary2.color.cgColor
+    if textField === nameTextField {
+      viewModel.send(input: .checkNameFormat(name: textField.text ?? ""))
+    } else if textField === birthTextField {
+      viewModel.send(input: .checkBirthFormat(birth: textField.text ?? ""))
+    }
   }
 
   public func textFieldDidEndEditing(_ textField: UITextField) {
-    textField.layer.borderColor = STColors.gray7.color.cgColor
+    if textField === nameTextField {
+      viewModel.send(input: .checkNameFormat(name: textField.text ?? ""))
+    } else if textField === birthTextField {
+      viewModel.send(input: .checkBirthFormat(birth: textField.text ?? ""))
+    }
   }
 
   public func textField(
@@ -569,4 +568,17 @@ extension EditProfileViewController: UITextFieldDelegate {
 
     return true
   }
+  
+  private func setupDismissKeyboardGesture() {
+      let tapGesture = UITapGestureRecognizer(
+        target: self,
+        action: #selector(dismissKeyboard)
+      )
+      tapGesture.cancelsTouchesInView = false
+      view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+      view.endEditing(true)
+    }
 }

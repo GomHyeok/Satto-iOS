@@ -31,15 +31,15 @@ enum FiveElements {
   var kor: String {
     switch self {
     case .wood:
-      return "목(木)"
+      return "목"
     case .fire:
-      return "화(火)"
+      return "화"
     case .earth:
-      return "토(土)"
+      return "토"
     case .metal:
-      return "금(金)"
+      return "금"
     case .water:
-      return "수(水)"
+      return "수"
     case .null:
       return "-"
     }

@@ -38,13 +38,7 @@ public final class SettingRouter: Routable {
       {
         timePickerVC.delegate = delegate
       }
-    } else if settingRoute == .editProfile {
-      if let editProfileVC = viewController as? EditProfileViewController,
-        let delegate = data["delegate"] as? EditProfileViewControllerProtocol
-      {
-        editProfileVC.delegate = delegate
-      }
-    }
+    } 
     manageViewController(viewController, how: how)
   }
 }

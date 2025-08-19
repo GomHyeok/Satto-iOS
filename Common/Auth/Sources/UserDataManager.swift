@@ -9,6 +9,7 @@ import Base
 import DIInjector
 import Foundation
 import NetworkCore
+import Combine
 
 public final class UserDataManager {
 
@@ -17,6 +18,7 @@ public final class UserDataManager {
   @Injected private var networkProvider: NetworkProvider
   public var user: UserDTO?
   public var userID: String { user?.id ?? deviceUUIDManager.deviceUUID }
+  private let userPublisher: PassthroughSubject<Void, Never> = .init()
 
   @discardableResult
   public func fetch() async throws -> UserDTO {
@@ -58,9 +60,15 @@ public final class UserDataManager {
     do {
       let user = try await networkProvider.request(target: target)
       self.user = user
+      userPublisher.send(())
       return user
     } catch {
       throw error
     }
+  }
+  
+  public func getPublisher() -> AnyPublisher<Void, Never> {
+    userPublisher
+      .eraseToAnyPublisher()
   }
 }

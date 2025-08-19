@@ -8,6 +8,7 @@
 import Combine
 import DIInjector
 import Foundation
+import Auth
 
 protocol HomeCellModel {}
 
@@ -25,24 +26,25 @@ public final class HomeViewModel {
 
   @Injected var homeService: HomeService
   @Injected var homeRouter: HomeRouter
+  @Injected var userDataManager: UserDataManager
+  
   let output: Output = Output()
+  private var cancellables = Set<AnyCancellable>()
 
-  public init() {}
+  public init() {
+    userDataManager
+      .getPublisher()
+      .sink { [weak self] _ in
+        guard let self = self else { return }
+        fetchUser()
+      }
+      .store(in: &cancellables)
+  }
 
   func send(input: Input) {
     switch input {
     case .viewDidLoad:
-      output.isLoading.send(true)
-      Task {
-        do {
-          let sections = try await homeService.fetch()
-          output.sections.send(sections)
-        } catch {
-          // TODO: 에러 처리
-          print(error)
-        }
-        output.isLoading.send(false)
-      }
+      fetchUser()
 
     case .recommendationButtonTapped(let state):
       switch state {
@@ -68,5 +70,23 @@ public final class HomeViewModel {
         }
       }
     }
+    
+  }
+  
+}
+
+extension HomeViewModel {
+  func fetchUser() {
+      output.isLoading.send(true)
+      Task {
+        do {
+          let sections = try await homeService.fetch()
+          output.sections.send(sections)
+        } catch {
+          // TODO: 에러 처리
+          print(error)
+        }
+        output.isLoading.send(false)
+      }
   }
 }

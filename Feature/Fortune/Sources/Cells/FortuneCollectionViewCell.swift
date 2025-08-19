@@ -72,6 +72,7 @@ final class FortuneCollectionViewCell: BaseCollectionViewCell {
     dayInfoLabel.snp.makeConstraints { make in
       make.top.equalToSuperview()
       make.centerX.equalToSuperview()
+      make.height.equalTo(28)
     }
 
     contentStackView.snp.makeConstraints { make in

@@ -190,6 +190,7 @@ public final class OnboardingViewController: BaseViewController {
     setupLayout()
     setupDelegate()
     setupKeyboardObservers()
+    setupDismissKeyboardGesture()
   }
 
   override public func viewWillDisappear(_ animated: Bool) {
@@ -262,9 +263,13 @@ extension OnboardingViewController {
             nameTextField.layer.borderColor = STColors.red3.color.cgColor
           }
         } else {
+          if nameTextField.isFirstResponder {
+            nameTextField.layer.borderColor = STColors.primary2.color.cgColor
+          } else {
+            nameTextField.layer.borderColor = STColors.gray7.color.cgColor
+          }
           if nameStack.arrangedSubviews.contains(nameErrorLabel) {
             nameStack.removeArrangedSubview(nameErrorLabel)
-            nameTextField.layer.borderColor = STColors.primary2.color.cgColor
             nameErrorLabel.removeFromSuperview()
           }
         }
@@ -284,9 +289,10 @@ extension OnboardingViewController {
             birthStack.setCustomSpacing(6, after: birthTextField)
           }
         } else {
-          birthTextField.resignFirstResponder()
-          if !onBoardingStack.contains(bornTimeStack) {
+          if !onBoardingStack.contains(bornTimeStack) && birthTextField.text?.count == 10 {
+            birthTextField.resignFirstResponder()
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+              
               self.onBoardingStack.insertArrangedSubview(self.bornTimeStack, at: 0)
 
               self.bornTimeStack.snp.makeConstraints {
@@ -296,6 +302,11 @@ extension OnboardingViewController {
               self.bornTimeStack.alpha = 1.0
               self.onBoardingStack.layoutIfNeeded()
             }
+          }
+          if birthTextField.isFirstResponder {
+            birthTextField.layer.borderColor = STColors.primary7.color.cgColor
+          } else {
+            birthTextField.layer.borderColor = STColors.gray7.color.cgColor
           }
           if birthStack.arrangedSubviews.contains(birthdayErrorLabel) {
             birthStack.removeArrangedSubview(birthdayErrorLabel)
@@ -470,11 +481,19 @@ extension OnboardingViewController {
 extension OnboardingViewController: UITextFieldDelegate {
 
   public func textFieldDidBeginEditing(_ textField: UITextField) {
-    textField.layer.borderColor = STColors.primary2.color.cgColor
+    if textField === nameTextField {
+      viewModel.send(input: .checkNameFormat(name: textField.text ?? ""))
+    } else if textField === birthTextField {
+      viewModel.send(input: .checkBirthFormat(birth: textField.text ?? ""))
+    }
   }
 
   public func textFieldDidEndEditing(_ textField: UITextField) {
-    textField.layer.borderColor = STColors.gray7.color.cgColor
+    if textField === nameTextField {
+      viewModel.send(input: .checkNameFormat(name: textField.text ?? ""))
+    } else if textField === birthTextField {
+      viewModel.send(input: .checkBirthFormat(birth: textField.text ?? ""))
+    }
   }
 
   public func textField(
@@ -534,7 +553,7 @@ extension OnboardingViewController: UITextFieldDelegate {
 
       textField.resignFirstResponder()
 
-      if !onBoardingStack.arrangedSubviews.contains(genderStack) {
+      if !onBoardingStack.arrangedSubviews.contains(genderStack) && nameTextField.text!.count < 7 {
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
           self.onBoardingStack.insertArrangedSubview(self.genderStack, at: 0)
           self.genderStack.alpha = 1.0
@@ -545,6 +564,19 @@ extension OnboardingViewController: UITextFieldDelegate {
 
     return true
   }
+  
+  private func setupDismissKeyboardGesture() {
+      let tapGesture = UITapGestureRecognizer(
+        target: self,
+        action: #selector(dismissKeyboard)
+      )
+      tapGesture.cancelsTouchesInView = false
+      view.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func dismissKeyboard() {
+      view.endEditing(true)
+    }
 }
 
 // MARK: radioButtonDelegate

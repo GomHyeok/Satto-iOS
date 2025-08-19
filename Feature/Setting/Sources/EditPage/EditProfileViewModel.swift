@@ -109,7 +109,6 @@ final class EditProfileViewModel {
               name: userDTO.name, birthDate: userDTO.birthDate!, birthTime: userDTO.birthTime,
               gender: userDTO.gender)
             await MainActor.run {
-              self.output.navigate.send(.popWithToast)
               self.router.navigate(to: SettingRoute.myPage, how: .pop, with: [:])
             }
           } catch {

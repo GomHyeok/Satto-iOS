@@ -107,7 +107,7 @@ extension FortuneViewController {
         spacing = 32
       case .thumbnail:
         itemHeight = .fractionalHeight(1.0)
-        groupHeight = .estimated(518)
+        groupHeight = .estimated(525)
         spacing = 32
       case .moreInfo:
         itemHeight = .fractionalHeight(1.0)
@@ -145,16 +145,14 @@ extension FortuneViewController {
 // MARK: SetupFunc
 extension FortuneViewController {
   private func setupHierarchy() {
-
-  }
-
-  private func setupUI() {
-    self.view.backgroundColor = STColors.primary9.color
-
     self.view.addSubview(separteLine)
     self.view.addSubview(backgroundView)
     self.view.addSubview(ellips)
     self.view.addSubview(collectionView)
+  }
+
+  private func setupUI() {
+    self.view.backgroundColor = STColors.primary9.color
 
     ellips.snp.makeConstraints { make in
       make.top.trailing.equalToSuperview()
@@ -185,6 +183,18 @@ extension FortuneViewController {
       .sink { [weak self] _ in
         guard let self else { return }
         self.collectionView.reloadData()
+      }
+      .store(in: &store)
+    
+    viewModel.output.isLoading
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] isLoading in
+        guard let self else { return }
+        if isLoading {
+          self.showLoading()
+        } else {
+          self.hideLoading()
+        }
       }
       .store(in: &store)
   }

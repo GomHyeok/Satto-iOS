@@ -47,10 +47,10 @@ extension LaunchScreenViewController {
 
   private func setupLayout() {
     launchImageView.snp.makeConstraints {
-      $0.leading.equalToSuperview().offset(109.67)
-      $0.top.equalToSuperview().offset(383.65)
-      $0.bottom.equalToSuperview().offset(-384.26)
-      $0.trailing.equalToSuperview().offset(-109)
+      $0.centerX.equalToSuperview()
+      $0.centerY.equalToSuperview()
+      $0.width.equalTo(152)
+      $0.height.equalTo(43)
     }
   }
 
