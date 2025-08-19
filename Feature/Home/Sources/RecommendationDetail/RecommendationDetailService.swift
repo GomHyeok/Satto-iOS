@@ -58,7 +58,7 @@ struct RecommendationDetailService {
           content.num4,
           content.num5,
           content.num6,
-        ]
+        ].sorted()
       ),
       AIAnalysisResultCollectionViewCellModel(
         description: content.reason,

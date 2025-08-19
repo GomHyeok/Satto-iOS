@@ -16,7 +16,7 @@ import UIKit
 enum MyPageSection {
   case profile(MyProfileInfoCollectionViewCellModel)
   case feedback(SendFeedbackCollectionViewCellModel)
-  case menu([MyPageMenuCollectionViewCellModel])
+  case menu([MyPageMenu])
 }
 
 public final class MyPageViewController: BaseViewController {
@@ -59,13 +59,9 @@ public final class MyPageViewController: BaseViewController {
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-
-  public override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-
-  }
-
+  
   private func setupUI() {
+    title = "마이"
     view.backgroundColor = STColors.primary9.color
 
     view.addSubview(collectionView)
@@ -81,8 +77,16 @@ public final class MyPageViewController: BaseViewController {
         self?.collectionView.reloadData()
       }
       .store(in: &cancellables)
+    
+    viewModel.output.showWebView
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] url in
+        let safariViewController = SFSafariViewController(url: url)
+        self?.present(safariViewController, animated: true)
+      }
+      .store(in: &cancellables)
 
-    viewModel.output.showToadt
+    viewModel.output.showToast
       .receive(on: DispatchQueue.main)
       .sink { [weak self] in
         guard let self else { return }
@@ -227,7 +231,7 @@ extension MyPageViewController: UICollectionViewDataSource {
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: MyPageMenuCollectionViewCell.typeName, for: indexPath)
       if let cell = cell as? MyPageMenuCollectionViewCell {
-        let model = models[indexPath.item]
+        let model = models[indexPath.item].item
         cell.update(with: model)
       }
       return cell
@@ -258,6 +262,7 @@ extension MyPageViewController: UICollectionViewDelegateFlowLayout {
   import Auth
   import DIInjector
   import NetworkCore
+import SafariServices
 
   @available(iOS 17.0, *)
   #Preview {

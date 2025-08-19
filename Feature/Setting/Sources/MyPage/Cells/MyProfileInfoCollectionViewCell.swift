@@ -14,9 +14,8 @@ import UIKit
 
 struct MyProfileInfoCollectionViewCellModel {
   let nickname: String
-  // let profileImageURL: URL?
-  let gender: String  // TODO: 데이터 타입 확인 필요
-  let birthDate: String  // TODO: 데이터 타입 확인 필요
+  let gender: String
+  let birthDate: String
   let birthTime: String
 }
 
@@ -30,6 +29,8 @@ final class MyProfileInfoCollectionViewCell: BaseCollectionViewCell {
   private lazy var profileImageView = UIImageView().then {
     $0.layer.cornerRadius = 44
     $0.clipsToBounds = true
+    $0.contentMode = .scaleAspectFit
+    $0.image = STImages.imageProfile.image
   }
   private lazy var nicknameStackView = UIStackView().then {
     $0.axis = .horizontal
@@ -61,7 +62,6 @@ final class MyProfileInfoCollectionViewCell: BaseCollectionViewCell {
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
-    profileImageView.backgroundColor = .gray  // TODO: 임시
   }
 
   required init?(coder: NSCoder) {

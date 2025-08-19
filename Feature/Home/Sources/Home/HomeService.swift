@@ -33,14 +33,16 @@ struct HomeService {
       if let recommendationContent = lottoRecommendation.content {
         HomeRecommendationCollectionViewCellModel(
           title: "\(name)님을 위한 로또 번호 추천",
-          state: .recommended(numbers: [
-            recommendationContent.num1,
-            recommendationContent.num2,
-            recommendationContent.num3,
-            recommendationContent.num4,
-            recommendationContent.num5,
-            recommendationContent.num6,
-          ])  // TODO: 결과 확인 여부 추가 예정
+          state: .recommended( // TODO: 서버 - 결과 확인 여부 추가 예정
+            numbers: [
+              recommendationContent.num1,
+              recommendationContent.num2,
+              recommendationContent.num3,
+              recommendationContent.num4,
+              recommendationContent.num5,
+              recommendationContent.num6,
+            ].sorted()
+          )
         )
       } else {
         HomeRecommendationCollectionViewCellModel(

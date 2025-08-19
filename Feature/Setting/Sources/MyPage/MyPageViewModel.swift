@@ -5,10 +5,12 @@
 //  Created by ttozzi on 7/29/25.
 //
 
+import Base
 import Combine
 import DIInjector
 import Foundation
 import Lib
+import UIKit
 
 public final class MyPageViewModel {
 
@@ -16,12 +18,13 @@ public final class MyPageViewModel {
     case viewDidLoad
     case editButtonTapped
     case feedBackButtonTapped
-    case menuTapped(item: MyPageMenuCollectionViewCellModel)
+    case menuTapped(item: MyPageMenu)
   }
 
   struct Output {
     let sections = CurrentValueSubject<[MyPageSection], Never>([])
-    let showToadt: PassthroughSubject<Void, Never> = .init()
+    let showToast = PassthroughSubject<Void, Never>()
+    let showWebView = PassthroughSubject<URL, Never>()
   }
 
   @Injected private var myPageService: MyPageService
@@ -53,12 +56,27 @@ public final class MyPageViewModel {
           with: ["delegate": self])
       }
     case .feedBackButtonTapped:
-      // TODO: 피드백 전송 링크
-      break
+      if let url = URL(string: ExternalLinks.feedbackChannel.rawValue) {
+          UIApplication.shared.open(url, options: [:], completionHandler: nil)
+      }
 
-    case .menuTapped(let item):
-      // TODO: menu 핸들링
-      break
+    case .menuTapped(let menu):
+      switch menu {
+      case .termsOfService:
+        let urlString = ExternalLinks.terms.rawValue
+        if let url = URL(string: urlString) {
+          output.showWebView.send(url)
+        }
+        
+      case .privacyPolicy:
+        let urlString = ExternalLinks.infoProvision.rawValue
+        if let url = URL(string: urlString) {
+          output.showWebView.send(url)
+        }
+        
+      case .appVersion:
+        break
+      }
     }
   }
 }
@@ -66,6 +84,6 @@ public final class MyPageViewModel {
 extension MyPageViewModel: EditProfileViewControllerProtocol {
   public func showToast() {
     self.send(input: .viewDidLoad)
-    self.output.showToadt.send(())
+    self.output.showToast.send(())
   }
 }

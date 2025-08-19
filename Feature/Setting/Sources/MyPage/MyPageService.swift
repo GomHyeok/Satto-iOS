@@ -38,23 +38,39 @@ struct MyPageService {
         MyProfileInfoCollectionViewCellModel(
           nickname: userData.name,
           gender: gender,
-          birthDate: birthDate,  // TODO: 서버 데이터 양식 확인 필요
-          birthTime: birthTime  // TODO: 서버 데이터 양식 확인 필요
+          birthDate: birthDate,
+          birthTime: birthTime
         )
       ),
       .feedback(
         SendFeedbackCollectionViewCellModel(
-          description: "더 나은 서비스를 위해,\n여러분의 목소리를 들려주세요",
+          description: "더 나은 서비스를 위하여,\n그대의 목소리를 들려주시게",
           feedbackButtonTitle: "의견 보내기"
         )
       ),
       .menu([
-        MyPageMenuCollectionViewCellModel(
-          style: .icon(STImages.chevronRightS.image), title: "이용약관"),
-        MyPageMenuCollectionViewCellModel(
-          style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침"),
-        MyPageMenuCollectionViewCellModel(style: .text(appVersion ?? "1.0.0"), title: "앱 버전"),
+        .termsOfService(MyPageMenuCollectionViewCellModel(
+          style: .icon(STImages.chevronRightS.image), title: "이용약관")),
+        .privacyPolicy(MyPageMenuCollectionViewCellModel(
+          style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침")),
+        .appVersion(MyPageMenuCollectionViewCellModel(style: .text(appVersion ?? "1.0.0"), title: "앱 버전")),
       ]),
     ]
+  }
+}
+
+enum MyPageMenu {
+  
+  case termsOfService(MyPageMenuCollectionViewCellModel)
+  case privacyPolicy(MyPageMenuCollectionViewCellModel)
+  case appVersion(MyPageMenuCollectionViewCellModel)
+  
+  var item: MyPageMenuCollectionViewCellModel {
+    switch self {
+    case .termsOfService(let myPageMenuCollectionViewCellModel),
+        .privacyPolicy(let myPageMenuCollectionViewCellModel),
+        .appVersion(let myPageMenuCollectionViewCellModel):
+      return myPageMenuCollectionViewCellModel
+    }
   }
 }

@@ -5,6 +5,7 @@
 //  Created by 최재혁 on 8/19/25.
 //
 
+import Base
 import Combine
 import SafariServices
 
@@ -24,11 +25,11 @@ final class AgreementViewModel {
   func send(input: Input) {
     switch input {
     case .acceptTermTapped:
-      let url = NSURL(string: NotionLinke.terms.rawValue)
+      let url = NSURL(string: ExternalLinks.terms.rawValue)
       let termSafariView: SFSafariViewController = SFSafariViewController(url: url! as URL)
       output.presentSafariViewController.send(termSafariView)
     case .acceptInfoProvisionTapped:
-      let url = NSURL(string: NotionLinke.infoProvision.rawValue)
+      let url = NSURL(string: ExternalLinks.infoProvision.rawValue)
       let infoProvisionSafariView: SFSafariViewController = SFSafariViewController(url: url! as URL)
       output.presentSafariViewController.send(infoProvisionSafariView)
     }

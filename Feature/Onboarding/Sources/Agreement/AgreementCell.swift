@@ -24,7 +24,7 @@ public final class AgreementCell: UICollectionViewCell {
   }
 
   public private(set) lazy var detailButton: UIButton = UIButton().then {
-    $0.setImage(STImages.line.image, for: .normal)
+    $0.setImage(STImages.chevronRightS.image, for: .normal)
     $0.tintColor = STColors.gray5.color
   }
 
