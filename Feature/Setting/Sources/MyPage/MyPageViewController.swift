@@ -9,10 +9,10 @@ import Base
 import Combine
 import DesignSystem
 import Extension
+import SafariServices
 import SnapKit
 import Then
 import UIKit
-import SafariServices
 
 enum MyPageSection {
   case profile(MyProfileInfoCollectionViewCellModel)
