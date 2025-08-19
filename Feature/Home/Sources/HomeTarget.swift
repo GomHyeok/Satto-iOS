@@ -43,7 +43,7 @@ enum HomeTarget {
     var headers: [String: String]? { nil }
     let userID: String
   }
-  
+
   struct CheckLottoResult: BaseTargetType {
 
     typealias Response = LottoResultDTO

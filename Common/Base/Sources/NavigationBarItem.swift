@@ -13,7 +13,7 @@ public protocol NavigationBarItem: UIView {
 }
 
 extension NavigationBarItem {
-  public func updateColor(_ color: UIColor) { }
+  public func updateColor(_ color: UIColor) {}
 }
 
 public final class NaivgationBarButtonItem: UIButton, NavigationBarItem {
@@ -31,7 +31,7 @@ public final class NaivgationBarButtonItem: UIButton, NavigationBarItem {
       make.size.equalTo(24)
     }
   }
-  
+
   public func updateColor(_ color: UIColor) {
     let image = image(for: .normal)?.withTintColor(color, renderingMode: .alwaysOriginal)
     setImage(image, for: .normal)

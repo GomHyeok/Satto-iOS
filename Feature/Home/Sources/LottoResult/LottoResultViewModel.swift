@@ -29,7 +29,7 @@ final class LottoResultViewModel {
   @Injected var lottoResultService: LottoResultService
   let output = Output()
   private let round: Int
-  
+
   init(round: Int) {
     self.round = round
   }

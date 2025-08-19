@@ -70,7 +70,7 @@ public final class NavigationBar: UIView {
         $0.updateColor(color)
       }
   }
-  
+
   private func setupUI(with style: Style, height: CGFloat) {
     addSubview(contentStackView)
     contentStackView.snp.makeConstraints { make in

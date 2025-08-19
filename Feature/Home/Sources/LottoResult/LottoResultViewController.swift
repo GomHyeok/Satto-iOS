@@ -113,7 +113,7 @@ final class LottoResultViewController: BaseViewController {
         self?.viewModel.send(input: .goToMainButtonTapped)
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.updateResultInfo
       .compactMap(\.self)
       .receive(on: DispatchQueue.main)
@@ -121,7 +121,7 @@ final class LottoResultViewController: BaseViewController {
         self?.infoView.update(with: model)
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.updateSattoMessage
       .compactMap(\.self)
       .receive(on: DispatchQueue.main)
@@ -129,7 +129,7 @@ final class LottoResultViewController: BaseViewController {
         self?.sattoMessageView.update(with: model)
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.updateResultNumber
       .compactMap(\.self)
       .receive(on: DispatchQueue.main)

@@ -8,7 +8,7 @@
 import Foundation
 
 struct LottoResultDTO: Decodable {
-  
+
   enum CodingKeys: String, CodingKey {
     case round
     case drawNumbers = "draw_numbers"
@@ -17,7 +17,7 @@ struct LottoResultDTO: Decodable {
     case rank
     case prizeAmount = "prize_amount"
   }
-  
+
   let round: Int
   let drawNumbers: [Int]
   let bonusNumber: Int

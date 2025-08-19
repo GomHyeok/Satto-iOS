@@ -33,7 +33,7 @@ final class HomeRouter: Routable {
       },
       .lottoResult: { data in
         guard let round = data["round"] as? Int else {
-          fatalError() // TODO: 안전하게 처리할 방법이 필요함
+          fatalError()  // TODO: 안전하게 처리할 방법이 필요함
         }
         return LottoResultViewController(viewModel: LottoResultViewModel(round: round))
       },

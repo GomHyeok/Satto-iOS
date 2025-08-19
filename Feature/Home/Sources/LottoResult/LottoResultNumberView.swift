@@ -7,8 +7,8 @@
 
 import Base
 import DesignSystem
-import UIKit
 import SwiftRichString
+import UIKit
 
 struct LottoResultNumberModel {
   let rankText: String?
@@ -18,12 +18,12 @@ struct LottoResultNumberModel {
 }
 
 final class LottoResultNumberView: UIView {
-  
+
   private lazy var resultStackView = UIStackView().then {
     $0.axis = .vertical
     $0.spacing = 20
   }
-  
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupUI()
@@ -32,7 +32,7 @@ final class LottoResultNumberView: UIView {
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-  
+
   func update(with model: LottoResultNumberModel) {
     resultStackView.arrangedSubviews.forEach {
       $0.removeFromSuperview()
@@ -42,7 +42,7 @@ final class LottoResultNumberView: UIView {
       bonusNumber: model.bonusNumber
     )
     resultStackView.addArrangedSubview(winningNumbersView)
-    
+
     let resultView = makeResultView(
       rankText: model.rankText,
       recommendedNumbers: model.recommendedNumbers,
@@ -57,7 +57,7 @@ final class LottoResultNumberView: UIView {
       make.edges.equalToSuperview()
     }
   }
-  
+
   private func makeContainerStackView() -> UIStackView {
     return UIStackView().then {
       $0.axis = .horizontal
@@ -70,7 +70,7 @@ final class LottoResultNumberView: UIView {
       $0.clipsToBounds = true
     }
   }
-  
+
   private func makeWinningNumbersView(numbers: [Int], bonusNumber: Int) -> UIView {
     let stackView = makeContainerStackView()
     numbers.forEach { number in
@@ -104,7 +104,7 @@ final class LottoResultNumberView: UIView {
     winningNumbers: [Int]
   ) -> UIView {
     let stackView = makeContainerStackView()
-    
+
     let rankView = UIView().then {
       $0.backgroundColor = STColors.primary2.color
       $0.layer.cornerRadius = 16
