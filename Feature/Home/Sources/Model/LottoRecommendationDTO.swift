@@ -13,11 +13,13 @@ struct LottoRecommendationDTO: Decodable {
     case userId = "user_id"
     case round
     case content
+    case isFinished = "is_finished"
   }
 
   let userId: String
   let round: Int
   let content: Content?
+  let isFinished: Bool
 
   struct Content: Codable {
 

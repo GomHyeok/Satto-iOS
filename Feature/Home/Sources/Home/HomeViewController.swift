@@ -65,6 +65,17 @@ public final class HomeViewController: BaseViewController {
   }
 
   private func setupBinding() {
+    viewModel.output.isLoading
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] isLoading in
+        if isLoading {
+          self?.showLoading()
+        } else {
+          self?.hideLoading()
+        }
+      }
+      .store(in: &cancellables)
+    
     viewModel.output.sections
       .receive(on: DispatchQueue.main)
       .sink { [weak self] _ in

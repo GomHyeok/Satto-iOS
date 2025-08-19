@@ -29,27 +29,28 @@ struct HomeService {
     let (lottoRecommendation, dailyFortunes) = try await (
       lottoRecommendationRequest, dailyFortunesRequest
     )
-    let recommendationCollectionViewCellModel =
-      if let recommendationContent = lottoRecommendation.content {
-        HomeRecommendationCollectionViewCellModel(
-          title: "\(name)님을 위한 로또 번호 추천",
-          state: .recommended(  // TODO: 서버 - 결과 확인 여부 추가 예정
-            numbers: [
-              recommendationContent.num1,
-              recommendationContent.num2,
-              recommendationContent.num3,
-              recommendationContent.num4,
-              recommendationContent.num5,
-              recommendationContent.num6,
-            ].sorted()
-          )
-        )
-      } else {
-        HomeRecommendationCollectionViewCellModel(
-          title: "\(name)님을 위한 로또 번호 추천",
-          state: .needsRecommendation
-        )
-      }
+    
+    let recommendationCollectionViewCellModel: HomeRecommendationCollectionViewCellModel
+    if let recommendationContent = lottoRecommendation.content {
+      let numbers = [
+        recommendationContent.num1,
+        recommendationContent.num2,
+        recommendationContent.num3,
+        recommendationContent.num4,
+        recommendationContent.num5,
+        recommendationContent.num6,
+      ].sorted()
+      recommendationCollectionViewCellModel = HomeRecommendationCollectionViewCellModel(
+        title: "\(name)님을 위한 로또 번호 추천",
+        state: lottoRecommendation.isFinished ? .needsResultCheck(numbers: numbers) : .recommended(numbers: numbers)
+      )
+    } else {
+      recommendationCollectionViewCellModel = HomeRecommendationCollectionViewCellModel(
+        title: "\(name)님을 위한 로또 번호 추천",
+        state: .needsRecommendation
+      )
+    }
+    
     let homeTodayFortuneCollectionViewCellModels = dailyFortunes.content.map { item in
       FortuneItemCollectionViewCellModel(
         title: item.fortuneType,

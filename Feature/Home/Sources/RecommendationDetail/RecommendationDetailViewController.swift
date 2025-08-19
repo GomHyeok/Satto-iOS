@@ -170,6 +170,7 @@ final class RecommendationDetailViewController: BaseViewController {
           self?.loadingView.play()
           self?.title = nil
         } else {
+          self?.collectionView.setContentOffset(.zero, animated: false)
           UIView.animate(
             withDuration: 0.25,
             animations: {

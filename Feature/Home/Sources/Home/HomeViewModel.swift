@@ -19,6 +19,7 @@ public final class HomeViewModel {
   }
 
   struct Output {
+    let isLoading = CurrentValueSubject<Bool, Never>(false)
     let sections = CurrentValueSubject<[any HomeCellModel], Never>([])
   }
 
@@ -31,6 +32,7 @@ public final class HomeViewModel {
   func send(input: Input) {
     switch input {
     case .viewDidLoad:
+      output.isLoading.send(true)
       Task {
         do {
           let sections = try await homeService.fetch()
@@ -39,6 +41,7 @@ public final class HomeViewModel {
           // TODO: 에러 처리
           print(error)
         }
+        output.isLoading.send(false)
       }
 
     case .recommendationButtonTapped(let state):

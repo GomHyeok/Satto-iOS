@@ -13,9 +13,13 @@ import UIKit
 
 struct NumberRecommendationCollectionViewCellModel: RecommendationDetailCellModel {
   let roundText: String
+  let isFinished: Bool
   let title: String
   let numbers: [Int]
-  var secondsUntilResult: Int {  // TODO: 기기 시간 설정을 바꾼 경우, 오후 8시 35분이 지났으나 서버에서 결과 조회가 준비되지 않은 경우 논의 필요
+  var secondsUntilResult: Int {  // TODO: 기기 시간 설정을 바꾼 케이스 논의 필요
+    if isFinished {
+      return .zero
+    }
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = .current
     calendar.locale = Locale(identifier: "ko_KR")
@@ -154,10 +158,7 @@ final class NumberRecommendationCollectionViewCell: BaseCollectionViewCell {
 
     countdownCancellable = Timer.publish(every: 1, on: .main, in: .common)
       .autoconnect()
-      .handleEvents(receiveSubscription: { [weak self] _ in
-        self?.timeUntilDrawLabel.styledText = self?.countdownText(
-          from: Int(target.timeIntervalSinceNow))
-      })
+      .prepend(target)
       .map { _ in
         return max(0, Int(target.timeIntervalSinceNow))
       }
@@ -219,6 +220,7 @@ final class NumberRecommendationCollectionViewCell: BaseCollectionViewCell {
 #Preview {
   let cellModel = NumberRecommendationCollectionViewCellModel(
     roundText: "1181회",
+    isFinished: false,
     title: "콩떡님을 위한 로또 번호 추천",
     numbers: [9, 11, 18, 24, 33, 42]
   )

@@ -240,7 +240,7 @@ extension AgreementViewController: AgreementCellDelegate {
   }
 }
 
-extension AgreementViewController: UIGestureRecognizerDelegate {
+extension AgreementViewController {
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch)
     -> Bool
   {

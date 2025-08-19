@@ -18,6 +18,15 @@ open class BaseViewController: UIViewController {
   open var navigationBarStyle: NavigationBar.Style { .text(alignment: .center) }
   public private(set) lazy var navigationBar = NavigationBar(
     style: navigationBarStyle, height: Constant.navigationBarHeight)
+  private lazy var interactionBlockerView = UIView().then {
+    $0.backgroundColor = .clear
+    $0.isHidden = true
+    $0.isUserInteractionEnabled = true
+  }
+  private lazy var activityIndicator = UIActivityIndicatorView(style: .large).then {
+    $0.hidesWhenStopped = true
+  }
+
   public override var title: String? {
     get { navigationBar.title }
     set { navigationBar.title = newValue }
@@ -29,12 +38,27 @@ open class BaseViewController: UIViewController {
     super.viewDidLoad()
     setupNavigationBar()
     setNavigationBarHidden(false)
+
+    view.addSubview(interactionBlockerView)
+    interactionBlockerView.snp.makeConstraints { make in
+      make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
+      make.leading.trailing.bottom.equalToSuperview()
+    }
+
+    view.addSubview(activityIndicator)
+    activityIndicator.snp.makeConstraints { make in
+      make.center.equalToSuperview()
+    }
   }
 
   open override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
     updateBottomSafeArea()
     view.bringSubviewToFront(navigationBar)
+    if interactionBlockerView.isHidden == false {
+      view.bringSubviewToFront(interactionBlockerView)
+      view.bringSubviewToFront(activityIndicator)
+    }
   }
 
   public func setNavigationBarHidden(_ isHidden: Bool) {
@@ -52,6 +76,7 @@ open class BaseViewController: UIViewController {
 
   private func setupNavigationBar() {
     navigationController?.setNavigationBarHidden(true, animated: false)
+    navigationController?.interactivePopGestureRecognizer?.delegate = self
     view.addSubview(navigationBar)
     navigationBar.snp.makeConstraints { make in
       make.bottom.equalTo(view.safeAreaLayoutGuide.snp.top)
@@ -67,5 +92,26 @@ open class BaseViewController: UIViewController {
       return
     }
     additionalSafeAreaInsets.bottom = TabBarView.Constant.tabBarHeight
+  }
+}
+
+extension BaseViewController: UIGestureRecognizerDelegate {
+  public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    return true
+  }
+}
+
+extension BaseViewController {
+  public func showLoading() {
+    interactionBlockerView.isHidden = false
+    view.bringSubviewToFront(interactionBlockerView)
+    view.bringSubviewToFront(activityIndicator)
+    activityIndicator.startAnimating()
+    view.bringSubviewToFront(navigationBar)
+  }
+  
+  public func hideLoading() {
+    interactionBlockerView.isHidden = true
+    activityIndicator.stopAnimating()
   }
 }

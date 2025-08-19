@@ -50,6 +50,7 @@ struct RecommendationDetailService {
     return [
       NumberRecommendationCollectionViewCellModel(
         roundText: "\(recommendation.round)회",
+        isFinished: recommendation.isFinished,
         title: title,
         numbers: [
           content.num1,
