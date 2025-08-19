@@ -185,7 +185,7 @@ extension FortuneViewController {
         self.collectionView.reloadData()
       }
       .store(in: &store)
-    
+
     viewModel.output.isLoading
       .receive(on: DispatchQueue.main)
       .sink { [weak self] isLoading in

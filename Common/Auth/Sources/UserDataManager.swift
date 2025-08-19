@@ -6,10 +6,10 @@
 //
 
 import Base
+import Combine
 import DIInjector
 import Foundation
 import NetworkCore
-import Combine
 
 public final class UserDataManager {
 
@@ -66,7 +66,7 @@ public final class UserDataManager {
       throw error
     }
   }
-  
+
   public func getPublisher() -> AnyPublisher<Void, Never> {
     userPublisher
       .eraseToAnyPublisher()

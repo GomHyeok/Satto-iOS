@@ -197,7 +197,7 @@ final class ThumbnailCollectionViewCell: BaseCollectionViewCell {
     juStackView.removeAllArrangedSubviews()
     jeStackView.removeAllArrangedSubviews()
     strengthStackView.removeAllArrangedSubviews()
-    
+
     nicknameLabel.styledText = cellModel.name
     birthDateLabel.styledText = cellModel.birthDate
     bornTimeLabel.styledText = cellModel.birthTime
@@ -408,7 +408,7 @@ extension ThumbnailCollectionViewCell {
 
     stackView.addArrangedSubview(typeLabel)
     stackView.addArrangedSubview(infoLabel)
-    
+
     infoLabel.snp.makeConstraints { make in
       make.height.equalTo(28)
     }

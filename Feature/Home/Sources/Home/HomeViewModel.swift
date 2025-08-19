@@ -5,10 +5,10 @@
 //  Created by ttozzi on 7/31/25.
 //
 
+import Auth
 import Combine
 import DIInjector
 import Foundation
-import Auth
 
 protocol HomeCellModel {}
 
@@ -27,7 +27,7 @@ public final class HomeViewModel {
   @Injected var homeService: HomeService
   @Injected var homeRouter: HomeRouter
   @Injected var userDataManager: UserDataManager
-  
+
   let output: Output = Output()
   private var cancellables = Set<AnyCancellable>()
 
@@ -70,23 +70,23 @@ public final class HomeViewModel {
         }
       }
     }
-    
+
   }
-  
+
 }
 
 extension HomeViewModel {
   func fetchUser() {
-      output.isLoading.send(true)
-      Task {
-        do {
-          let sections = try await homeService.fetch()
-          output.sections.send(sections)
-        } catch {
-          // TODO: 에러 처리
-          print(error)
-        }
-        output.isLoading.send(false)
+    output.isLoading.send(true)
+    Task {
+      do {
+        let sections = try await homeService.fetch()
+        output.sections.send(sections)
+      } catch {
+        // TODO: 에러 처리
+        print(error)
       }
+      output.isLoading.send(false)
+    }
   }
 }

@@ -5,13 +5,13 @@
 //  Created by ttozzi on 7/29/25.
 //
 
+import Auth
 import Base
 import Combine
 import DIInjector
 import Foundation
 import Lib
 import UIKit
-import Auth
 
 public final class MyPageViewModel {
 
@@ -37,13 +37,13 @@ public final class MyPageViewModel {
   private var cancellables = Set<AnyCancellable>()
 
   public init() {
-     userDataManager.getPublisher()
-       .sink { [weak self] _ in
-         guard let self else { return }
-         self.fetchUser()
-         self.output.showToast.send()
-       }
-       .store(in: &cancellables)
+    userDataManager.getPublisher()
+      .sink { [weak self] _ in
+        guard let self else { return }
+        self.fetchUser()
+        self.output.showToast.send()
+      }
+      .store(in: &cancellables)
   }
 
   func send(input: Input) {
@@ -56,7 +56,7 @@ public final class MyPageViewModel {
         guard let self else { return }
         self.router.navigate(
           to: SettingRoute.editProfile, how: .push(hidesBottomBarWhenPushed: true),
-          with: [: ])
+          with: [:])
       }
     case .feedBackButtonTapped:
       if let url = URL(string: ExternalLinks.feedbackChannel.rawValue) {

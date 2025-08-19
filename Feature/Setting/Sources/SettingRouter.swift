@@ -38,7 +38,7 @@ public final class SettingRouter: Routable {
       {
         timePickerVC.delegate = delegate
       }
-    } 
+    }
     manageViewController(viewController, how: how)
   }
 }

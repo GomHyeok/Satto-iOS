@@ -292,7 +292,7 @@ extension OnboardingViewController {
           if !onBoardingStack.contains(bornTimeStack) && birthTextField.text?.count == 10 {
             birthTextField.resignFirstResponder()
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
-              
+
               self.onBoardingStack.insertArrangedSubview(self.bornTimeStack, at: 0)
 
               self.bornTimeStack.snp.makeConstraints {
@@ -564,19 +564,19 @@ extension OnboardingViewController: UITextFieldDelegate {
 
     return true
   }
-  
-  private func setupDismissKeyboardGesture() {
-      let tapGesture = UITapGestureRecognizer(
-        target: self,
-        action: #selector(dismissKeyboard)
-      )
-      tapGesture.cancelsTouchesInView = false
-      view.addGestureRecognizer(tapGesture)
-    }
 
-    @objc private func dismissKeyboard() {
-      view.endEditing(true)
-    }
+  private func setupDismissKeyboardGesture() {
+    let tapGesture = UITapGestureRecognizer(
+      target: self,
+      action: #selector(dismissKeyboard)
+    )
+    tapGesture.cancelsTouchesInView = false
+    view.addGestureRecognizer(tapGesture)
+  }
+
+  @objc private func dismissKeyboard() {
+    view.endEditing(true)
+  }
 }
 
 // MARK: radioButtonDelegate

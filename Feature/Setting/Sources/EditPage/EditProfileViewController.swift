@@ -568,17 +568,17 @@ extension EditProfileViewController: UITextFieldDelegate {
 
     return true
   }
-  
-  private func setupDismissKeyboardGesture() {
-      let tapGesture = UITapGestureRecognizer(
-        target: self,
-        action: #selector(dismissKeyboard)
-      )
-      tapGesture.cancelsTouchesInView = false
-      view.addGestureRecognizer(tapGesture)
-    }
 
-    @objc private func dismissKeyboard() {
-      view.endEditing(true)
-    }
+  private func setupDismissKeyboardGesture() {
+    let tapGesture = UITapGestureRecognizer(
+      target: self,
+      action: #selector(dismissKeyboard)
+    )
+    tapGesture.cancelsTouchesInView = false
+    view.addGestureRecognizer(tapGesture)
+  }
+
+  @objc private func dismissKeyboard() {
+    view.endEditing(true)
+  }
 }

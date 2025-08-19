@@ -5,10 +5,10 @@
 //  Created by 최재혁 on 8/14/25.
 //
 
+import Auth
 import Combine
 import DIInjector
 import Foundation
-import Auth
 
 public final class FortuneViewModel {
   enum Input {
@@ -22,7 +22,7 @@ public final class FortuneViewModel {
 
   @Injected private var fortuneService: FortuneService
   @Injected private var userDataManager: UserDataManager
-  
+
   let output: Output = Output()
   private var cancellables = Set<AnyCancellable>()
 
