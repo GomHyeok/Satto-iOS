@@ -53,11 +53,6 @@ public final class HomeViewController: BaseViewController {
     viewModel.send(input: .viewDidLoad)
   }
 
-  public override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-
-  }
-
   private func setupUI() {
     setNavigationBarHidden(true)
 

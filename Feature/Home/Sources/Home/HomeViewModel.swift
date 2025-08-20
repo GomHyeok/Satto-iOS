@@ -9,6 +9,7 @@ import Auth
 import Combine
 import DIInjector
 import Foundation
+import Auth
 
 protocol HomeCellModel {}
 
@@ -70,9 +71,7 @@ public final class HomeViewModel {
         }
       }
     }
-
   }
-
 }
 
 extension HomeViewModel {

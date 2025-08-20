@@ -408,6 +408,10 @@ extension ThumbnailCollectionViewCell {
 
     stackView.addArrangedSubview(typeLabel)
     stackView.addArrangedSubview(infoLabel)
+    
+    infoLabel.snp.makeConstraints { make in
+      make.height.equalTo(28)
+    }
 
     infoLabel.snp.makeConstraints { make in
       make.height.equalTo(28)

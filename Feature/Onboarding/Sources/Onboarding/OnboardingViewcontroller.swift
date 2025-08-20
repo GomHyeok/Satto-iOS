@@ -292,7 +292,6 @@ extension OnboardingViewController {
           if !onBoardingStack.contains(bornTimeStack) && birthTextField.text?.count == 10 {
             birthTextField.resignFirstResponder()
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
-
               self.onBoardingStack.insertArrangedSubview(self.bornTimeStack, at: 0)
 
               self.bornTimeStack.snp.makeConstraints {
@@ -304,7 +303,7 @@ extension OnboardingViewController {
             }
           }
           if birthTextField.isFirstResponder {
-            birthTextField.layer.borderColor = STColors.primary7.color.cgColor
+            birthTextField.layer.borderColor = STColors.primary2.color.cgColor
           } else {
             birthTextField.layer.borderColor = STColors.gray7.color.cgColor
           }

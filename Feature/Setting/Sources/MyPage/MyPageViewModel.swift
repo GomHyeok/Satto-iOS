@@ -12,6 +12,7 @@ import DIInjector
 import Foundation
 import Lib
 import UIKit
+import Auth
 
 public final class MyPageViewModel {
 

@@ -10,6 +10,7 @@ import Combine
 import DIInjector
 import Foundation
 import NetworkCore
+import Combine
 
 public final class UserDataManager {
 
