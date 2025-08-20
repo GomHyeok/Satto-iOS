@@ -161,7 +161,7 @@ extension AgreementViewController {
   }
 
   @objc private func confirmButtonTapped() {
-    showLoading() // TODO: 나중에 정리 필요
+    showLoading()  // TODO: 나중에 정리 필요
     delegate?.agreementViewDidComplete()
   }
 
