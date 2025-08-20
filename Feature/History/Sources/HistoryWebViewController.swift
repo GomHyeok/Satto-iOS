@@ -63,7 +63,7 @@ extension HistoryWebViewController: WKNavigationDelegate {
     // TODO: 뷰모델로 분리
     hideLoading()
   }
-  
+
   public func webView(
     _ webView: WKWebView, didFail navigation: WKNavigation!, withError error: any Error
   ) {
@@ -82,7 +82,7 @@ extension HistoryWebViewController: WKNavigationDelegate {
     // TODO: 에러 처리
     print(error)
   }
-  
+
   public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
     // TODO: 뷰모델로 분리
     hideLoading()

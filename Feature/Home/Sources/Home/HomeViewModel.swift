@@ -81,8 +81,8 @@ public final class HomeViewModel {
   }
 }
 
-private extension HomeViewModel {
-  func fetch() {
+extension HomeViewModel {
+  fileprivate func fetch() {
     output.isLoading.send(true)
     Task {
       do {
@@ -95,8 +95,8 @@ private extension HomeViewModel {
       output.isLoading.send(false)
     }
   }
-  
-  func fetchRecommendation() {
+
+  fileprivate func fetchRecommendation() {
     output.isLoading.send(true)
     Task {
       do {

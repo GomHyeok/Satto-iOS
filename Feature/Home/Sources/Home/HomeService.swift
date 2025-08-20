@@ -45,14 +45,15 @@ final class HomeService {
       makeTodayFortune(dailyFortunes),
     ]
   }
-  
+
   func fetchLottoRecommendation() async throws -> [any HomeCellModel] {
     guard let cachedDailyFortunes else {
       return try await fetch()
     }
     let getLottoRecommendationTarget = HomeTarget.GetLottoRecommendation(
       userID: userDataManager.userID)
-    let lottoRecommendation = try await networkProvider.request(target: getLottoRecommendationTarget)
+    let lottoRecommendation = try await networkProvider.request(
+      target: getLottoRecommendationTarget)
     round = lottoRecommendation.round
     return [
       makeHeader(round: lottoRecommendation.round, message: cachedDailyFortunes.title),
@@ -60,15 +61,17 @@ final class HomeService {
       makeTodayFortune(cachedDailyFortunes),
     ]
   }
-  
+
   private func makeHeader(round: Int, message: String?) -> HomeHeaderCollectionViewCellModel {
     return HomeHeaderCollectionViewCellModel(
       roundText: "\(round)회",
       message: message ?? "잘 되면 꼭 기억해 주시오"
     )
   }
-  
-  private func makeRecommendation(_ lottoRecommendation: LottoRecommendationDTO) -> HomeRecommendationCollectionViewCellModel {
+
+  private func makeRecommendation(_ lottoRecommendation: LottoRecommendationDTO)
+    -> HomeRecommendationCollectionViewCellModel
+  {
     let name = self.userDataManager.user?.name ?? ""  // TODO: 확인 필요
     if let recommendationContent = lottoRecommendation.content {
       let numbers = [
@@ -81,8 +84,8 @@ final class HomeService {
       ].sorted()
       return HomeRecommendationCollectionViewCellModel(
         title: "\(name)님을 위한 로또 번호 추천",
-//        state: lottoRecommendation.isFinished
-//          ? .needsResultCheck(numbers: numbers) : .recommended(numbers: numbers)
+        //        state: lottoRecommendation.isFinished
+        //          ? .needsResultCheck(numbers: numbers) : .recommended(numbers: numbers)
         state: .needsResultCheck(numbers: numbers)
       )
     } else {
@@ -92,8 +95,10 @@ final class HomeService {
       )
     }
   }
-  
-  private func makeTodayFortune(_ dailyFortunes: DailyFortunesDTO) -> HomeTodayFortuneCollectionViewCellModel {
+
+  private func makeTodayFortune(_ dailyFortunes: DailyFortunesDTO)
+    -> HomeTodayFortuneCollectionViewCellModel
+  {
     let homeTodayFortuneCollectionViewCellModels = dailyFortunes.content.map { item in
       FortuneItemCollectionViewCellModel(
         title: item.fortuneType,
