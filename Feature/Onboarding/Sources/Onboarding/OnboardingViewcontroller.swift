@@ -226,7 +226,7 @@ extension OnboardingViewController {
     self.bornTimeStack.addArrangedSubview(bornTimeSetButton)
     self.bornTimeStack.addArrangedSubview(dontKnowButton)
   }
-  
+
   private func setupNavigationBar() {
     let backButtonItem = NaivgationBarButtonItem.back
     backButtonItem.tapPublisher
