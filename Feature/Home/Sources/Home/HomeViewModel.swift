@@ -39,6 +39,14 @@ public final class HomeViewModel {
         fetchUser()
       }
       .store(in: &cancellables)
+    
+    RecommendationDetailService
+      .getPublisher()
+      .sink { [weak self] _ in
+        guard let self = self else { return }
+        fetchUser()
+      }
+      .store(in: &cancellables)
   }
 
   func send(input: Input) {

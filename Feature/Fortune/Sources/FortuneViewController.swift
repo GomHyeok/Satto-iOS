@@ -21,7 +21,6 @@ enum FortuneSection {
 public final class FortuneViewController: BaseViewController {
 
   private let viewModel: FortuneViewModel
-  private var store: Set<AnyCancellable> = Set<AnyCancellable>()
 
   private lazy var ellips = UIImageView().then {
     $0.image = STImages.ellipseBackground.image.withRenderingMode(.alwaysTemplate)
@@ -184,7 +183,7 @@ extension FortuneViewController {
         guard let self else { return }
         self.collectionView.reloadData()
       }
-      .store(in: &store)
+      .store(in: &cancellables)
 
     viewModel.output.isLoading
       .receive(on: DispatchQueue.main)
@@ -196,7 +195,15 @@ extension FortuneViewController {
           self.hideLoading()
         }
       }
-      .store(in: &store)
+      .store(in: &cancellables)
+    
+    viewModel.output.showError
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] retryAction in
+        guard let self else { return }
+        self.showErrorPopup(action: retryAction)
+      }
+      .store(in: &cancellables)
   }
 }
 

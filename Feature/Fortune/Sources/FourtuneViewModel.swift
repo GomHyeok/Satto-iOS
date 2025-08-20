@@ -18,6 +18,7 @@ public final class FortuneViewModel {
   struct Output {
     let sections = CurrentValueSubject<[FortuneSection], Never>([])
     let isLoading = PassthroughSubject<Bool, Never>()
+    let showError = PassthroughSubject<()->Void, Never>()
   }
 
   @Injected private var fortuneService: FortuneService
@@ -53,7 +54,12 @@ extension FortuneViewModel {
         self.output.sections.send(sections)
         output.isLoading.send(false)
       } catch {
-        // TODO: 에러 처리
+        output.isLoading.send(false)
+        output.showError.send { [weak self] in
+          guard let self else { return }
+          self.fetchUser()
+          
+        }
       }
     }
   }

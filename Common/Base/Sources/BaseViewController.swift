@@ -8,6 +8,7 @@
 import Combine
 import SnapKit
 import UIKit
+import DesignSystem
 
 open class BaseViewController: UIViewController {
 
@@ -27,12 +28,17 @@ open class BaseViewController: UIViewController {
     $0.hidesWhenStopped = true
   }
 
+  private lazy var errorPopup = PopUp(style: .one).then {
+    $0.isHidden = true
+  }
+  
   public override var title: String? {
     get { navigationBar.title }
     set { navigationBar.title = newValue }
   }
   private var navigationAreaHeight: Constraint?
   public var cancellables = Set<AnyCancellable>()
+  private var errorPopupCancellables = Set<AnyCancellable>()
 
   open override func viewDidLoad() {
     super.viewDidLoad()
@@ -48,6 +54,12 @@ open class BaseViewController: UIViewController {
     view.addSubview(activityIndicator)
     activityIndicator.snp.makeConstraints { make in
       make.center.equalToSuperview()
+    }
+    
+    view.addSubview(errorPopup)
+    errorPopup.snp.makeConstraints { make in
+      make.centerX.centerY.equalToSuperview()
+      make.leading.trailing.equalToSuperview().inset(24)
     }
   }
 
@@ -113,5 +125,25 @@ extension BaseViewController {
   public func hideLoading() {
     interactionBlockerView.isHidden = true
     activityIndicator.stopAnimating()
+  }
+}
+
+extension BaseViewController {
+  public func showErrorPopup( action: @escaping () -> Void) {
+    errorPopup.update(
+      titile: "문제가 발생하였소", description: "잠시 후 다시 시도해 주시오.", actionButtonTitle: "확인")
+    errorPopup.update(style: .one)
+    errorPopup.isHidden = false
+    
+    view.bringSubviewToFront(errorPopup)
+    
+    errorPopupCancellables.removeAll()
+    
+    errorPopup.actionButton.tapPublisher
+      .sink { _ in
+        action()
+        self.errorPopup.isHidden = true
+      }
+      .store(in: &errorPopupCancellables)
   }
 }

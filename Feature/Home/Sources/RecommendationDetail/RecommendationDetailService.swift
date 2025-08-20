@@ -9,11 +9,15 @@ import Auth
 import DIInjector
 import Foundation
 import NetworkCore
+import Combine
 
 final class RecommendationDetailService {
 
   @Injected private var userDataManager: UserDataManager
   @Injected private var networkProvider: NetworkProvider
+  
+  private static var recommentPublisher = PassthroughSubject<Void, Never>()
+  
   private var username: String? { userDataManager.user?.name }
   var navigationTitle: String {
     guard let username else {
@@ -26,6 +30,7 @@ final class RecommendationDetailService {
   func createRecommendation() async throws -> [any RecommendationDetailCellModel] {
     let target = HomeTarget.CreateLottoRecommendation(userID: userDataManager.userID)
     let lottoRecommendation = try await networkProvider.request(target: target)
+    RecommendationDetailService.recommentPublisher.send()
     return try makeSections(from: lottoRecommendation)
   }
 
@@ -87,5 +92,10 @@ final class RecommendationDetailService {
         ]
       ),
     ]
+  }
+  
+  public static func getPublisher() -> AnyPublisher<Void, Never> {
+    RecommendationDetailService.recommentPublisher
+      .eraseToAnyPublisher()
   }
 }
