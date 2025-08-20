@@ -84,9 +84,8 @@ final class HomeService {
       ].sorted()
       return HomeRecommendationCollectionViewCellModel(
         title: "\(name)님을 위한 로또 번호 추천",
-        //        state: lottoRecommendation.isFinished
-        //          ? .needsResultCheck(numbers: numbers) : .recommended(numbers: numbers)
-        state: .needsResultCheck(numbers: numbers)
+        state: lottoRecommendation.isFinished
+        ? .needsResultCheck(numbers: numbers) : .recommended(numbers: numbers)
       )
     } else {
       return HomeRecommendationCollectionViewCellModel(
