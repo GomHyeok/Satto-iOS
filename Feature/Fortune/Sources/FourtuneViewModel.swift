@@ -9,7 +9,6 @@ import Auth
 import Combine
 import DIInjector
 import Foundation
-import Auth
 
 public final class FortuneViewModel {
   enum Input {
