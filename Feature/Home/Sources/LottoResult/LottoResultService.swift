@@ -25,6 +25,7 @@ struct LottoResultService {
   func fetch(round: Int) async throws -> Response {
     let target = HomeTarget.CheckLottoResult(userID: userDataManager.userID, round: round)
     let lottoResult = try await networkProvider.request(target: target)
+    NotificationCenter.default.post(name: .recommendationStateChanged, object: nil)
 
     let rankTitle =
       if let rank = lottoResult.rank {

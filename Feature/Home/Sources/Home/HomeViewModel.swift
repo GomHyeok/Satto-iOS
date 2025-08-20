@@ -36,15 +36,15 @@ public final class HomeViewModel {
       .getPublisher()
       .sink { [weak self] _ in
         guard let self = self else { return }
-        fetchUser()
+        fetch()
       }
       .store(in: &cancellables)
 
-    RecommendationDetailService
-      .getPublisher()
+    homeService
+      .recommendationStateChanged
       .sink { [weak self] _ in
         guard let self = self else { return }
-        fetchUser()
+        fetchRecommendation()
       }
       .store(in: &cancellables)
   }
@@ -52,7 +52,7 @@ public final class HomeViewModel {
   func send(input: Input) {
     switch input {
     case .viewDidLoad:
-      fetchUser()
+      fetch()
 
     case .recommendationButtonTapped(let state):
       switch state {
@@ -81,12 +81,26 @@ public final class HomeViewModel {
   }
 }
 
-extension HomeViewModel {
-  func fetchUser() {
+private extension HomeViewModel {
+  func fetch() {
     output.isLoading.send(true)
     Task {
       do {
         let sections = try await homeService.fetch()
+        output.sections.send(sections)
+      } catch {
+        // TODO: 에러 처리
+        print(error)
+      }
+      output.isLoading.send(false)
+    }
+  }
+  
+  func fetchRecommendation() {
+    output.isLoading.send(true)
+    Task {
+      do {
+        let sections = try await homeService.fetchLottoRecommendation()
         output.sections.send(sections)
       } catch {
         // TODO: 에러 처리

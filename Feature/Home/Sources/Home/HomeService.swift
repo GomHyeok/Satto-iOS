@@ -6,6 +6,7 @@
 //
 
 import Auth
+import Combine
 import DIInjector
 import Foundation
 import NetworkCore
@@ -17,10 +18,15 @@ final class HomeService {
   private var appVersion: String? {
     Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
   }
-  var round: Int?
+  private var cachedDailyFortunes: DailyFortunesDTO?
+  private(set) var round: Int?
+  var recommendationStateChanged: AnyPublisher<Void, Never> {
+    NotificationCenter.default.publisher(for: .recommendationStateChanged)
+      .map { _ in Void() }
+      .eraseToAnyPublisher()
+  }
 
   func fetch() async throws -> [any HomeCellModel] {
-    let name = self.userDataManager.user?.name ?? ""  // TODO: 확인 필요
     let getLottoRecommendationTarget = HomeTarget.GetLottoRecommendation(
       userID: userDataManager.userID)
     async let lottoRecommendationRequest = networkProvider.request(
@@ -31,8 +37,39 @@ final class HomeService {
       lottoRecommendationRequest, dailyFortunesRequest
     )
     self.round = lottoRecommendation.round
+    self.cachedDailyFortunes = dailyFortunes
 
-    let recommendationCollectionViewCellModel: HomeRecommendationCollectionViewCellModel
+    return [
+      makeHeader(round: lottoRecommendation.round, message: dailyFortunes.title),
+      makeRecommendation(lottoRecommendation),
+      makeTodayFortune(dailyFortunes),
+    ]
+  }
+  
+  func fetchLottoRecommendation() async throws -> [any HomeCellModel] {
+    guard let cachedDailyFortunes else {
+      return try await fetch()
+    }
+    let getLottoRecommendationTarget = HomeTarget.GetLottoRecommendation(
+      userID: userDataManager.userID)
+    let lottoRecommendation = try await networkProvider.request(target: getLottoRecommendationTarget)
+    round = lottoRecommendation.round
+    return [
+      makeHeader(round: lottoRecommendation.round, message: cachedDailyFortunes.title),
+      makeRecommendation(lottoRecommendation),
+      makeTodayFortune(cachedDailyFortunes),
+    ]
+  }
+  
+  private func makeHeader(round: Int, message: String?) -> HomeHeaderCollectionViewCellModel {
+    return HomeHeaderCollectionViewCellModel(
+      roundText: "\(round)회",
+      message: message ?? "잘 되면 꼭 기억해 주시오"
+    )
+  }
+  
+  private func makeRecommendation(_ lottoRecommendation: LottoRecommendationDTO) -> HomeRecommendationCollectionViewCellModel {
+    let name = self.userDataManager.user?.name ?? ""  // TODO: 확인 필요
     if let recommendationContent = lottoRecommendation.content {
       let numbers = [
         recommendationContent.num1,
@@ -42,18 +79,21 @@ final class HomeService {
         recommendationContent.num5,
         recommendationContent.num6,
       ].sorted()
-      recommendationCollectionViewCellModel = HomeRecommendationCollectionViewCellModel(
+      return HomeRecommendationCollectionViewCellModel(
         title: "\(name)님을 위한 로또 번호 추천",
-        state: lottoRecommendation.isFinished
-          ? .needsResultCheck(numbers: numbers) : .recommended(numbers: numbers)
+//        state: lottoRecommendation.isFinished
+//          ? .needsResultCheck(numbers: numbers) : .recommended(numbers: numbers)
+        state: .needsResultCheck(numbers: numbers)
       )
     } else {
-      recommendationCollectionViewCellModel = HomeRecommendationCollectionViewCellModel(
+      return HomeRecommendationCollectionViewCellModel(
         title: "\(name)님을 위한 로또 번호 추천",
         state: .needsRecommendation
       )
     }
-
+  }
+  
+  private func makeTodayFortune(_ dailyFortunes: DailyFortunesDTO) -> HomeTodayFortuneCollectionViewCellModel {
     let homeTodayFortuneCollectionViewCellModels = dailyFortunes.content.map { item in
       FortuneItemCollectionViewCellModel(
         title: item.fortuneType,
@@ -61,14 +101,6 @@ final class HomeService {
         message: item.description
       )
     }
-
-    return [
-      HomeHeaderCollectionViewCellModel(
-        roundText: "\(lottoRecommendation.round)회",
-        message: dailyFortunes.title ?? "잘 되면 꼭 기억해 주시오"
-      ),
-      recommendationCollectionViewCellModel,
-      HomeTodayFortuneCollectionViewCellModel(items: homeTodayFortuneCollectionViewCellModels),
-    ]
+    return HomeTodayFortuneCollectionViewCellModel(items: homeTodayFortuneCollectionViewCellModels)
   }
 }
