@@ -39,7 +39,7 @@ public final class HomeViewModel {
         fetchUser()
       }
       .store(in: &cancellables)
-    
+
     RecommendationDetailService
       .getPublisher()
       .sink { [weak self] _ in

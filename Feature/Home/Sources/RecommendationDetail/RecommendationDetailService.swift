@@ -6,18 +6,18 @@
 //
 
 import Auth
+import Combine
 import DIInjector
 import Foundation
 import NetworkCore
-import Combine
 
 final class RecommendationDetailService {
 
   @Injected private var userDataManager: UserDataManager
   @Injected private var networkProvider: NetworkProvider
-  
+
   private static var recommentPublisher = PassthroughSubject<Void, Never>()
-  
+
   private var username: String? { userDataManager.user?.name }
   var navigationTitle: String {
     guard let username else {
@@ -93,7 +93,7 @@ final class RecommendationDetailService {
       ),
     ]
   }
-  
+
   public static func getPublisher() -> AnyPublisher<Void, Never> {
     RecommendationDetailService.recommentPublisher
       .eraseToAnyPublisher()

@@ -6,9 +6,9 @@
 //
 
 import Combine
+import DesignSystem
 import SnapKit
 import UIKit
-import DesignSystem
 
 open class BaseViewController: UIViewController {
 
@@ -31,7 +31,7 @@ open class BaseViewController: UIViewController {
   private lazy var errorPopup = PopUp(style: .one).then {
     $0.isHidden = true
   }
-  
+
   public override var title: String? {
     get { navigationBar.title }
     set { navigationBar.title = newValue }
@@ -55,7 +55,7 @@ open class BaseViewController: UIViewController {
     activityIndicator.snp.makeConstraints { make in
       make.center.equalToSuperview()
     }
-    
+
     view.addSubview(errorPopup)
     errorPopup.snp.makeConstraints { make in
       make.centerX.centerY.equalToSuperview()
@@ -129,16 +129,16 @@ extension BaseViewController {
 }
 
 extension BaseViewController {
-  public func showErrorPopup( action: @escaping () -> Void) {
+  public func showErrorPopup(action: @escaping () -> Void) {
     errorPopup.update(
       titile: "문제가 발생하였소", description: "잠시 후 다시 시도해 주시오.", actionButtonTitle: "확인")
     errorPopup.update(style: .one)
     errorPopup.isHidden = false
-    
+
     view.bringSubviewToFront(errorPopup)
-    
+
     errorPopupCancellables.removeAll()
-    
+
     errorPopup.actionButton.tapPublisher
       .sink { _ in
         action()

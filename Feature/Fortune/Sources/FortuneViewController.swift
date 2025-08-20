@@ -196,7 +196,7 @@ extension FortuneViewController {
         }
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.showError
       .receive(on: DispatchQueue.main)
       .sink { [weak self] retryAction in
