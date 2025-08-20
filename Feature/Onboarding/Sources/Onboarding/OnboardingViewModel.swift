@@ -15,6 +15,7 @@ import Lib
 public class OnboardingViewModel {
 
   enum Input {
+    case backButtonTap
     case checkNameFormat(name: String)
     case genderSelected(isSelected: GenderType)
     case checkBirthFormat(birth: String)
@@ -30,6 +31,7 @@ public class OnboardingViewModel {
     let isNextButtonEnabled: PassthroughSubject<Bool, Never> = .init()
     let isBornTimeButtonEnabled: PassthroughSubject<Bool, Never> = .init()
     let navigate: PassthroughSubject<OnboardingRoute, Never> = .init()
+    let back: PassthroughSubject<Void, Never> = .init()
   }
 
   let output: Output = Output()
@@ -46,6 +48,8 @@ public class OnboardingViewModel {
 
   func send(input: Input) {
     switch input {
+    case .backButtonTap:
+      self.output.back.send(())
     case .checkNameFormat(let name):
       self._isNameValid = checkNameFormat(name: name)
       if self._isNameValid { self.state.name = name }

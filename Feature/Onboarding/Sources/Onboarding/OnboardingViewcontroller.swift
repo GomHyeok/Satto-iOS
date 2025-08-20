@@ -183,10 +183,9 @@ public final class OnboardingViewController: BaseViewController {
   override public func viewDidLoad() {
     super.viewDidLoad()
     self.view.backgroundColor = .white
-    let backButtonItem = NaivgationBarButtonItem.back
-    self.setNavigationBarLeftButtonItems(items: [backButtonItem])
     setupBind()
     setupHierarchy()
+    setupNavigationBar()
     setupLayout()
     setupDelegate()
     setupKeyboardObservers()
@@ -227,6 +226,16 @@ extension OnboardingViewController {
     self.bornTimeStack.addArrangedSubview(bornTimeSetButton)
     self.bornTimeStack.addArrangedSubview(dontKnowButton)
   }
+  
+  private func setupNavigationBar() {
+    let backButtonItem = NaivgationBarButtonItem.back
+    backButtonItem.tapPublisher
+      .sink { [weak self] _ in
+        self?.viewModel.send(input: .backButtonTap)
+      }
+      .store(in: &cancellables)
+    setNavigationBarLeftButtonItems(items: [backButtonItem])
+  }
 
   private func setupDelegate() {
     nameTextField.delegate = self
@@ -236,6 +245,12 @@ extension OnboardingViewController {
   }
 
   private func setupBind() {
+    viewModel.output.back
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] _ in
+        self?.navigationController?.popViewController(animated: true)
+      }
+      .store(in: &cancellables)
 
     viewModel.output.isNextButtonEnabled
       .receive(on: RunLoop.main)
