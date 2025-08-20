@@ -29,7 +29,6 @@ final class AgreementViewController: BaseViewController {
 
   private var isAllAgree: Bool {
     return agreementItems.filter { $0.isRequired }.allSatisfy { $0.isAgreed }
-      || agreementItems[0].isAgreed
   }
 
   private lazy var containerView = UIView().then {
@@ -152,9 +151,9 @@ extension AgreementViewController {
     confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
   }
 
-  private func updateConfrimButton() {
+  private func updateConfirmButton() {
     confirmButton.backgroundColor = isAllAgree ? STColors.primary2.color : STColors.primary7.color
-    if isAllAgree { confirmButton.isEnabled = true } else { confirmButton.isEnabled = false }
+    confirmButton.isEnabled = isAllAgree
   }
 
   @objc private func closeButtonTapped() {
@@ -162,6 +161,7 @@ extension AgreementViewController {
   }
 
   @objc private func confirmButtonTapped() {
+    showLoading() // TODO: 나중에 정리 필요
     delegate?.agreementViewDidComplete()
   }
 
@@ -231,11 +231,12 @@ extension AgreementViewController: AgreementCellDelegate {
         for i in 0..<agreementItems.count {
           agreementItems[i].isAgreed = shouldAgreeAll
         }
-        collectionView.reloadData()
       } else {
         agreementItems[indexPath.item].isAgreed = isAgreed
+        agreementItems[0].isAgreed = isAllAgree
       }
-      updateConfrimButton()
+      collectionView.reloadData()
+      updateConfirmButton()
     }
   }
 }
