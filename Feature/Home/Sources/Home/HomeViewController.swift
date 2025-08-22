@@ -33,6 +33,11 @@ public final class HomeViewController: BaseViewController {
       HomeTodayFortuneCollectionViewCell.self,
       forCellWithReuseIdentifier: HomeTodayFortuneCollectionViewCell.typeName
     )
+    
+    $0.register(
+      HomeFeatureCollectionViewCell.self,
+      forCellWithReuseIdentifier: HomeFeatureCollectionViewCell.typeName
+    )
   }
 
   private let viewModel: HomeViewModel
@@ -165,6 +170,13 @@ extension HomeViewController: UICollectionViewDataSource {
       if let cell = cell as? HomeTodayFortuneCollectionViewCell {
         cell.update(with: item)
       }
+      return cell
+      
+    case _ as HomeFeatureCollectionViewCellModel :
+      let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: HomeFeatureCollectionViewCell.typeName,
+        for: indexPath
+      )
       return cell
 
     default:

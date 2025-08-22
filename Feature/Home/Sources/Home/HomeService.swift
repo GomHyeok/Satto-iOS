@@ -42,7 +42,8 @@ final class HomeService {
     return [
       makeHeader(round: lottoRecommendation.round, message: dailyFortunes.title),
       makeRecommendation(lottoRecommendation),
-      makeTodayFortune(dailyFortunes),
+      HomeFeatureCollectionViewCellModel(),
+      //makeTodayFortune(dailyFortunes),
     ]
   }
 
@@ -58,7 +59,8 @@ final class HomeService {
     return [
       makeHeader(round: lottoRecommendation.round, message: cachedDailyFortunes.title),
       makeRecommendation(lottoRecommendation),
-      makeTodayFortune(cachedDailyFortunes),
+      HomeFeatureCollectionViewCellModel(),
+      //makeTodayFortune(cachedDailyFortunes),
     ]
   }
 

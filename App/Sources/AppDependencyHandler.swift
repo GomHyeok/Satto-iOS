@@ -29,8 +29,8 @@ struct AppDependencyHandler: DependencyRegistrable {
     tabBarController.viewControllers = [
 
       BaseNavigationController(rootViewController: HomeViewController(viewModel: HomeViewModel())),
-      BaseNavigationController(
-        rootViewController: FortuneViewController(viewModel: FortuneViewModel())),
+//      BaseNavigationController(
+//        rootViewController: FortuneViewController(viewModel: FortuneViewModel())),
       BaseNavigationController(
         rootViewController: HistoryWebViewController(viewModel: HistoryWebViewModel())),
       BaseNavigationController(
