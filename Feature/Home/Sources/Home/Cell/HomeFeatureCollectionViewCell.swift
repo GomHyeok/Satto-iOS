@@ -10,7 +10,7 @@ import DesignSystem
 import UIKit
 
 struct HomeFeatureCollectionViewCellModel: HomeCellModel {
-  
+
 }
 
 final class HomeFeatureCollectionViewCell: BaseCollectionViewCell {

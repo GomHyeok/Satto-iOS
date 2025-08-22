@@ -33,7 +33,7 @@ public final class HomeViewController: BaseViewController {
       HomeTodayFortuneCollectionViewCell.self,
       forCellWithReuseIdentifier: HomeTodayFortuneCollectionViewCell.typeName
     )
-    
+
     $0.register(
       HomeFeatureCollectionViewCell.self,
       forCellWithReuseIdentifier: HomeFeatureCollectionViewCell.typeName
@@ -171,8 +171,8 @@ extension HomeViewController: UICollectionViewDataSource {
         cell.update(with: item)
       }
       return cell
-      
-    case _ as HomeFeatureCollectionViewCellModel :
+
+    case _ as HomeFeatureCollectionViewCellModel:
       let cell = collectionView.dequeueReusableCell(
         withReuseIdentifier: HomeFeatureCollectionViewCell.typeName,
         for: indexPath

@@ -10,7 +10,7 @@ import UIKit
 
 enum Tab: CaseIterable {
   case home
-//  case fortune
+  //  case fortune
   case pastLotto
   case my
 
@@ -18,8 +18,8 @@ enum Tab: CaseIterable {
     switch self {
     case .home:
       return "홈"
-//    case .fortune:
-//      return "오늘 운세"
+    //    case .fortune:
+    //      return "오늘 운세"
     case .pastLotto:
       return "뭐 나왔지"
     case .my:
@@ -31,8 +31,8 @@ enum Tab: CaseIterable {
     switch self {
     case .home:
       return STImages.home.image
-//    case .fortune:
-//      return STImages.clover.image
+    //    case .fortune:
+    //      return STImages.clover.image
     case .pastLotto:
       return STImages.receipt.image
     case .my:
