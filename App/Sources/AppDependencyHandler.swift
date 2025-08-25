@@ -13,12 +13,19 @@ import Home
 import Lib
 import Setting
 import UIKit
+import Onboarding
 
 struct AppDependencyHandler: DependencyRegistrable {
   func register(to dependencyHandler: DependencyHandler) {
     dependencyHandler.register(key: DependencyKey.App.configureTabBarController) {
       Task { @MainActor in
         self.configureTabBarController()
+      }
+    }
+    
+    dependencyHandler.register(key: DependencyKey.App.moveToSplashViewController) {
+      Task { @MainActor in
+        self.moveToSplashViewController()
       }
     }
   }
@@ -38,7 +45,17 @@ struct AppDependencyHandler: DependencyRegistrable {
     ]
     UIApplication.shared.activeWindow?.rootViewController = tabBarController
   }
+  
+  private func moveToSplashViewController() {
+    let router = OnboardingRouter()
+    let splashViewController = SplashViewcontroller(viewModel: SplashViewModel(), router: router)
+
+    let navigationController = UINavigationController(rootViewController: splashViewController)
+
+    UIApplication.shared.activeWindow?.rootViewController = navigationController
+  }
 }
+
 
 extension UIApplication {
   fileprivate var activeWindow: UIWindow? {

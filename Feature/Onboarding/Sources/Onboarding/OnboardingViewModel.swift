@@ -32,6 +32,7 @@ public class OnboardingViewModel {
     let isBornTimeButtonEnabled: PassthroughSubject<Bool, Never> = .init()
     let navigate: PassthroughSubject<OnboardingRoute, Never> = .init()
     let back: PassthroughSubject<Void, Never> = .init()
+    let showError : PassthroughSubject<()->Void, Never> = .init()
   }
 
   let output: Output = Output()
@@ -92,7 +93,9 @@ public class OnboardingViewModel {
             }
           } catch {
             // TODO: API 호출 에러처리
-            print(error)
+            self.output.showError.send {
+              self.send(input: .completeButtonTap)
+            }
           }
         }
       } else {

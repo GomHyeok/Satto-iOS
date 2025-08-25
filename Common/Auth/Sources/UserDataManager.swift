@@ -66,6 +66,15 @@ public final class UserDataManager {
       throw error
     }
   }
+  
+  public func delete() async throws {
+    do {
+      try deviceUUIDManager.deleteUUID()
+      user = nil
+    } catch {
+      throw error
+    }
+  }
 
   public func getPublisher() -> AnyPublisher<Void, Never> {
     userPublisher

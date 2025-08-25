@@ -13,6 +13,10 @@ import Foundation
 import Lib
 import UIKit
 
+enum PopUpType {
+  case deleteUser
+}
+
 public final class MyPageViewModel {
 
   enum Input {
@@ -20,6 +24,7 @@ public final class MyPageViewModel {
     case editButtonTapped
     case feedBackButtonTapped
     case menuTapped(item: MyPageMenu)
+    case deleteUser
   }
 
   struct Output {
@@ -27,11 +32,14 @@ public final class MyPageViewModel {
     let showToast = PassthroughSubject<Void, Never>()
     let showWebView = PassthroughSubject<URL, Never>()
     let isLoading = PassthroughSubject<Bool, Never>()
+    let updatePopupHidden = PassthroughSubject<PopUpType, Never>()
+    let showError = PassthroughSubject<()->Void, Never>()
   }
 
   @Injected private var myPageService: MyPageService
   @Injected private var router: SettingRouter
   @Injected private var userDataManager: UserDataManager
+  @Injected private var dependencyHandler: DependencyHandler
 
   let output: Output = Output()
   private var cancellables = Set<AnyCancellable>()
@@ -76,10 +84,33 @@ public final class MyPageViewModel {
         if let url = URL(string: urlString) {
           output.showWebView.send(url)
         }
+        
+      case .deleteUserInfo:
+        output.updatePopupHidden.send(.deleteUser)
 
       case .appVersion:
         break
       }
+      
+    case .deleteUser :
+      Task { [weak self] in
+        guard let self else { return }
+        async let minDelay: Void = Task.sleep(for: .seconds(2))
+        output.isLoading.send(true)
+        do {
+          try await userDataManager.delete()
+          let _ = try? await minDelay
+          output.isLoading.send(false)
+          self.dependencyHandler.handle(key: DependencyKey.App.moveToSplashViewController)
+        } catch {
+          output.isLoading.send(false)
+          output.showError.send{ [weak self] in
+            guard let self else { return }
+            self.send(input: .deleteUser)
+          }
+        }
+      }
+      break
     }
   }
 }
@@ -96,6 +127,11 @@ extension MyPageViewModel {
         self.output.isLoading.send(false)
       } catch {
         // TODO: 에러 처리
+        output.isLoading.send(false)
+        output.showError.send{[weak self] in
+          guard let self else { return }
+          self.fetchUser()
+        }
       }
     }
   }

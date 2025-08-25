@@ -152,6 +152,14 @@ final class LottoResultViewController: BaseViewController {
         }
       }
       .store(in: &cancellables)
+    
+    viewModel.output.showError
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] retryAction in
+        guard let self else { return }
+        self.showErrorPopup(action: retryAction)
+      }
+      .store(in: &cancellables)
 
     viewModel.output.back
       .receive(on: DispatchQueue.main)

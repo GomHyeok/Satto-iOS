@@ -9,6 +9,27 @@ import SnapKit
 import Then
 import UIKit
 
+public struct PopUpModel {
+  let title: String
+  let description: String?
+  let actionButtonTitle: String
+  let outButtonTitle: String
+  
+  public init(title: String, description: String?, actionButtonTitle: String, outButtonTitle: String) {
+    self.title = title
+    self.description = description
+    self.actionButtonTitle = actionButtonTitle
+    self.outButtonTitle = outButtonTitle
+  }
+  
+  public init(title: String, actionButtonTitle: String, outButtonTitle: String) {
+    self.title = title
+    self.description = nil
+    self.actionButtonTitle = actionButtonTitle
+    self.outButtonTitle = outButtonTitle
+  }
+}
+
 public final class PopUp: UIView {
 
   public enum Style: CaseIterable {
@@ -29,7 +50,7 @@ public final class PopUp: UIView {
     $0.alignment = .center
   }
 
-  private(set) lazy var deleteButton = UIButton().then {
+  public private(set) lazy var deleteButton = UIButton().then {
     $0.setImage(STImages.xMark.image, for: .normal)
   }
 
@@ -111,17 +132,14 @@ public final class PopUp: UIView {
     }
   }
 
-  public func update(
-    titile: String, description: String? = nil, actionButtonTitle: String,
-    outButtonTitle: String = "취소"
-  ) {
-    titleLabel.styledText = titile
-    descriptionLabel.styledText = description
+  public func update(popUpModel: PopUpModel) {
+    titleLabel.styledText = popUpModel.title
+    descriptionLabel.styledText = popUpModel.description
     let style = Typography.Body_16_B
     style.color = STColors.white.color
-    actionButton.setAttributedTitle(actionButtonTitle.set(style: style), for: .normal)
+    actionButton.setAttributedTitle(popUpModel.actionButtonTitle.set(style: style), for: .normal)
     style.color = STColors.gray1.color
-    outButton.setAttributedTitle(outButtonTitle.set(style: style), for: .normal)
+    outButton.setAttributedTitle(popUpModel.outButtonTitle.set(style: style), for: .normal)
   }
 
   public func update(style: Style) {
@@ -139,13 +157,12 @@ public final class PopUp: UIView {
   }
 
   let popup = PopUp().then {
-    $0.update(titile: "제목", description: "설명 텍스트입니다.", actionButtonTitle: "확인")
+    $0.update(popUpModel : PopUpModel(title: "제목", description: "설명 텍스트입니다.", actionButtonTitle: "확인", outButtonTitle: "취소"))
     $0.update(style: .one)
   }
 
   let popupTwo = PopUp().then {
-    $0.update(
-      titile: "제목", description: "설명 \n텍스트입니다.", actionButtonTitle: "확인", outButtonTitle: "취소")
+    $0.update(popUpModel : PopUpModel(title: "제목", description: "설명 텍스트입니다.", actionButtonTitle: "확인", outButtonTitle: "취소"))
     $0.update(style: .two)
   }
 

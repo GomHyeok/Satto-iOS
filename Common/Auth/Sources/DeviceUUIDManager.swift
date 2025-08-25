@@ -33,7 +33,7 @@ final class DeviceUUIDManager {
     return newUUID
   }
 
-  func deleteUUID() {
+  func deleteUUID() throws {
     try? KeyChainService.remove(forKey: Constant.uuidKey)
   }
 }

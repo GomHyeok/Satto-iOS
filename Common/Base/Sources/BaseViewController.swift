@@ -130,8 +130,7 @@ extension BaseViewController {
 
 extension BaseViewController {
   public func showErrorPopup(action: @escaping () -> Void) {
-    errorPopup.update(
-      titile: "문제가 발생하였소", description: "잠시 후 다시 시도해 주시오.", actionButtonTitle: "확인")
+    errorPopup.update(popUpModel: PopUpModel(title: "문제가 발생하였소", description: "잠시 후 다시 시도해 주시오.", actionButtonTitle: "확인", outButtonTitle: "취소"))
     errorPopup.update(style: .one)
     errorPopup.isHidden = false
 

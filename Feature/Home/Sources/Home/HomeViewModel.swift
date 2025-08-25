@@ -22,6 +22,7 @@ public final class HomeViewModel {
   struct Output {
     let isLoading = CurrentValueSubject<Bool, Never>(false)
     let sections = CurrentValueSubject<[any HomeCellModel], Never>([])
+    let showError = PassthroughSubject<()->Void, Never>()
   }
 
   @Injected var homeService: HomeService
@@ -76,6 +77,8 @@ public final class HomeViewModel {
             to: HomeRoute.lottoResult, how: .push(hidesBottomBarWhenPushed: true),
             with: ["round": homeService.round as Any])
         }
+        
+        fetchResult()
       }
     }
   }
@@ -89,8 +92,11 @@ extension HomeViewModel {
         let sections = try await homeService.fetch()
         output.sections.send(sections)
       } catch {
-        // TODO: 에러 처리
-        print(error)
+        output.isLoading.send(false)
+        output.showError.send {[weak self] in
+          guard let self else { return }
+          self.fetch()
+        }
       }
       output.isLoading.send(false)
     }
@@ -103,10 +109,28 @@ extension HomeViewModel {
         let sections = try await homeService.fetchLottoRecommendation()
         output.sections.send(sections)
       } catch {
-        // TODO: 에러 처리
-        print(error)
+        output.isLoading.send(false)
+        output.showError.send {[weak self] in
+          guard let self else { return }
+          self.fetchRecommendation()
+        }
       }
       output.isLoading.send(false)
     }
+  }
+  
+  fileprivate func fetchResult() {
+    let name = userDataManager.user?.name ?? ""
+    var sections : [any HomeCellModel] = []
+    
+    output.sections.value.forEach { section in
+      if let _ = section as? HomeRecommendationCollectionViewCellModel {
+        sections.append(HomeRecommendationCollectionViewCellModel(title: "\(name)님을 위한 로또 번호 추천", state: .needsRecommendation))
+      } else {
+        sections.append(section)
+      }
+    }
+    
+    output.sections.send(sections)
   }
 }
