@@ -32,7 +32,7 @@ public class OnboardingViewModel {
     let isBornTimeButtonEnabled: PassthroughSubject<Bool, Never> = .init()
     let navigate: PassthroughSubject<OnboardingRoute, Never> = .init()
     let back: PassthroughSubject<Void, Never> = .init()
-    let showError : PassthroughSubject<()->Void, Never> = .init()
+    let showError: PassthroughSubject<() -> Void, Never> = .init()
   }
 
   let output: Output = Output()

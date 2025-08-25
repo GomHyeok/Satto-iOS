@@ -356,7 +356,7 @@ extension OnboardingViewController {
         self.bornTimeSetButton.isEnabled = isEnable
       }
       .store(in: &store)
-    
+
     viewModel.output.showError
       .receive(on: DispatchQueue.main)
       .sink { [weak self] retryAction in

@@ -26,12 +26,12 @@ public final class MyPageViewController: BaseViewController {
     static let menuItemHeight: CGFloat = 48
     static let sectionSpacing: CGFloat = 12
   }
-  
+
   private lazy var backgroundView = UIView().then {
     $0.isHidden = true
     $0.backgroundColor = STColors.black.color.withAlphaComponent(0.5)
   }
-  
+
   private lazy var popup = PopUp().then {
     $0.isHidden = true
   }
@@ -73,12 +73,12 @@ public final class MyPageViewController: BaseViewController {
   private func setupUI() {
     title = "마이"
     view.backgroundColor = STColors.primary9.color
-    
+
     view.addSubview(collectionView)
     collectionView.snp.makeConstraints {
       $0.edges.equalToSuperview().inset(24)
     }
-    
+
     backgroundView.addSubview(popup)
     popup.snp.makeConstraints { make in
       make.center.equalToSuperview()
@@ -127,9 +127,9 @@ public final class MyPageViewController: BaseViewController {
           })
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.updatePopupHidden
-      .receive(on : RunLoop.main)
+      .receive(on: RunLoop.main)
       .sink { [weak self] type in
         guard let self else { return }
         self.navigationController?.view.addSubview(backgroundView)
@@ -138,17 +138,20 @@ public final class MyPageViewController: BaseViewController {
         }
         self.backgroundView.isHidden = false
         self.popup.isHidden = false
-        
+
         switch type {
-        case .deleteUser :
-          popup.update(popUpModel: PopUpModel(title: "정말로 탈퇴하시겠소?", description: "탈퇴 시 모든 정보가 삭제되오.\n다시 돌아올 수 없소.", actionButtonTitle: "탈퇴하기", outButtonTitle: "취소"))
+        case .deleteUser:
+          popup.update(
+            popUpModel: PopUpModel(
+              title: "정말로 탈퇴하시겠소?", description: "탈퇴 시 모든 정보가 삭제되오.\n다시 돌아올 수 없소.",
+              actionButtonTitle: "탈퇴하기", outButtonTitle: "취소"))
           popup.actionButton.tapPublisher
-            .sink {_ in
+            .sink { _ in
               self.backgroundView.removeFromSuperview()
               self.viewModel.send(input: .deleteUser)
             }
             .store(in: &cancellables)
-          
+
           popup.outButton.tapPublisher
             .sink { _ in
               self.backgroundView.removeFromSuperview()
@@ -158,7 +161,7 @@ public final class MyPageViewController: BaseViewController {
         }
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.showError
       .receive(on: DispatchQueue.main)
       .sink { [weak self] retryAction in
@@ -166,7 +169,7 @@ public final class MyPageViewController: BaseViewController {
         self.showErrorPopup(action: retryAction)
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.isLoading
       .receive(on: DispatchQueue.main)
       .sink { [weak self] isLoading in
@@ -178,7 +181,7 @@ public final class MyPageViewController: BaseViewController {
         }
       }
       .store(in: &cancellables)
-    
+
     popup.deleteButton.tapPublisher
       .sink { [weak self] _ in
         guard let self else { return }

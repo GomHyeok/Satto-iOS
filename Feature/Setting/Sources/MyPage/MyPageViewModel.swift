@@ -33,7 +33,7 @@ public final class MyPageViewModel {
     let showWebView = PassthroughSubject<URL, Never>()
     let isLoading = PassthroughSubject<Bool, Never>()
     let updatePopupHidden = PassthroughSubject<PopUpType, Never>()
-    let showError = PassthroughSubject<()->Void, Never>()
+    let showError = PassthroughSubject<() -> Void, Never>()
   }
 
   @Injected private var myPageService: MyPageService
@@ -84,15 +84,15 @@ public final class MyPageViewModel {
         if let url = URL(string: urlString) {
           output.showWebView.send(url)
         }
-        
+
       case .deleteUserInfo:
         output.updatePopupHidden.send(.deleteUser)
 
       case .appVersion:
         break
       }
-      
-    case .deleteUser :
+
+    case .deleteUser:
       Task { [weak self] in
         guard let self else { return }
         async let minDelay: Void = Task.sleep(for: .seconds(2))
@@ -104,7 +104,7 @@ public final class MyPageViewModel {
           self.dependencyHandler.handle(key: DependencyKey.App.moveToSplashViewController)
         } catch {
           output.isLoading.send(false)
-          output.showError.send{ [weak self] in
+          output.showError.send { [weak self] in
             guard let self else { return }
             self.send(input: .deleteUser)
           }
@@ -128,7 +128,7 @@ extension MyPageViewModel {
       } catch {
         // TODO: 에러 처리
         output.isLoading.send(false)
-        output.showError.send{[weak self] in
+        output.showError.send { [weak self] in
           guard let self else { return }
           self.fetchUser()
         }

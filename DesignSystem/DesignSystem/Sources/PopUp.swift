@@ -14,14 +14,16 @@ public struct PopUpModel {
   let description: String?
   let actionButtonTitle: String
   let outButtonTitle: String
-  
-  public init(title: String, description: String?, actionButtonTitle: String, outButtonTitle: String) {
+
+  public init(
+    title: String, description: String?, actionButtonTitle: String, outButtonTitle: String
+  ) {
     self.title = title
     self.description = description
     self.actionButtonTitle = actionButtonTitle
     self.outButtonTitle = outButtonTitle
   }
-  
+
   public init(title: String, actionButtonTitle: String, outButtonTitle: String) {
     self.title = title
     self.description = nil
@@ -157,12 +159,16 @@ public final class PopUp: UIView {
   }
 
   let popup = PopUp().then {
-    $0.update(popUpModel : PopUpModel(title: "제목", description: "설명 텍스트입니다.", actionButtonTitle: "확인", outButtonTitle: "취소"))
+    $0.update(
+      popUpModel: PopUpModel(
+        title: "제목", description: "설명 텍스트입니다.", actionButtonTitle: "확인", outButtonTitle: "취소"))
     $0.update(style: .one)
   }
 
   let popupTwo = PopUp().then {
-    $0.update(popUpModel : PopUpModel(title: "제목", description: "설명 텍스트입니다.", actionButtonTitle: "확인", outButtonTitle: "취소"))
+    $0.update(
+      popUpModel: PopUpModel(
+        title: "제목", description: "설명 텍스트입니다.", actionButtonTitle: "확인", outButtonTitle: "취소"))
     $0.update(style: .two)
   }
 

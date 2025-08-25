@@ -66,7 +66,7 @@ public final class UserDataManager {
       throw error
     }
   }
-  
+
   public func delete() async throws {
     do {
       try deviceUUIDManager.deleteUUID()

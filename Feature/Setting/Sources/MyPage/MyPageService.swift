@@ -55,9 +55,11 @@ struct MyPageService {
         .privacyPolicy(
           MyPageMenuCollectionViewCellModel(
             style: .icon(STImages.chevronRightS.image), title: "개인정보 처리방침")),
-        .deleteUserInfo(MyPageMenuCollectionViewCellModel(style: .icon(STImages.chevronRightS.image), title: "정보 삭제")),
+        .deleteUserInfo(
+          MyPageMenuCollectionViewCellModel(
+            style: .icon(STImages.chevronRightS.image), title: "정보 삭제")),
         .appVersion(
-          MyPageMenuCollectionViewCellModel(style: .text(appVersion ?? "1.0.0"), title: "앱 버전"))
+          MyPageMenuCollectionViewCellModel(style: .text(appVersion ?? "1.0.0"), title: "앱 버전")),
       ]),
     ]
   }

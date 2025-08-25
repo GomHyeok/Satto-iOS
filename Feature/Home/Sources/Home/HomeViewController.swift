@@ -87,7 +87,7 @@ public final class HomeViewController: BaseViewController {
         self?.collectionView.reloadData()
       }
       .store(in: &cancellables)
-    
+
     viewModel.output.showError
       .receive(on: DispatchQueue.main)
       .sink { [weak self] retryAction in

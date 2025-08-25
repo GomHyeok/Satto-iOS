@@ -22,7 +22,7 @@ public final class HomeViewModel {
   struct Output {
     let isLoading = CurrentValueSubject<Bool, Never>(false)
     let sections = CurrentValueSubject<[any HomeCellModel], Never>([])
-    let showError = PassthroughSubject<()->Void, Never>()
+    let showError = PassthroughSubject<() -> Void, Never>()
   }
 
   @Injected var homeService: HomeService
@@ -77,7 +77,7 @@ public final class HomeViewModel {
             to: HomeRoute.lottoResult, how: .push(hidesBottomBarWhenPushed: true),
             with: ["round": homeService.round as Any])
         }
-        
+
         fetchResult()
       }
     }
@@ -93,7 +93,7 @@ extension HomeViewModel {
         output.sections.send(sections)
       } catch {
         output.isLoading.send(false)
-        output.showError.send {[weak self] in
+        output.showError.send { [weak self] in
           guard let self else { return }
           self.fetch()
         }
@@ -110,7 +110,7 @@ extension HomeViewModel {
         output.sections.send(sections)
       } catch {
         output.isLoading.send(false)
-        output.showError.send {[weak self] in
+        output.showError.send { [weak self] in
           guard let self else { return }
           self.fetchRecommendation()
         }
@@ -118,19 +118,21 @@ extension HomeViewModel {
       output.isLoading.send(false)
     }
   }
-  
+
   fileprivate func fetchResult() {
     let name = userDataManager.user?.name ?? ""
-    var sections : [any HomeCellModel] = []
-    
+    var sections: [any HomeCellModel] = []
+
     output.sections.value.forEach { section in
-      if let _ = section as? HomeRecommendationCollectionViewCellModel {
-        sections.append(HomeRecommendationCollectionViewCellModel(title: "\(name)님을 위한 로또 번호 추천", state: .needsRecommendation))
+      if section as? HomeRecommendationCollectionViewCellModel != nil {
+        sections.append(
+          HomeRecommendationCollectionViewCellModel(
+            title: "\(name)님을 위한 로또 번호 추천", state: .needsRecommendation))
       } else {
         sections.append(section)
       }
     }
-    
+
     output.sections.send(sections)
   }
 }

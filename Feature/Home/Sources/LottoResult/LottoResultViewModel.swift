@@ -24,7 +24,7 @@ final class LottoResultViewModel {
     let isLoading = CurrentValueSubject<Bool, Never>(true)
     let back = PassthroughSubject<Void, Never>()
     let popToRoot = PassthroughSubject<Void, Never>()
-    let showError = PassthroughSubject<()->Void, Never>()
+    let showError = PassthroughSubject<() -> Void, Never>()
   }
 
   @Injected var lottoResultService: LottoResultService
@@ -49,7 +49,7 @@ final class LottoResultViewModel {
           output.isLoading.send(false)
         } catch {
           output.isLoading.send(false)
-          output.showError.send {[weak self] in
+          output.showError.send { [weak self] in
             self?.send(input: .viewDidLoad)
           }
           // TODO: 에러 처리
