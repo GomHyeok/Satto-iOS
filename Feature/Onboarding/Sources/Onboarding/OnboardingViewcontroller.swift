@@ -513,6 +513,14 @@ extension OnboardingViewController: UITextFieldDelegate {
   public func textFieldDidEndEditing(_ textField: UITextField) {
     if textField === nameTextField {
       viewModel.send(input: .checkNameFormat(name: textField.text ?? ""))
+      guard let name = textField.text, !name.isEmpty else { return }
+      if !onBoardingStack.arrangedSubviews.contains(genderStack) && nameTextField.text!.count < 7 {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
+          self.onBoardingStack.insertArrangedSubview(self.genderStack, at: 0)
+          self.genderStack.alpha = 1.0
+          self.onBoardingStack.layoutIfNeeded()
+        }
+      }
     } else if textField === birthTextField {
       viewModel.send(input: .checkBirthFormat(birth: textField.text ?? ""))
     }
@@ -569,21 +577,8 @@ extension OnboardingViewController: UITextFieldDelegate {
 
   public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
     if textField === nameTextField {
-      guard let name = textField.text, !name.isEmpty else {
-        return false
-      }
-
       textField.resignFirstResponder()
-
-      if !onBoardingStack.arrangedSubviews.contains(genderStack) && nameTextField.text!.count < 7 {
-        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
-          self.onBoardingStack.insertArrangedSubview(self.genderStack, at: 0)
-          self.genderStack.alpha = 1.0
-          self.onBoardingStack.layoutIfNeeded()
-        }
-      }
     }
-
     return true
   }
 
