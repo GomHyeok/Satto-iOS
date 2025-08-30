@@ -1,0 +1,45 @@
+name: CI - Build & Test (Tuist)
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 16.4
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+        
+      - name: Setup mise & install Tuist
+        uses: jdx/mise-action@v2
+
+      - name: Extract Tuist version from mise.toml
+        id: get-tuist-version
+        run: |
+          TUIST_VERSION=$(grep '^tuist' mise.toml | sed 's/.*= "\(.*\)"/\1/')
+          echo "TUIST_VERSION=$TUIST_VERSION" >> $GITHUB_ENV
+
+      - name: Install Tuist
+        run: mise install tuist@${{ env.TUIST_VERSION }}
+
+      - name: Activate Tuist
+        run: |
+          mise use -g tuist@${{ env.TUIST_VERSION }}
+          tuist version
+
+      - name: Install Dependencies with Tuist
+        run: |
+          tuist install
+
+      - name: Build
+        run: |
+          tuist generate
+          tuist build

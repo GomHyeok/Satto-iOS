@@ -1,0 +1,35 @@
+name: Format
+
+# 실행 조건 = push
+on:
+  push:
+    branches:
+      - develop
+      
+# 기존 실행중인 work_flow 중지
+concurrency:
+  group: format-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  swift_format:
+    name: swift-format
+    runs-on: macos-15
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 16.4
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app
+
+      # swift-format 실행
+      # .swift 파일에 대해서만 실행
+      - name: Run swift-format
+        run: swift format -irp .
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: '[Auto] Run swift-format'
+          branch: 'develop'

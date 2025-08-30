@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "clover-pig.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

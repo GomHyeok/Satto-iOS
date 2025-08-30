@@ -1,0 +1,8 @@
+addAssignees: author
+addReviewers: true
+
+reviewers:
+  - GomHyeok
+  - TTOzzi
+
+numberOfReviewers: 0
