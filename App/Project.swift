@@ -20,6 +20,7 @@ struct AppLayer: Layer {
             "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
             "ITSAppUsesNonExemptEncryption": false,
             "UILaunchStoryboardName": "LaunchScreen",
+            "UIUserInterfaceStyle": "Light",
             "UISupportedInterfaceOrientations": [
               "UIInterfaceOrientationPortrait"
             ],

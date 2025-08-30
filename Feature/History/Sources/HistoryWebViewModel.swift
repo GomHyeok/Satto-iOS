@@ -12,10 +12,13 @@ public final class HistoryWebViewModel {
 
   enum Input {
     case viewDidLoad
+    case webContentProcessDidTerminate
+    case recovered
   }
 
   struct Output {
     let loadURL = PassthroughSubject<URLRequest, Never>()
+    let needsRecovery = CurrentValueSubject<Bool, Never>(false)
   }
 
   let output = Output()
@@ -28,6 +31,12 @@ public final class HistoryWebViewModel {
       let url = URL(string: "https://clever-kataifi-dcedaf.netlify.app/lotto-history")!
       let request = URLRequest(url: url)
       output.loadURL.send(request)
+      
+    case .webContentProcessDidTerminate:
+      output.needsRecovery.send(true)
+      
+    case .recovered:
+      output.needsRecovery.send(false)
     }
   }
 }

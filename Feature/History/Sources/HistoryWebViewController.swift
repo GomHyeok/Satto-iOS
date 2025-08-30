@@ -55,6 +55,34 @@ public final class HistoryWebViewController: BaseViewController {
         self?.webView.load(request)
       }
       .store(in: &cancellables)
+
+    viewModel.output.needsRecovery
+      .removeDuplicates()
+      .receive(on: DispatchQueue.main)
+      .sink { [weak self] needsRecovery in
+        guard let self = self else { return }
+        guard needsRecovery else { return }
+        if UIApplication.shared.applicationState == .active {
+          self.recoverIfNeeded()
+        }
+      }
+      .store(in: &cancellables)
+
+    NotificationCenter.default.publisher(
+      for: UIApplication.willEnterForegroundNotification
+    )
+    .receive(on: DispatchQueue.main)
+    .sink { [weak self] _ in
+      self?.recoverIfNeeded()
+    }
+    .store(in: &cancellables)
+  }
+
+  private func recoverIfNeeded() {
+    guard viewModel.output.needsRecovery.value else { return }
+    showLoading()
+    webView.reload()
+    viewModel.send(input: .recovered)
   }
 }
 
@@ -84,8 +112,6 @@ extension HistoryWebViewController: WKNavigationDelegate {
   }
 
   public func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
-    // TODO: 뷰모델로 분리
-    hideLoading()
-    // TODO: 에러 처리
+    viewModel.send(input: .webContentProcessDidTerminate)
   }
 }
