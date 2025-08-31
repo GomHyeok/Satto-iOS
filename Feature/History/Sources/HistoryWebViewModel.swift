@@ -31,10 +31,10 @@ public final class HistoryWebViewModel {
       let url = URL(string: "https://clever-kataifi-dcedaf.netlify.app/lotto-history")!
       let request = URLRequest(url: url)
       output.loadURL.send(request)
-      
+
     case .webContentProcessDidTerminate:
       output.needsRecovery.send(true)
-      
+
     case .recovered:
       output.needsRecovery.send(false)
     }
