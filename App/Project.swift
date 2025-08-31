@@ -44,7 +44,7 @@ struct AppLayer: Layer {
           base: [
             "PRODUCT_BUNDLE_IDENTIFIER": "$(APP_IDENTIFIER)",
             "TARGETED_DEVICE_FAMILY": "1",
-            "MARKETING_VERSION": "1.0.0",
+            "MARKETING_VERSION": "1.0.1",
             "CURRENT_PROJECT_VERSION": "0",
           ],
           configurations: [
