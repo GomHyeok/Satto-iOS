@@ -101,7 +101,7 @@ public final class RootViewController: UIViewController {
 
   @objc private func moveButtonTapped() {
     TestAppRouter.shared.navigate(
-      to: selectedRoute ?? .lib, how: selectedPresentationStyle ?? .push, with: [:])
+      to: selectedRoute ?? .lib, how: selectedPresentationStyle ?? .push(), with: [:])
   }
 
   // MARK: - Alert Functions
@@ -131,7 +131,7 @@ public final class RootViewController: UIViewController {
     // 네비게이션 방식에 대한 액션 추가
     alert.addAction(
       UIAlertAction(title: "Push", style: .default) { [weak self] _ in
-        self?.selectedPresentationStyle = .push
+        self?.selectedPresentationStyle = .push()
         self?.howButton.setTitle("Push 방식으로", for: .normal)
       })
     alert.addAction(
