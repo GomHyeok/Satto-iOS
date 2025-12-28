@@ -54,6 +54,12 @@ struct FeatureLayer: Layer {
           .project(target: "CommonLayer", path: "../Common")
         ]
       ),
+      .createTarget(
+        name : "Search",
+        dependencies: [
+          .project(target: "CommonLayer", path: "../Common")
+        ]
+      )
     ]
   }
 }
