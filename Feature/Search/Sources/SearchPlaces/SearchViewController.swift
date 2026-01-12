@@ -14,9 +14,34 @@ import Base
 
 public final class SearchViewController: BaseViewController {
   
+  enum Constant {
+    static let searchViewPlaceHolder = "우리 지역 명소 찾기"
+  }
+  
   private let viewModel: SearchViewModel
   
-  // TODO: SearchView, CollectionViewCell, CollectionView, EmptyView로 화면 구성
+  private var searchViewArea = UIView()
+  private var resultViewArea = UIView()
+  
+  private lazy var searchView = InputSearch().then {
+    $0.setPlaceholder(Constant.searchViewPlaceHolder)
+  }
+  
+  private lazy var searchImageView = UIImageView().then {
+    $0.image = STImages.imageMoreLuckInfo.image
+    $0.contentMode = .center
+  }
+  
+  private lazy var searchTitle = UILabel().then {
+    $0.style = Typography.Body_16_SB
+    $0.textColor = STColors.gray4.color
+  }
+  
+  private lazy var searchSubTitle = UILabel().then {
+    $0.style = Typography.Body_14_R
+    $0.textColor = STColors.gray4.color
+    $0.numberOfLines = 2
+  }
   
   public init(viewModel: SearchViewModel) {
     self.viewModel = viewModel
@@ -29,23 +54,112 @@ public final class SearchViewController: BaseViewController {
   
   public override func viewDidLoad() {
     super.viewDidLoad()
+    setNavigationBarHidden(true)
     setupUI()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
   
-  private func createLayout() -> UICollectionViewCompositionalLayout {
-    
-  }
+//  private func createLayout() -> UICollectionViewCompositionalLayout {
+//    
+//  }
 }
 
 extension SearchViewController {
   private func setupUI() {
     view.backgroundColor = .systemBackground
+    
+    view.addSubview(searchViewArea)
+    view.addSubview(resultViewArea)
+    searchViewArea.addSubview(searchView)
+    resultViewArea.addSubview(searchImageView)
+    resultViewArea.addSubview(searchTitle)
+    resultViewArea.addSubview(searchSubTitle)
+    
+    searchViewArea.snp.makeConstraints { make in
+      make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+      make.height.equalTo(56)
+    }
+    
+    searchView.snp.makeConstraints { make in
+      make.leading.trailing.equalToSuperview().inset(16)
+      make.centerY.equalToSuperview()
+      make.height.equalTo(43)
+    }
+    
+    resultViewArea.snp.makeConstraints { make  in
+      make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+      make.bottom.equalToSuperview()
+      make.top.equalTo(searchViewArea.snp.bottom)
+    }
+    
+    searchImageView.snp.makeConstraints { make in
+      make.centerX.equalToSuperview()
+      make.top.equalToSuperview().offset(180)
+      make.width.height.equalTo(100)
+    }
+    
+    searchTitle.snp.makeConstraints { make in
+      make.top.equalTo(searchImageView.snp.bottom)
+      make.centerX.equalToSuperview()
+    }
+    
+    searchSubTitle.snp.makeConstraints { make in
+      make.top.equalTo(searchTitle.snp.bottom).offset(8)
+      make.centerX.equalToSuperview()
+    }
   }
   
   private func setupBinding() {
+    viewModel.output.isLoading
+      .receive(on: RunLoop.main)
+      .sink { [weak self] isLoading in
+        guard let self else { return }
+        if isLoading {
+          self.showLoading()
+        } else {
+          self.hideLoading()
+        }
+      }
+      .store(in: &cancellables)
     
+    viewModel.output.showError
+      .receive(on: RunLoop.main)
+      .sink { [weak self] error in
+        guard let self else { return }
+        self.showErrorPopup { }
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.changeBasicView
+      .receive(on: RunLoop.main)
+      .sink { [weak self] emptyCase in
+        guard let self else { return }
+        if emptyCase == .filled {
+          setBasicViewIsHidden(true)
+          return
+        }
+        
+        self.searchTitle.text = emptyCase.title
+        self.searchSubTitle.text = emptyCase.subTitle
+        setBasicViewIsHidden(false)
+      }
+      .store(in: &cancellables)
+    
+    searchView.textPublisher
+      .sink { [weak self] text in
+        guard let self else { return }
+        self.viewModel.send(input: .searchPlace(query: text))
+        print(text)
+      }
+      .store(in: &cancellables)
+    
+  }
+  
+  private func setBasicViewIsHidden(_ isHidden : Bool) {
+    self.searchTitle.isHidden = isHidden
+    self.searchSubTitle.isHidden = isHidden
+    self.searchImageView.isHidden = isHidden
   }
 }
 
