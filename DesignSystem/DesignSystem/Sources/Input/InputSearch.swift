@@ -49,6 +49,7 @@ public final class InputSearch : UIView {
     $0.borderStyle = .none
     $0.delegate = self
     $0.returnKeyType = .search
+    $0.addTarget(self, action: #selector(textFieldEditingChanged(_:)), for: .editingChanged)
   }
   
   private lazy var deleteButton = UIButton().then {
@@ -117,11 +118,13 @@ public final class InputSearch : UIView {
     switch state {
     case .normal:
       searchImageView.tintColor = STColors.primary2.color
-      backgroundView.layer.borderColor = STColors.gray7.color.cgColor
+      backgroundView.layer.borderColor = STColors.primary2.color.cgColor
+      searchImageView.image = STImages.search.image.withRenderingMode(.alwaysTemplate)
       setDeleteButton(true)
     case .focused:
       searchImageView.tintColor = STColors.primary2.color
       backgroundView.layer.borderColor = STColors.primary2.color.cgColor
+      searchImageView.image = STImages.search.image.withRenderingMode(.alwaysTemplate)
       setDeleteButton(false)
     case .filled :
       searchImageView.tintColor = STColors.gray3.color
@@ -148,13 +151,18 @@ public final class InputSearch : UIView {
     state = .normal
     _textPublisher.send("")
   }
+  
+  @objc private func textFieldEditingChanged(_ textField: UITextField) {
+    let text = textField.text ?? ""
+    state = .focused
+    _textPublisher.send(text)
+  }
 }
 
 extension InputSearch : UITextFieldDelegate {
   public func textFieldDidBeginEditing(_ textField: UITextField) {
     guard state != .disabled else { return }
     state = .focused
-    _textPublisher.send(textField.text ?? "")
   }
   
   public func textFieldDidEndEditing(_ textField: UITextField) {
