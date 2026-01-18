@@ -169,7 +169,6 @@ extension SearchViewController {
       .sink { [weak self] text in
         guard let self else { return }
         self.viewModel.send(input: .searchPlace(query: text))
-        print(text)
       }
       .store(in: &cancellables)
     
@@ -225,8 +224,16 @@ extension SearchViewController : UICollectionViewDataSource {
       return UICollectionViewCell()
     }
     
+    cell.delegate = self
+    
     cell.update(with: section)
     return cell
+  }
+}
+
+extension SearchViewController : SearchResultCellDelegate {
+  func searchResultCell(_ id: String) {
+    viewModel.send(input: .selectPlace(id: id))
   }
 }
 

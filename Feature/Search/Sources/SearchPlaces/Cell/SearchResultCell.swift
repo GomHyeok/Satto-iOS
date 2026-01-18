@@ -21,10 +21,15 @@ struct SearchResultCellModel {
 }
 
 protocol SearchResultCellDelegate: AnyObject {
-  func searchResultCell(_ cell: SearchResultCell, didSelectPlace id: String)
+  func searchResultCell(_ placeId : String)
 }
 
 final class SearchResultCell : BaseCollectionViewCell {
+  
+  weak var delegate : SearchResultCellDelegate?
+  
+  private lazy var id : String = ""
+  
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .horizontal
     $0.spacing = 0
@@ -33,13 +38,17 @@ final class SearchResultCell : BaseCollectionViewCell {
     $0.layoutMargins = UIEdgeInsets(top: 16, left: 24, bottom: 16, right: 24)
   }
   
+  private lazy var cellTouchButton = UIButton().then {
+    $0.addTarget(self, action: #selector(cellTapped), for: .touchUpInside)
+  }
+  
   private lazy var imageBackgroundView = UIView().then {
     $0.backgroundColor = STColors.primary8.color
     $0.layer.cornerRadius = 16
   }
   
   private lazy var pinImageView = UIImageView().then {
-    $0.image = STImages.mapPin.image
+    $0.image = STImages.mapPin.image.withRenderingMode(.alwaysTemplate)
     $0.contentMode = .scaleAspectFit
     $0.tintColor = STColors.primary2.color
   }
@@ -83,12 +92,17 @@ extension SearchResultCell {
     contentView.clipsToBounds = true
     
     contentView.addSubview(contentStackView)
+    contentView.addSubview(cellTouchButton)
     contentStackView.addArrangedSubview(imageBackgroundView)
     contentStackView.addArrangedSubview(textStackView)
     contentStackView.addArrangedSubview(chevronImageView)
     imageBackgroundView.addSubview(pinImageView)
     textStackView.addArrangedSubview(titleLabel)
     textStackView.addArrangedSubview(descriptionLabel)
+    
+    cellTouchButton.snp.makeConstraints {
+      $0.edges.equalToSuperview()
+    }
     
     contentStackView.snp.makeConstraints {
       $0.edges.equalToSuperview()
@@ -123,8 +137,14 @@ extension SearchResultCell {
   func update(with cellModel : SearchResultCellModel) {
     titleLabel.text = cellModel.title
     descriptionLabel.text = cellModel.address
+    id = cellModel.id
     
     if cellModel.isMatched { titleLabel.textColor = STColors.primary2.color }
+    else { titleLabel.textColor = STColors.gray1.color }
+  }
+  
+  @objc private func cellTapped() {
+    delegate?.searchResultCell(id)
   }
 }
 

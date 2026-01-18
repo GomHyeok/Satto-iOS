@@ -38,8 +38,9 @@ public final class InputSearch : UIView {
   }
   
   private lazy var searchImageView = UIImageView().then {
-    $0.image = STImages.search.image.withRenderingMode(.alwaysTemplate)
+    $0.image = STImages.chevronLeftM.image.withRenderingMode(.alwaysTemplate)
     $0.contentMode = .center
+    $0.tintColor = STColors.gray3.color
   }
   
   private lazy var textField = UITextField().then {
@@ -117,22 +118,15 @@ public final class InputSearch : UIView {
   private func update() {
     switch state {
     case .normal:
-      searchImageView.tintColor = STColors.primary2.color
       backgroundView.layer.borderColor = STColors.primary2.color.cgColor
-      searchImageView.image = STImages.search.image.withRenderingMode(.alwaysTemplate)
       setDeleteButton(true)
     case .focused:
-      searchImageView.tintColor = STColors.primary2.color
       backgroundView.layer.borderColor = STColors.primary2.color.cgColor
-      searchImageView.image = STImages.search.image.withRenderingMode(.alwaysTemplate)
       setDeleteButton(false)
     case .filled :
-      searchImageView.tintColor = STColors.gray3.color
-      searchImageView.image = STImages.iconArrow.image
       backgroundView.layer.borderColor = STColors.gray7.color.cgColor
       setDeleteButton(false)
     case .disabled :
-      backgroundView.backgroundColor = STColors.gray8.color
       backgroundView.layer.borderColor = STColors.gray8.color.cgColor
     }
   }
