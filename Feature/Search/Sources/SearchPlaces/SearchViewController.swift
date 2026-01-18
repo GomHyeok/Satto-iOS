@@ -43,6 +43,16 @@ public final class SearchViewController: BaseViewController {
     $0.numberOfLines = 2
   }
   
+  private lazy var collectionView = UICollectionView(
+    frame: .zero, collectionViewLayout: createLayout()
+  ).then {
+    $0.dataSource = self
+    $0.register(
+      SearchResultCell.self,
+      forCellWithReuseIdentifier: SearchResultCell.typeName
+    )
+  }
+  
   public init(viewModel: SearchViewModel) {
     self.viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
@@ -59,10 +69,6 @@ public final class SearchViewController: BaseViewController {
     setupBinding()
     viewModel.send(input: .viewDidLoad)
   }
-  
-//  private func createLayout() -> UICollectionViewCompositionalLayout {
-//    
-//  }
 }
 
 extension SearchViewController {
@@ -75,6 +81,7 @@ extension SearchViewController {
     resultViewArea.addSubview(searchImageView)
     resultViewArea.addSubview(searchTitle)
     resultViewArea.addSubview(searchSubTitle)
+    resultViewArea.addSubview(collectionView)
     
     searchViewArea.snp.makeConstraints { make in
       make.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
@@ -107,6 +114,10 @@ extension SearchViewController {
     searchSubTitle.snp.makeConstraints { make in
       make.top.equalTo(searchTitle.snp.bottom).offset(8)
       make.centerX.equalToSuperview()
+    }
+    
+    collectionView.snp.makeConstraints { make in
+      make.top.leading.trailing.bottom.equalToSuperview()
     }
   }
   
@@ -146,6 +157,14 @@ extension SearchViewController {
       }
       .store(in: &cancellables)
     
+    viewModel.output.reloadData
+      .receive(on: RunLoop.main)
+      .sink { [weak self] _ in
+        guard let self else { return }
+        self.collectionView.reloadData()
+      }
+      .store(in: &cancellables)
+    
     searchView.textPublisher
       .sink { [weak self] text in
         guard let self else { return }
@@ -160,6 +179,54 @@ extension SearchViewController {
     self.searchTitle.isHidden = isHidden
     self.searchSubTitle.isHidden = isHidden
     self.searchImageView.isHidden = isHidden
+    self.collectionView.isHidden = !isHidden
+  }
+  
+  private func createLayout() -> UICollectionViewCompositionalLayout {
+    let layout = UICollectionViewCompositionalLayout { section, env in
+      let item = NSCollectionLayoutItem(
+        layoutSize : NSCollectionLayoutSize(
+          widthDimension: .fractionalWidth(1.0),
+          heightDimension: .estimated(78)
+        )
+      )
+      
+      let group = NSCollectionLayoutGroup.vertical(
+        layoutSize: NSCollectionLayoutSize(
+          widthDimension: .fractionalWidth(1.0),
+          heightDimension: .estimated(78)
+        ),
+        subitems: [item]
+      )
+      
+      let sectionLayout = NSCollectionLayoutSection(group: group)
+      return sectionLayout
+    }
+    
+    return layout
+  }
+}
+
+extension SearchViewController : UICollectionViewDataSource {
+  public func collectionView(
+    _ collectionView: UICollectionView, numberOfItemsInSection section: Int
+  ) -> Int {
+    return viewModel.getSectionCount()
+  }
+  
+  public func collectionView(
+    _ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath
+  ) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(
+      withReuseIdentifier: SearchResultCell.typeName,
+      for: indexPath
+    ) as? SearchResultCell, let section = viewModel.getSection(at: indexPath.item)
+    else {
+      return UICollectionViewCell()
+    }
+    
+    cell.update(with: section)
+    return cell
   }
 }
 

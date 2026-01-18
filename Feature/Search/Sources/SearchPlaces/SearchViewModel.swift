@@ -52,6 +52,7 @@ public final class SearchViewModel {
   
   struct Output {
     fileprivate let _changeBasicView = PassthroughSubject<EmptyCase, Never>()
+    fileprivate let _reloadData = CurrentValueSubject<[SearchResultCellModel], Never>([])
     fileprivate let _isLoading = PassthroughSubject<Bool, Never>()
     fileprivate let _showError = PassthroughSubject<() -> Void, Never>()
     
@@ -63,6 +64,10 @@ public final class SearchViewModel {
     }
     var changeBasicView : AnyPublisher<EmptyCase, Never> {
       _changeBasicView.eraseToAnyPublisher()
+    }
+    
+    var reloadData : AnyPublisher<[SearchResultCellModel], Never> {
+      _reloadData.eraseToAnyPublisher()
     }
   }
   
@@ -79,7 +84,6 @@ public final class SearchViewModel {
         return
       }
       
-      self.output._changeBasicView.send(.filled)
       searchPlace(query: query)
     }
   }
@@ -87,8 +91,47 @@ public final class SearchViewModel {
 
 extension SearchViewModel {
     func searchPlace(query: String) {
+      let sections = [
+        SearchResultCellModel(
+          id: "1",
+          title: "스타벅스 강남역점",
+          address: "서울특별시 강남구 테헤란로 123",
+          isMatched: true
+        ),
+        SearchResultCellModel(
+          id: "2",
+          title: "이디야커피 역삼역점",
+          address: "서울특별시 강남구 역삼로 456",
+          isMatched: false
+        ),
+        SearchResultCellModel(
+          id: "3",
+          title: "투썸플레이스 삼성점",
+          address: "서울특별시 강남구 봉은사로 789",
+          isMatched: false
+        )
+      ]
       
+      if sections.count == 0 {
+        self.output._changeBasicView.send(.none)
+        return
+      } else {
+        self.output._changeBasicView.send(.filled)
+        self.output._reloadData.send(sections)
+      }
     }
+  
+  func getSectionCount() -> Int {
+    return output._reloadData.value.count
+  }
+  
+  func getSection(at index: Int) -> SearchResultCellModel? {
+    let sections = output._reloadData.value
+    guard index >= 0 && index < sections.count else {
+      return nil
+    }
+    return sections[index]
+  }
 }
 
 

@@ -20,6 +20,10 @@ struct SearchResultCellModel {
   let isMatched: Bool
 }
 
+protocol SearchResultCellDelegate: AnyObject {
+  func searchResultCell(_ cell: SearchResultCell, didSelectPlace id: String)
+}
+
 final class SearchResultCell : BaseCollectionViewCell {
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .horizontal
@@ -119,6 +123,8 @@ extension SearchResultCell {
   func update(with cellModel : SearchResultCellModel) {
     titleLabel.text = cellModel.title
     descriptionLabel.text = cellModel.address
+    
+    if cellModel.isMatched { titleLabel.textColor = STColors.primary2.color }
   }
 }
 
