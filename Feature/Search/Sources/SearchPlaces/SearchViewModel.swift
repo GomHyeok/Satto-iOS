@@ -10,7 +10,7 @@ import DIInjector
 import Foundation
 
 public final class SearchViewModel {
-  public init() {}
+  
   enum Input {
     case viewDidLoad
     case searchPlace(query: String)
@@ -71,11 +71,25 @@ public final class SearchViewModel {
     }
   }
 
+  // MARK: - Properties
   let output: Output = Output()
   private var cancellables = Set<AnyCancellable>()
   
+  // MARK: SearchProperties
   @Injected private var searchService : SearchService
-
+  private let querySubject = PassthroughSubject<String, Never>()
+  
+  public init() {
+    querySubject
+      .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+      .removeDuplicates()
+      .sink { [weak self] query in
+        guard let self else { return }
+        self.send(input: .searchPlace(query: query))
+      }
+      .store(in: &cancellables)
+  }
+  
   func send(input: Input) {
     switch input {
     case .viewDidLoad:
@@ -86,7 +100,7 @@ public final class SearchViewModel {
         return
       }
 
-      searchPlace(query: query)
+      querySubject.send(query)
 
     case .selectPlace(let id):
       // TODO: 장소 선택 처리(화면 이동)
