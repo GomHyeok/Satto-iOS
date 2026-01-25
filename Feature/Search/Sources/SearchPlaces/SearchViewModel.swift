@@ -73,6 +73,8 @@ public final class SearchViewModel {
 
   let output: Output = Output()
   private var cancellables = Set<AnyCancellable>()
+  
+  @Injected private var searchService : SearchService
 
   func send(input: Input) {
     switch input {
