@@ -89,6 +89,7 @@ public final class SearchViewModel {
       searchPlace(query: query)
 
     case .selectPlace(let id):
+      // TODO: 장소 선택 처리(화면 이동)
       mockSelectPlacefunc()
     }
   }
@@ -96,33 +97,27 @@ public final class SearchViewModel {
 
 extension SearchViewModel {
   private func searchPlace(query: String) {
-    let sections = [
-      SearchResultCellModel(
-        id: "1",
-        title: "스타벅스 강남역점",
-        address: "서울특별시 강남구 테헤란로 123",
-        isMatched: true
-      ),
-      SearchResultCellModel(
-        id: "2",
-        title: "이디야커피 역삼역점",
-        address: "서울특별시 강남구 역삼로 456",
-        isMatched: false
-      ),
-      SearchResultCellModel(
-        id: "3",
-        title: "투썸플레이스 삼성점",
-        address: "서울특별시 강남구 봉은사로 789",
-        isMatched: false
-      ),
-    ]
-
-    if sections.count == 0 {
-      self.output._changeBasicView.send(.none)
-      return
-    } else {
-      self.output._changeBasicView.send(.filled)
-      self.output._reloadData.send(sections)
+    
+    output._isLoading.send(true)
+    
+    Task { [weak self] in
+      guard let self else { return }
+      do {
+        let sections = try await searchService.search(query: query)
+        
+        if sections.count == 0 {
+          self.output._changeBasicView.send(.none)
+          return
+        } else {
+          self.output._changeBasicView.send(.filled)
+          self.output._reloadData.send(sections)
+        }
+        
+        self.output._isLoading.send(false)
+      } catch {
+        self.output._isLoading.send(false)
+        // TODO: ErrorHandling
+      }
     }
   }
 

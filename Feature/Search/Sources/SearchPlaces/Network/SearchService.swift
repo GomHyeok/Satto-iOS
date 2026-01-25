@@ -24,7 +24,7 @@ struct SearchService {
         id : result.id,
         title : result.name,
         address : result.address,
-        isMatched: false
+        isMatched: query == result.name
       )
     }
     
