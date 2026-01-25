@@ -85,7 +85,12 @@ public final class SearchViewModel {
       .removeDuplicates()
       .sink { [weak self] query in
         guard let self else { return }
-        self.send(input: .searchPlace(query: query))
+  
+        if query.isEmpty {
+          self.output._changeBasicView.send(.before)
+          return
+        }
+        self.searchPlace(query: query)
       }
       .store(in: &cancellables)
   }
@@ -94,14 +99,10 @@ public final class SearchViewModel {
     switch input {
     case .viewDidLoad:
       self.output._changeBasicView.send(.before)
+      
     case .searchPlace(let query):
-      if query.isEmpty {
-        self.output._changeBasicView.send(.before)
-        return
-      }
-
       querySubject.send(query)
-
+      
     case .selectPlace(let id):
       // TODO: 장소 선택 처리(화면 이동)
       mockSelectPlacefunc()
@@ -113,11 +114,12 @@ extension SearchViewModel {
   private func searchPlace(query: String) {
     
     output._isLoading.send(true)
-    
     Task { [weak self] in
       guard let self else { return }
       do {
         let sections = try await searchService.search(query: query)
+        
+        self.output._isLoading.send(false)
         
         if sections.count == 0 {
           self.output._changeBasicView.send(.none)
@@ -126,8 +128,6 @@ extension SearchViewModel {
           self.output._changeBasicView.send(.filled)
           self.output._reloadData.send(sections)
         }
-        
-        self.output._isLoading.send(false)
       } catch {
         self.output._isLoading.send(false)
         // TODO: ErrorHandling
