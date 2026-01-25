@@ -28,7 +28,7 @@ final class SearchResultCell : BaseCollectionViewCell {
   
   weak var delegate : SearchResultCellDelegate?
   
-  private lazy var id : String = ""
+  private var model : SearchResultCellModel?
   
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .horizontal
@@ -137,14 +137,16 @@ extension SearchResultCell {
   func update(with cellModel : SearchResultCellModel) {
     titleLabel.text = cellModel.title
     descriptionLabel.text = cellModel.address
-    id = cellModel.id
+    model = cellModel
     
     if cellModel.isMatched { titleLabel.textColor = STColors.primary2.color }
     else { titleLabel.textColor = STColors.gray1.color }
   }
   
   @objc private func cellTapped() {
-    delegate?.searchResultCell(id)
+    if let model = model {
+      delegate?.searchResultCell(model.id)
+    }
   }
 }
 

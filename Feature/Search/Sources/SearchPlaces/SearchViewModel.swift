@@ -135,10 +135,7 @@ extension SearchViewModel {
   
   func getSection(at index: Int) -> SearchResultCellModel? {
     let sections = output._reloadData.value
-    guard index >= 0 && index < sections.count else {
-      return nil
-    }
-    return sections[index]
+    return sections[safe: index]
   }
 }
 

@@ -9,6 +9,10 @@ import Then
 import UIKit
 import Combine
 
+public protocol InputSearchDelegate: AnyObject {
+  func inputSearchDidChange(_ inputSearch: InputSearch, text: String)
+}
+
 public final class InputSearch : UIView {
   
   private enum State {
@@ -24,10 +28,7 @@ public final class InputSearch : UIView {
     }
   }
   
-  private let _textPublisher = PassthroughSubject<String, Never>()
-  public var textPublisher: AnyPublisher<String, Never> {
-    _textPublisher.eraseToAnyPublisher()
-  }
+  public weak var delegate : InputSearchDelegate?
   
   private lazy var backgroundView = UIView().then {
     $0.backgroundColor = STColors.white.color
@@ -73,10 +74,6 @@ public final class InputSearch : UIView {
   
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-  
-  public override func layoutSubviews() {
-    super.layoutSubviews()
   }
   
   private func setupView() {
@@ -143,13 +140,13 @@ public final class InputSearch : UIView {
   @objc private func deleteButtonTapped() {
     textField.text = ""
     state = .normal
-    _textPublisher.send("")
+    delegate?.inputSearchDidChange(self, text: "")
   }
   
   @objc private func textFieldEditingChanged(_ textField: UITextField) {
     let text = textField.text ?? ""
     state = .focused
-    _textPublisher.send(text)
+    delegate?.inputSearchDidChange(self, text: text)
   }
 }
 

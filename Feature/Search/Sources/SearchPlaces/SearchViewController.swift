@@ -25,6 +25,7 @@ public final class SearchViewController: BaseViewController {
   
   private lazy var searchView = InputSearch().then {
     $0.setPlaceholder(Constant.searchViewPlaceHolder)
+    $0.delegate = self
   }
   
   private lazy var searchImageView = UIImageView().then {
@@ -165,13 +166,6 @@ extension SearchViewController {
       }
       .store(in: &cancellables)
     
-    searchView.textPublisher
-      .sink { [weak self] text in
-        guard let self else { return }
-        self.viewModel.send(input: .searchPlace(query: text))
-      }
-      .store(in: &cancellables)
-    
   }
   
   private func setBasicViewIsHidden(_ isHidden : Bool) {
@@ -234,6 +228,12 @@ extension SearchViewController : UICollectionViewDataSource {
 extension SearchViewController : SearchResultCellDelegate {
   func searchResultCell(_ id: String) {
     viewModel.send(input: .selectPlace(id: id))
+  }
+}
+
+extension SearchViewController : InputSearchDelegate {
+  public func inputSearchDidChange(_ inputSearch: InputSearch, text: String) {
+    self.viewModel.send(input: .searchPlace(query: text))
   }
 }
 
