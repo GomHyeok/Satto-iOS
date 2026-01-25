@@ -5,8 +5,8 @@
 //  Created by 최재혁 on 1/13/26.
 //
 
-import UIKit
 import Search
+import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

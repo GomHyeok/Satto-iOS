@@ -55,7 +55,7 @@ struct FeatureLayer: Layer {
         ]
       ),
       .createTarget(
-        name : "Search",
+        name: "Search",
         dependencies: [
           .project(target: "CommonLayer", path: "../Common")
         ]
@@ -81,9 +81,9 @@ struct FeatureLayer: Layer {
         ),
         sources: ["FeatureSample/Sources/**"],
         dependencies: [
-          .target(name : "FeatureLayer")
+          .target(name: "FeatureLayer")
         ]
-      )
+      ),
     ]
   }
 }
