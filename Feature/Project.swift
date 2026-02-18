@@ -16,6 +16,8 @@ struct FeatureLayer: Layer {
           .target(name: "Setting"),
           .target(name: "History"),
           .target(name: "Fortune"),
+          .target(name: "Search"),
+          .target(name : "Places")
         ],
         settings: .settings(
           base: [
@@ -56,6 +58,12 @@ struct FeatureLayer: Layer {
       ),
       .createTarget(
         name: "Search",
+        dependencies: [
+          .project(target: "CommonLayer", path: "../Common")
+        ]
+      ),
+      .createTarget(
+        name: "Places",
         dependencies: [
           .project(target: "CommonLayer", path: "../Common")
         ]
