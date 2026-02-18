@@ -19,7 +19,7 @@ struct SearchService {
     
     async let searchRequst = networkProvider.request(target: getSearchResultsTarget)
     
-    let modal = try await searchRequst.results.map { result in
+    let model = try await searchRequst.results.map { result in
       SearchResultCellModel(
         id : result.id,
         title : result.name,
@@ -28,6 +28,6 @@ struct SearchService {
       )
     }
     
-    return modal
+    return model
   }
 }

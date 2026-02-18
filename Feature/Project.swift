@@ -81,7 +81,7 @@ struct FeatureLayer: Layer {
         ),
         sources: ["FeatureSample/Sources/**"],
         dependencies: [
-          .target(name: "FeatureLayer")
+          .target(name: "Search")
         ]
       ),
     ]
