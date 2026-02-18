@@ -16,6 +16,7 @@ struct FeatureLayer: Layer {
           .target(name: "Setting"),
           .target(name: "History"),
           .target(name: "Fortune"),
+          .target(name: "Search")
         ],
         settings: .settings(
           base: [
@@ -81,7 +82,7 @@ struct FeatureLayer: Layer {
         ),
         sources: ["FeatureSample/Sources/**"],
         dependencies: [
-          .target(name: "Search")
+          .target(name: "FeatureLayer")
         ]
       ),
     ]
