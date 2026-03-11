@@ -5,7 +5,7 @@
 //  Created by 최재혁 on 1/13/26.
 //
 
-import Search
+import Places
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window = UIWindow(windowScene: windowScene)
     window?.windowScene = windowScene
 
-    let viewController = SearchViewController(viewModel: SearchViewModel())
+    let viewController = WeeklyPlaceViewController(viewModel: WeeklyPlaceViewModel())
 
     window?.rootViewController = viewController
     window?.makeKeyAndVisible()

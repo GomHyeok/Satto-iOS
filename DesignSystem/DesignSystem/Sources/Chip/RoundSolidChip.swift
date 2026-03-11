@@ -9,7 +9,7 @@ import UIKit
 
 public final class RoundSolidChip: UIView {
   public enum Style: CaseIterable {
-    case primary, black, gray, red, orange, yellow, green, blue
+    case primary, black, gray, red, orange, yellow, green, blue, white
 
     fileprivate var backgroudColor: UIColor {
       switch self {
@@ -21,10 +21,16 @@ public final class RoundSolidChip: UIView {
       case .yellow: return STColors.yellow3.color
       case .green: return STColors.gray3.color
       case .blue: return STColors.blue3.color
+      case .white: return STColors.white.color
       }
     }
 
-    fileprivate var tintColor: UIColor { return STColors.white.color }
+    fileprivate var tintColor: UIColor {
+      switch self {
+      case .white : return STColors.gray1.color
+      default: return STColors.white.color
+      }
+    }
 
     fileprivate var borderColor: UIColor {
       switch self {
@@ -36,6 +42,7 @@ public final class RoundSolidChip: UIView {
       case .yellow: return STColors.yellow3.color
       case .green: return STColors.green3.color
       case .blue: return STColors.blue3.color
+      case .white: return STColors.white.color
       }
     }
   }
@@ -105,6 +112,11 @@ public final class RoundSolidChip: UIView {
       arrowRightView.image = template
     }
   }
+  
+  public func update(leftIcon: UIImage) {
+    arrowLeftView.isHidden = false
+    arrowLeftView.image = leftIcon
+  }
 
   public func update(style: Style) {
     backgroundColor = style.backgroudColor
@@ -131,6 +143,11 @@ public final class RoundSolidChip: UIView {
     chip.update(text: "Round Solid Chip", icon: STImages.iconArrow.image)
     chip.update(style: $0)
     stackView.addArrangedSubview(chip)
+    let leftImage = RoundSolidChip()
+    leftImage.update(text: "Round Solid Chip")
+    leftImage.update(leftIcon: STImages.iconArrow.image)
+    leftImage.update(style: $0)
+    stackView.addArrangedSubview(leftImage)
   }
 
   return stackView
