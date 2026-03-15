@@ -19,6 +19,8 @@ public final class PlaceViewController: BaseViewController {
   private let viewModel: PlaceViewModel
   
   private var currentVC: BaseViewController?
+  private var weeklyPlaceVC: WeeklyPlaceViewController?
+  private var rankedPlaceVC: RankPlaceViewController?
   
   private lazy var segmentedControl = SegmentedControl().then {
     $0.update(firstTitle: Constant.firstButtonTitle, secondTitle: Constant.secondButtonTitle, style: .gray)
@@ -43,6 +45,7 @@ public final class PlaceViewController: BaseViewController {
     setupUI()
     setupBinding()
     viewModel.send(input: .viewDidLoad)
+    self.setNavigationBarHidden(true)
   }
 }
 
@@ -54,7 +57,7 @@ extension PlaceViewController {
     view.addSubview(containerView)
     
     segmentedControl.snp.makeConstraints{ make in
-      make.top.equalToSuperview().offset(12)
+      make.top.equalTo(view.safeAreaLayoutGuide)
       make.leading.trailing.equalToSuperview().inset(24)
       make.height.equalTo(40)
     }
@@ -66,7 +69,25 @@ extension PlaceViewController {
   }
   
   private func setupBinding() {
+    viewModel.output.showWeeklyPlaces
+      .sink { [weak self] in
+        guard let self else { return }
+        if weeklyPlaceVC == nil {
+          weeklyPlaceVC = WeeklyPlaceViewController(viewModel: .init())
+        }
+        show(weeklyPlaceVC!)
+      }
+      .store(in: &cancellables)
     
+    viewModel.output.showRankingPlaces
+      .sink { [weak self] in
+        guard let self else { return }
+        if rankedPlaceVC == nil {
+          rankedPlaceVC = RankPlaceViewController(viewModel: .init())
+        }
+        show(rankedPlaceVC!)
+      }
+      .store(in: &cancellables)
   }
   
   private func show(_ vc: BaseViewController) {

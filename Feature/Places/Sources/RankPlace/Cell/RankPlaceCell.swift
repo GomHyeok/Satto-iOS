@@ -1,33 +1,35 @@
 //
-//  WeeklyPlaceCell.swift
+//  RankPlaceCell.swift
 //  FeatureLayer
 //
-//  Created by 최재혁 on 3/10/26.
+//  Created by 최재혁 on 3/12/26.
 //
 
 import Base
 import DesignSystem
-import Foundation
-import SnapKit
-import Then
 import UIKit
+import Then
 
-struct WeeklyPlaceCellModel {
+struct RankPlaceCellModel {
   let id: String
   let index: Int
   let title: String
   let address: String
+  let count: Int
+  let auto: Int
+  let manual: Int
+  let semi: Int
 }
 
-protocol WeeklyPlaceCellDelegate: AnyObject {
-  func weeklyPlaceCellDidTap(_ model: WeeklyPlaceCellModel)
+protocol RankPlaceCellDelegate: AnyObject {
+  func rankPlaceCellDidTap(_ model: RankPlaceCellModel)
 }
 
-final class WeeklyPlaceCell: BaseCollectionViewCell {
+final class RankPlaceCell: BaseCollectionViewCell {
   
-  weak var delegate: WeeklyPlaceCellDelegate?
+  weak var delegate: RankPlaceCellDelegate?
   
-  private var model: WeeklyPlaceCellModel?
+  private var model: RankPlaceCellModel?
   
   private lazy var contentStackView = UIStackView().then {
     $0.axis = .horizontal
@@ -46,6 +48,12 @@ final class WeeklyPlaceCell: BaseCollectionViewCell {
   private lazy var titleStackView: UIStackView = UIStackView().then {
     $0.axis = .horizontal
     $0.spacing = 6
+    $0.alignment = .center
+  }
+  
+  private lazy var countStackView: UIStackView = UIStackView().then {
+    $0.axis = .horizontal
+    $0.spacing = 4
     $0.alignment = .center
   }
   
@@ -83,7 +91,7 @@ final class WeeklyPlaceCell: BaseCollectionViewCell {
   }
 }
 
-extension WeeklyPlaceCell {
+extension RankPlaceCell {
   private func setupUI() {
     contentView.addSubview(contentStackView)
     contentView.addSubview(splitView)
@@ -91,6 +99,7 @@ extension WeeklyPlaceCell {
     contentStackView.addArrangedSubview(cellTouchButton)
     textStackView.addArrangedSubview(titleStackView)
     textStackView.addArrangedSubview(addressLabel)
+    textStackView.addArrangedSubview(countStackView)
     titleStackView.addArrangedSubview(numTitleLabel)
     titleStackView.addArrangedSubview(titleLabel)
     
@@ -103,37 +112,53 @@ extension WeeklyPlaceCell {
       make.height.equalTo(24)
     }
     
-    splitView.snp.makeConstraints { make in
+    splitView.snp.makeConstraints {make in
       make.height.equalTo(1)
-      make.leading.trailing.equalToSuperview().inset(24)
+      make.leading.trailing.equalToSuperview().offset(24)
       make.bottom.equalToSuperview()
     }
   }
   
-  func update(with cellModel: WeeklyPlaceCellModel) {
+  func update(with cellModel: RankPlaceCellModel) {
     self.model = cellModel
-    numTitleLabel.styledText = "\(cellModel.index + 1)."
+    numTitleLabel.styledText = "\(cellModel.index + 1)"
     titleLabel.styledText = cellModel.title
     addressLabel.styledText = cellModel.address
+    countStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    makeCountView(text: "당첨횟수", count: cellModel.count)
+    makeCountView(text: "자동", count: cellModel.auto)
+    makeCountView(text: "수동", count: cellModel.manual)
+    makeCountView(text: "반자동", count: cellModel.semi)
+  }
+  
+  private func makeCountView(text : String, count: Int) {
+    let countLabel = CountView()
+    countLabel.update(title: text, count: "\(count)")
+    countStackView.addArrangedSubview(countLabel)
   }
   
   @objc private func cellTapped() {
     guard let model = model else { return }
-    delegate?.weeklyPlaceCellDidTap(model)
+    delegate?.rankPlaceCellDidTap(model)
   }
 }
 
 @available(iOS 17.0, *)
 #Preview {
-  let cellModel = WeeklyPlaceCellModel(
+  let cellModel = RankPlaceCellModel(
     id: "0",
     index: 0,
-    title: "서울숲",
-    address: "서울 성동구 뚝섬로 273 (성수동1가)",
+    title: "집가고 싶다",
+    address: "서울특별시 종로구 종로 1",
+    count: 100,
+    auto: 50,
+    manual: 30,
+    semi: 20
   )
-
-  let cell = WeeklyPlaceCell()
+  
+  let cell = RankPlaceCell(frame: .zero)
+  
   cell.update(with: cellModel)
-
+  
   return cell
 }

@@ -20,6 +20,8 @@ public final class WeeklyPlaceViewModel {
   struct Output {
     fileprivate let _showPlaces = CurrentValueSubject<[WeeklyPlaceCellModel], Never>([])
     fileprivate let _setRoundAndDate = PassthroughSubject<(round: String, date: String), Never>()
+    fileprivate let _showLoading = PassthroughSubject<Bool, Never>()
+    fileprivate let _showError = PassthroughSubject<() -> Void, Never>()
     
     var showPlaces : AnyPublisher<[WeeklyPlaceCellModel], Never> {
       _showPlaces.eraseToAnyPublisher()
@@ -28,10 +30,17 @@ public final class WeeklyPlaceViewModel {
     var setRoundAndDate : AnyPublisher<(round: String, date: String), Never> {
       _setRoundAndDate.eraseToAnyPublisher()
     }
+    
+    var showLoading: AnyPublisher<Bool, Never> {
+      _showLoading.eraseToAnyPublisher()
+    }
+    
+    var showError: AnyPublisher<() -> Void, Never> {
+      _showError.eraseToAnyPublisher()
+    }
   }
   
   let output: Output = Output()
-  private var cancellables = Set<AnyCancellable>()
   
   func send(input: Input) {
     switch input {
@@ -53,9 +62,9 @@ public final class WeeklyPlaceViewModel {
   }
   
   let dummyData: [WeeklyPlaceCellModel] = [
-    WeeklyPlaceCellModel(id: 1, title: "서울특별시 종로구 종로 1", address: "서울특별시 종로구 종로 1"),
-    WeeklyPlaceCellModel(id: 2, title: "서울특별시 종로구 종로 2", address: "서울특별시 종로구 종로 2"),
-    WeeklyPlaceCellModel(id: 3, title: "서울특별시 종로구 종로 3", address: "서울특별시 종로구 종로 3"),
+    WeeklyPlaceCellModel(id: "123", index: 0, title: "서울특별시 종로구 종로 1", address: "서울특별시 종로구 종로 1"),
+    WeeklyPlaceCellModel(id: "123", index: 1, title: "서울특별시 종로구 종로 2", address: "서울특별시 종로구 종로 2"),
+    WeeklyPlaceCellModel(id: "123", index: 2, title: "서울특별시 종로구 종로 3", address: "서울특별시 종로구 종로 3"),
   ]
 }
 

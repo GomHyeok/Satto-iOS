@@ -63,6 +63,7 @@ public final class WeeklyPlaceViewController: BaseViewController {
       WeeklyPlaceCell.self,
       forCellWithReuseIdentifier: WeeklyPlaceCell.typeName
     )
+    $0.showsVerticalScrollIndicator = false
   }
   
   public init(viewModel: WeeklyPlaceViewModel) {
@@ -99,7 +100,7 @@ extension WeeklyPlaceViewController {
     titleStackView.snp.makeConstraints{ make in
       make.top.equalToSuperview()
       make.leading.trailing.equalToSuperview().inset(24)
-      make.height.equalTo(54)
+      make.height.equalTo(28)
     }
     
     splitView.snp.makeConstraints { make in
@@ -145,6 +146,7 @@ extension WeeklyPlaceViewController {
         viewModel.send(input: .selectPlaceRank(1))
         applyShadow(to: secondPlaceChip)
         firstPlaceChip.update(style: .primary)
+        secondPlaceChip.update(style: .white)
       }
       .store(in: &cancellables)
     
@@ -172,6 +174,26 @@ extension WeeklyPlaceViewController {
         guard let self else { return }
         self.roundLabel.styledText = round
         self.dateLabel.styledText = date
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.showLoading
+      .sink { [weak self] isLoading in
+        guard let self = self else { return }
+        if isLoading {
+          self.showLoading()
+        } else {
+          self.hideLoading()
+        }
+      }
+      .store(in: &cancellables)
+    
+    viewModel.output.showError
+      .sink { [weak self] retryAction in
+        guard let self = self else { return }
+        self.showErrorPopup {
+          retryAction()
+        }
       }
       .store(in: &cancellables)
   }

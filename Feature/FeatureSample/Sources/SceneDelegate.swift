@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     window = UIWindow(windowScene: windowScene)
     window?.windowScene = windowScene
 
-    let viewController = WeeklyPlaceViewController(viewModel: WeeklyPlaceViewModel())
+    let viewController = PlaceViewController(viewModel: PlaceViewModel())
 
     window?.rootViewController = viewController
     window?.makeKeyAndVisible()
